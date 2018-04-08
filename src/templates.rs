@@ -231,7 +231,7 @@ pub fn create_menu(page: &str, admin_opt: &Option<AdministratorCookie>, user_opt
     let mut pages: Vec<TemplateMenu> = DEFAULT_PAGE_MENU.clone().unwrap_or(vec![
         TemplateMenu::new(String::from("Home"), String::from("/"), page),
         TemplateMenu::new(String::from("Rust Tutorials"), String::from("/content/tutorials"), page),
-        TemplateMenu::new(String::from("Tags"), String::from("/all_tags"), page),
+        TemplateMenu::new(String::from("Topics"), String::from("/all_tags"), page),
         TemplateMenu::new(String::from("About"), String::from("/content/about-me"), page),
     ]);
     

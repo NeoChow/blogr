@@ -1,19 +1,18 @@
 # Shannon Entropy
-## Background
-### What Is Entropy
+
+## What Is Entropy
 In computer science terminology entropy measures the randomness of data.  Higher entropy means greater randomness or disorder.  A file with a high entropy might contain, for example, all of the possible combinations of a byte (0-255), and each symbol would be repeat a relatively equal number of times.
 
 In contrast an example of a file with low entropy might contain only English text (or for very low entropy just numbers), with some of those numbers being repeated a disproportional number of times (maybe the numbers 1, 2, and 3 are repeated much more often than the others).
 
 Essentially the more predictable the data is the lower the entropy, and the less predictable (more random) the higher the entropy.
 
-### Entropy And Compression
+## Entropy And Compression
 Finding the entropy of a file can be very useful for determining whether or not to cmopress files.  If you have a bunch of files with high entropy you may not want to compress them, maybe just an uncompressed .tar archive would suffice.
 
 Finding the entropy of a file will not tell you exactly how well a particular comrpession algorithm will perform on a given dataset but instead tell you how well the average compression alogirthm may perform.
 
-## Calculating Entropy
-### Shannon Entropy Formula
+## Shannon Entropy Formula
 <!-- Original Markdown Forumula  -\sum_{k=1}^{n} p_k log_2 p_k  -->
 <!-- jqMath formula  $$∑↙{k=0}↖n p_k log_2 p_k$$  -->
 
@@ -25,64 +24,27 @@ Oh you don't know how to speak greek?  The algorithm is actually fairly simple. 
 
 ## Algorithm
 In a computer program the process would look something like:
-#### 1) Count Symbol Occurences
+1. ##### Count Symbol Occurences
+    1. Initialize a mutable array named `histogram` with 256 unsigned integer elements with each element having a value of 0.
+    2. Create a mutable variable, `t` with a value of 0
+    2. Iterate each byte of the file, counting the number of times that particular byte appears.  Also increment `t` each iteration.
+        - 0 maps to the first array element while 255 is the last element in the array
+        - At the end of the file (or dataset) `t` should equal the total size of the file, since it is the total number of 
 
-##### 1A. Setup Variables
-Initialize a mutable array named `histogram` with 256 unsigned integer elements, with each element having an initial value of 0.
-```rust
-let mut histogram = [0; 256];
-```
-
-Create a mutable variable, `total` with a value of 0 which will hold the number of bytes processed, and eventually the size of the file
-```rust
-let mut t = 0u32
-```
-
-##### 1B. Fill Variables
-Iterate each byte of the file (using either the `map` iterator or a loop), counting the number of times that particular byte appears.  Also increment `total` after each iteration.
-```rust
-for byte in f.bytes() {
-    if let Ok(b) = byte {
-        histogram.get_mut(b as usize)
-            .map(|v| *v += 1);
-        total += 1;
-    }
-}
-
-```
-
-0 maps to the first array element while 255 is the last element in the array.
-
-At the end of the file (or dataset) `total` should equal the total size of the file, since it is the total number of bytes processed.
-
-#### 2) Calculate The Entropy
-Iterate the array of symbol frequencies, finding the probability of the symbol and using that to calculate the entropy.
-
-##### 2A. Iterate & Process Symbols
-Use the `fold` iterator (or a for loop) to find the probability of each symbol.  The probability is found by dividing the number of occurences (the array element's value) by `total` (the total bytes processed, or the length of the file/dataset).
-
-Then subtract from the accumulator the result of:
-
-- probability &times; log2(probability)
-
-```rust
-let result = (0..256).into_iter()
-  .fold(0.0, |acc, i|
-    if histogram[i] > 0 {
-      let p = (histogram[i] as f32) / (total as f32);
-      acc - ( p * p.log2() )
-    } else { acc });
-
-```
-
-
-The final value is the entropy, and will be a value between 0 and 8 due to each symbol having 8 bits.  I like to divide that by 8 to get a nice percentage-like number.
+2. ##### Calculate The Entropy
+    3. Create a mutable floating point variable `entropy`
+    4. For each element `i` of the `histogram` array (0-255):
+        1. Create a variable `probability`
+            1. The value for `probability` is found by dividing the value of `histogram[i]` by `t` (the total size of the file or length of data)
+        2. Subtract the result of the following from `entropy`:
+            1. `probability` &times; log2(`probability`)
+    3. The above steps will yield a result that is a deciamal number between 0 and 8.  This is because there are 8 bits in each symbol.  To display the entropy as a decimal between 0 and 1 (my preference) divide the result by 8.
 
 
 ## Shannon Entropy In Rust
-Now onto the full source code.  The following program is a modified version of one of my first programs in Rust and as such it is not overly sophisticated, but it is fairly simple to understand.
+Now onto some code.  The following program was one of my first programs in Rust and as such it is not overly sophisticated, but it is fairly simple to understand.
 
-#### Shannon Entropy Rust Code
+#### Rust Code
 
 ```rust
 

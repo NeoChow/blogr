@@ -99,6 +99,27 @@ Caching
 	
 
 Blogr-Fixes
+	udpate the Shannon Entropy article
+
+	finish the blog-organization page
+
+	Finish the titlize() funciton in the content module
+		remember it converts a filename to a TITLE, so convert a - to a space
+		and other suitable transformations.  Some of the new added replace()'s
+		may be WRONG as it was late at night and thought it was title to uri
+
+	Eventually add smarter static page uri's.  Instead of just using the file name replace
+		certain symbols with hyphens or nothing.  Make a uri() function or something.
+	Make the uri an optional field, just pass the file name in 	
+
+	Do the default headers added by Express override any explicit headers?
+		Do the default headers added for File/NamedFile override any custom set ones?
+
+	Make refresh_content refresh the article, text, and multi-article caches
+		Make a function to do this
+	Call the above function every few hours, make a new setting to determine this
+		This could be a fairing?
+
 	Finish making the cache a setting.
 		Finish the fallback functions in the cache::pages module
 		Add conditional compilation attributes to check if caching is enabled (CACHE_ENABLED)
@@ -280,6 +301,8 @@ Blogr-Fixes
 
 
 Blogr-Features
+	Articles iterator could more easily enable pagination
+
 	Could make a struct called Articles that holds a Vec<Article>
 		it would implement Iterator
 		and Vec<Article> should implement IntoIterator (I think)

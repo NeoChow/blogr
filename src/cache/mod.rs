@@ -20,7 +20,7 @@ use std::prelude::*;
 use std::ffi::OsStr;
 use std::collections::HashMap;
 use std::sync::{Mutex, Arc, RwLock};
-use std::sync::atomic::AtomicUsize;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use std::borrow::Cow;
 
@@ -64,7 +64,8 @@ pub fn make_descriptions(articles: Vec<Article>) -> Vec<Article> {
 
 
 
-pub struct NumArticles(pub u32);
+// pub struct NumArticles(pub u32);
+pub struct NumArticles(pub AtomicUsize);
 
 
 

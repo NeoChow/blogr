@@ -336,8 +336,8 @@ pub mod articles {
         
         // Get pagination info to build the welcome message
         let NumArticles(total_items) = *num_articles;
-        let (ipp, cur_page, num_pages) = pagination.page_data(total_items);
-        let info = pagination.page_info(total_items);
+        let (ipp, cur_page, num_pages) = pagination.page_data(total_items as u32);
+        let info = pagination.page_info(total_items as u32);
         
         // Define and build the welcome message
         let mut page_info: String;

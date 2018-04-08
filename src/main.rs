@@ -136,6 +136,7 @@ use std::{env, str, io};
 use std::io::{Cursor, Read};
 use std::path::{Path, PathBuf};
 use std::sync::{Mutex, Arc, RwLock};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::collections::HashMap;
 
 // use std::cell::Cell;
@@ -367,7 +368,7 @@ fn main() {
     // let multi_aids = TagAidsLock::new( AidsCache::load_cache(&conn), TagsCache::load_cache(&conn) );
     let multi_aids = TagAidsLock::load_cache(&conn);
     let text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids) );
-    let num_articles = NumArticles( article_map_cache.num_articles() );
+    let num_articles = NumArticles(AtomicUsize::new( article_map_cache.num_articles() as usize ));
     /*
     
     all_tags
@@ -434,17 +435,13 @@ fn main() {
         
         .mount("/", routes![
             
-            
-            pages::test_article,
-            pages::test_tag,
-            pages::test_author,
-            pages::test_rss,
-            pages::test_tagcloud,
-            pages::test_home,
-            
+            routes::articles::cache_index,
+            routes::author::cache_author_seo,
+            routes::author::cache_author,
+
             pages::static_pages,
             pages::code_download,
-            pages::refresh_content,
+            
             
             // pages::hbs_view_articles,
             // old_pages::hbs_tags_all,
@@ -474,14 +471,14 @@ fn main() {
             pages::hbs_search_redirect,
             pages::hbs_search_results,
             // old_pages::hbs_author_display,
-            routes::author::cache_author_seo,
+            
             // old_pages::hbs_author,
-            routes::author::cache_author,
+            
             pages::hbs_about,
             // old_pages::rss_page,
             routes::rss::cache_rss,
             // old_pages::hbs_index,
-            routes::articles::cache_index,
+            // routes::articles::cache_index,
             
             pages::hbs_manage_basic,
             pages::hbs_manage_full,
@@ -492,13 +489,10 @@ fn main() {
             pages::hbs_process_admin_login,
             pages::hbs_logout_admin,
             
-            pages::hbs_admin_test,
+            // pages::hbs_admin_test,
             // pages::hbs_admin_test_unauthorized,
             pages::hbs_dashboard_admin_retry_redir,
             pages::hbs_dashboard_admin_retry_redir_only,
-            
-            pages::backup,
-            pages::hbs_pageviews,
             
             pages::hbs_dashboard_user_authorized,
             pages::hbs_dashboard_user_retry_user,
@@ -512,9 +506,20 @@ fn main() {
             pages::hbs_pageviews_unauthorized,
             pages::hbs_backup_unauthorized,
             
+            pages::refresh_content,
             pages::hbs_pagestats,
             pages::hbs_pagestats_unauthorized,
             pages::hbs_pagestats_no_errors,
+            pages::backup,
+            
+            pages::hbs_pageviews,
+            
+            pages::test_article,
+            pages::test_tag,
+            pages::test_author,
+            pages::test_rss,
+            pages::test_tagcloud,
+            pages::test_home,
             
             // pages::test_cache,,
             

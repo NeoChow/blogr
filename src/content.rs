@@ -5,7 +5,7 @@ use blog::GenTimer;
 // use static_pages::*;
 use templates::TemplateMenu;
 use xpress::*;
-
+use cache::{TagAidsLock, TagsCache, AidsCache};
 
 use std::fmt::Display;
 use std::{env, str, thread};
@@ -61,6 +61,9 @@ pub fn destruct_cache(cache: ContentCacheLock) -> (HashMap<String, ContentCached
     (reader, size)
 }
 
+pub fn destruct_multi(multi: TagAidsLock) -> (TagsCache, AidsCache) {
+    (multi.tags_lock, multi.aids_lock)
+}
 
 pub const SEPARATOR: &[u8] = b"
 -----";
@@ -331,7 +334,26 @@ impl ContentCacheLock {
 }
 
 pub fn titlize(name: &str) -> String {
-    let title_new = name.to_owned().replace("-", " ").replace("_", " ");
+    let title_new = name.to_owned()
+        .replace("-", " ")
+        .replace("_", " ")
+        // .replace("'", "")
+        // .replace("\"", "")
+        // .replace("!", "")
+        // .replace("@", "")
+        // .replace("#", "")
+        // .replace("$", "")
+        // .replace("%", "")
+        // .replace("^", "")
+        // .replace("&", "")
+        // .replace("*", "")
+        // .replace("(", "")
+        // .replace(")", "")
+        // .replace("=", "")
+        // .replace(",", "")
+        // .replace(".", "")
+        // .replace("/", "")
+        ;
     titlecase(&title_new)
 }
 
@@ -615,6 +637,7 @@ impl PageFormat {
         }
     }
     
+    /// Deprecated. 
     /// Deserializes a yaml byte vector into a PageContext
     pub fn parse_yaml(self) -> Option<PageContext> {
         let yaml_des: Result<PageInfo, _> = ::serde_yaml::from_slice(&self.yaml);
@@ -775,6 +798,7 @@ pub fn bytes_are_true(bytes: &[u8], default: bool) -> bool {
     || &bytes[pos..pos+3] == b"yes" 
     || &bytes[pos..pos+4] == b"Yes" 
     || &bytes[pos..pos+4] == b"True" 
+    || &bytes[pos..pos+4] == b"1" 
     || &bytes[pos..pos+2] == b"on" 
     || &bytes[pos..pos+2] == b"On" {
         !default

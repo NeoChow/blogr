@@ -51,7 +51,7 @@ use super::*;
 // use routes::pages::*;
 use cache::*;
 // use content::*;
-use content::{destruct_cache, destruct_context};
+use content::{destruct_cache, destruct_context, destruct_multi};
 use cache::body::*;
 use cache::pages::*;
 use counter::*;
@@ -370,13 +370,64 @@ pub fn test_home(start: GenTimer, pagination: Page<Pagination>, article_lock: St
 
 
 
-
-
-
+/* 
+ArticleCacheLock.lock: ArticleCacheLock 
+TextCacheLock: TextCache(lock: TextCache - TextCache.pages)
+TagAidsLock: (aids_lock: AidsCache.pages, tags_loc: TagsCache.tags)
+ */
 
 
 #[get("/refresh_content")]
-pub fn refresh_content(start: GenTimer, admin: AdministratorCookie, user: Option<UserCookie>, encoding: AcceptCompression, uhits: UniqueHits, context_state: State<ContentContext>, cache_state: State<ContentCacheLock>) -> Express {
+pub fn refresh_content(start: GenTimer, 
+                       conn: DbConn,
+                       article_cache: State<ArticleCacheLock>,
+                       text_cache: State<TextCacheLock>,
+                       multi_aids: State<TagAidsLock>,
+                       context_state: State<ContentContext>, 
+                       cache_state: State<ContentCacheLock>,
+                       number_articles: State<NumArticles>,
+                       admin: AdministratorCookie, 
+                       user: Option<UserCookie>, 
+                       encoding: AcceptCompression, 
+                       uhits: UniqueHits
+                      ) -> Express {
+    
+    
+    if let Ok(article_cache) = article_cache.lock.write() {
+        // *article_cache = ArticleCacheLock::new( ArticleCache::load_cache(&conn) );
+        *article_cache = ArticleCache::load_cache(&conn);
+    } else {
+        println!("Failed refresh content - could not unlock article cache");
+    }
+    
+    if let Ok(text_cache) = text_cache.lock.write() {
+        // *text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids) );
+        *text_cache = TextCache::load_cache(&conn, &multi_aids);
+    } else {
+        println!("Failed refresh content - could not unlock text cache");
+    }
+    
+    let multi = TagAidsLock::load_cache(&conn);
+    let (tags_multi, aids_multi) = destruct_multi(multi);
+    
+    if let Ok(tags) = multi_aids.tags_lock.write() {
+        *tags = tags_multi;
+    } else {
+        println!("Failed refresh content - could not unlock multi cache - tags");
+    }
+    
+    if let Ok(multi_aids) = multi_aids.aids_lock.write() {
+        *multi_aids = aids_multi;
+    } else {
+        println!("Failed refresh content - could not unlock multi cache - ArticleIds");
+    }
+    
+    if let Ok(num_articles) = number_articles.write() {
+        *num_articles = NumArticles( article_cache.num_articles() );
+    } else {
+        println!("Failed refresh content - could not unlock number of articles");
+    }
+    
     
     let mut ctx_writer;
     if let Ok(ctx) = context_state.pages.write() {
@@ -634,7 +685,7 @@ pub fn code_download(start: GenTimer,
 
 
 
-
+/* 
 #[get("/admin-test")]
 pub fn hbs_admin_test(start: GenTimer, user: Option<UserCookie>, admin: Option<AdministratorCookie>, encoding: AcceptCompression) -> Express {
     
@@ -655,6 +706,7 @@ pub fn hbs_admin_test(start: GenTimer, user: Option<UserCookie>, admin: Option<A
     express.compress( encoding )
     
 }
+ */
 // #[get("/admin-test", rank = 2)]
 // pub fn hbs_admin_test_unauthorized(start: GenTimer, user: Option<UserCookie>, encoding: AcceptCompression, location: Location) -> Redirect {
 //     // Redirect::to("/admin?referrer=")

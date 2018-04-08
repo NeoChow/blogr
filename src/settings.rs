@@ -287,7 +287,7 @@ lazy_static! {
         vec![
             TemplateMenu::new("Home".to_owned(), "/".to_owned(), ""),
             TemplateMenu::new("Rust Tutorials".to_owned(), "/content/tutorials".to_owned(), ""),
-            TemplateMenu::new("Tags".to_owned(), "/all_tags".to_owned(), ""),
+            TemplateMenu::new("Topics".to_owned(), "/all_tags".to_owned(), ""),
             TemplateMenu::new("About".to_owned(), "/content/about-me".to_owned(), ""),
         ]
     );
@@ -298,7 +298,7 @@ lazy_static! {
         vec![
             TemplateMenu::new("Home".to_owned(), "/".to_owned(), ""),
             TemplateMenu::new("Rust Tutorials".to_owned(), "/content/tutorials".to_owned(), ""),
-            TemplateMenu::new("Tags".to_owned(), "/all_tags".to_owned(), ""),
+            TemplateMenu::new("Topics".to_owned(), "/all_tags".to_owned(), ""),
             TemplateMenu::new("About".to_owned(), "/content/about-me".to_owned(), ""),
         ]
     );
