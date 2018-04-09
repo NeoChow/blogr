@@ -779,7 +779,24 @@ pub fn update_text_cache(conn: &DbConn, text_cache: &TextCacheLock, multi_aids: 
     
 }
 
-
+pub fn update_all_caches(conn: &DbConn,
+                         article_cache: &ArticleCacheLock, 
+                         multi_aids: &TagAidsLock, 
+                         num_articles: &NumArticles,
+                         text_cache: &TextCacheLock,
+                        ) -> bool 
+{
+    let mut output = true;
+    if !update_article_caches(conn, article_cache, multi_aids, num_articles) {
+        output = false;
+    }
+    
+    if ! update_text_cache(conn, text_cache, multi_aids) {
+        output = false;
+    }
+    
+    output
+}
 
 
 
