@@ -62,7 +62,10 @@ pub fn destruct_cache(cache: ContentCacheLock) -> (HashMap<String, ContentCached
 }
 
 pub fn destruct_multi(multi: TagAidsLock) -> (TagsCache, AidsCache) {
-    (multi.tags_lock, multi.aids_lock)
+    (
+     multi.tags_lock.into_inner().expect("Failed to unwrap() tags cache for destruct_multi()"), 
+     multi.aids_lock.into_inner().expect("Failed to unwrap() aids cache for destruct_multi()")
+     )
 }
 
 pub const SEPARATOR: &[u8] = b"

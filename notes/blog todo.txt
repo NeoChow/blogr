@@ -83,8 +83,9 @@ Caching
 		Maybe make a function to read the route's state and return a template
 		Templates are determined by the struct they use, CtxBody<T: BodyContext>(T)
 		    TemplateGeneral will use the general template, TemplateLogin the login, etc
-
-
+		Maybe static pages should have their contexts cached but only cache
+			their contents if CACHE_ENABLED is set to true
+		
 	Figure out a way to tie page info (such as title, admin/user cookies, encoding, etc)
 		into the caching retrieval stuffs
 
@@ -99,6 +100,10 @@ Caching
 	
 
 Blogr-Fixes
+	Make javascript look for an html tag with the 'js-toc' id (or something like that)
+		and if one doesnt exist create it at the top of the page
+		Use this tag to put the table of contents into4
+
 	udpate the Shannon Entropy article
 
 	finish the blog-organization page

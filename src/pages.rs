@@ -393,14 +393,14 @@ pub fn refresh_content(start: GenTimer,
                       ) -> Express {
     
     
-    if let Ok(article_cache) = article_cache.lock.write() {
+    if let Ok(mut article_cache) = article_cache.lock.write() {
         // *article_cache = ArticleCacheLock::new( ArticleCache::load_cache(&conn) );
         *article_cache = ArticleCache::load_cache(&conn);
     } else {
         println!("Failed refresh content - could not unlock article cache");
     }
     
-    if let Ok(text_cache) = text_cache.lock.write() {
+    if let Ok(mut text_cache) = text_cache.lock.write() {
         // *text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids) );
         *text_cache = TextCache::load_cache(&conn, &multi_aids);
     } else {
@@ -410,23 +410,24 @@ pub fn refresh_content(start: GenTimer,
     let multi = TagAidsLock::load_cache(&conn);
     let (tags_multi, aids_multi) = destruct_multi(multi);
     
-    if let Ok(tags) = multi_aids.tags_lock.write() {
+    if let Ok(mut tags) = multi_aids.tags_lock.write() {
         *tags = tags_multi;
     } else {
         println!("Failed refresh content - could not unlock multi cache - tags");
     }
     
-    if let Ok(multi_aids) = multi_aids.aids_lock.write() {
+    if let Ok(mut multi_aids) = multi_aids.aids_lock.write() {
         *multi_aids = aids_multi;
     } else {
         println!("Failed refresh content - could not unlock multi cache - ArticleIds");
     }
     
-    if let Ok(num_articles) = number_articles.write() {
-        *num_articles = NumArticles( article_cache.num_articles() );
-    } else {
-        println!("Failed refresh content - could not unlock number of articles");
-    }
+    number_articles.0.store( article_cache.num_articles() as usize, Ordering::Relaxed );
+    // if let Ok(num_articles) = number_articles.write() {
+    //     *num_articles = NumArticles( article_cache.num_articles() );
+    // } else {
+    //     println!("Failed refresh content - could not unlock number of articles");
+    // }
     
     
     let mut ctx_writer;

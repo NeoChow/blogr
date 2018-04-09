@@ -335,9 +335,11 @@ pub mod articles {
         let fmsg = fmsg(flash);
         
         // Get pagination info to build the welcome message
-        let NumArticles(total_items) = *num_articles;
-        let (ipp, cur_page, num_pages) = pagination.page_data(total_items as u32);
-        let info = pagination.page_info(total_items as u32);
+        // let NumArticles(total_items) = *num_articles;
+        let NumArticles(ref items_total) = *num_articles;
+        let total_items = items_total.load(Ordering::SeqCst) as u32;
+        let (ipp, cur_page, num_pages) = pagination.page_data(total_items);
+        let info = pagination.page_info(total_items);
         
         // Define and build the welcome message
         let mut page_info: String;
