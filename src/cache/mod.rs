@@ -100,7 +100,7 @@ impl ArticleCacheLock {
     }
     
     
-    pub fn update_articles(&self, conn: &DbConn) -> Result<(), ()> {
+    pub fn update_cache(&self, conn: &DbConn) -> Result<(), ()> {
         if let Ok(mut article_cache) = self.lock.write() {
             *article_cache = ArticleCache::load_cache(&conn);
             Ok( () )
@@ -730,10 +730,54 @@ pub fn load_articles_map(conn: &DbConn) -> Option<HashMap<u32, Article>> {
 
 
 
+pub fn update_article_caches(conn: &DbConn,
+                             article_cache: ArticleCacheLock, 
+                             multi_aids: TagAidsLock, 
+                             num_articles: NumArticles
+                            ) -> bool {
+    let mut output = true;
+    if let Ok(mut article_cache) = article_cache.lock.write() {
+        *article_cache = ArticleCache::load_cache(&conn);
+    } else {
+        println!("Failed to update_article_caches() - could not unlock article cache");
+        output = false;
+    }
+    
+    let multi = TagAidsLock::load_cache(&conn);
+    let (tags_multi, aids_multi) = destruct_multi(multi);
+    
+    if let Ok(mut tags) = multi_aids.tags_lock.write() {
+        *tags = tags_multi;
+    } else {
+        println!("Failed to update_article_caches() - could not unlock multi cache - tags");
+        output = false;
+    }
+    
+    if let Ok(mut multi_aids) = multi_aids.aids_lock.write() {
+        *multi_aids = aids_multi;
+    } else {
+        println!("Failed to update_article_caches() - could not unlock multi cache - ArticleIds");
+        output = false;
+    }
+    
+    num_articles.0.store( article_cache.num_articles() as usize, Ordering::Relaxed );
+    
+    output
+}
 
 
-
-
+pub fn update_text_cache(conn: &DbConn, text_cache: TextCacheLock, multi_aids: TagAidsLock) -> bool {
+    
+    if let Ok(mut text_cache) = text_cache.lock.write() {
+        // *text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids) );
+        *text_cache = TextCache::load_cache(&conn, &multi_aids);
+        true
+    } else {
+        println!("Failed refresh content - could not unlock text cache");
+        false
+    }
+    
+}
 
 
 
