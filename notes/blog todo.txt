@@ -52,6 +52,9 @@ Server
 			sudo cp -r private ~/backups/<backup_name>
 
 Theme
+	Maybe add styling for a caption inside a pre that is before a code tag
+		The caption will tell what file the code is, or a short description
+
 	Add scope for comment.line.documentation
 	Maybe add a bubble around the tags
 		Could set size of the div v-article-tags to something like:
@@ -100,6 +103,15 @@ Caching
 	
 
 Blogr-Fixes
+	Does the article table's update trigger save modified timestamp?
+		Now it does.  In the fulltxt_articles_update() trigger function added line before return:
+		new.modified := now() AT TIME ZONE 'UTC';
+
+	Make a function cache::ArticleCacheLock::update_articles() to update the article cache
+		It will re-load the article cache, pulling changes from database
+	Whenever an article is updated or added or deleted run the update_articles() function
+	It should look like: update_articles(&self) -> bool
+
 	Make javascript look for an html tag with the 'js-toc' id (or something like that)
 		and if one doesnt exist create it at the top of the page
 		Use this tag to put the table of contents into4

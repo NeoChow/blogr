@@ -217,7 +217,7 @@ fn static_files(file: PathBuf, encoding: AcceptCompression) -> Option<Express> {
     // if let Some(named) = NamedFile::open(Path::new("static/").join(file)).ok() {
     if let Some(named) = NamedFile::open(Path::new("static/").join(file)).ok() {
         let exp: Express = named.into();
-        Some( exp.compress(encoding) )
+        Some( exp.compress(encoding).set_ttl(2592000isize) )
     } else {
         None
     }

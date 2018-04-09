@@ -98,6 +98,18 @@ impl ArticleCacheLock {
     pub fn new(cache: ArticleCache) -> Self {
         ArticleCacheLock{ lock: RwLock::new( cache ) }
     }
+    
+    
+    pub fn update_articles(&self, conn: &DbConn) -> Result<(), ()> {
+        if let Ok(mut article_cache) = self.lock.write() {
+            *article_cache = ArticleCache::load_cache(&conn);
+            Ok( () )
+        } else {
+            println!("Failed to run update_articles() - could not acquire write lock");
+            Err( () )
+        }
+    }
+    
     pub fn num_articles(&self) -> u32 {
         if let Ok(article_cache) = self.lock.read() {
             article_cache.articles.len() as u32
@@ -395,7 +407,6 @@ impl TagAidsLock {
             None
         }
     }
-    
     // pub fn tag_aids(tag: &str) -> Option<Vec<u32>> {
     //     unimplemented!()
     // }
