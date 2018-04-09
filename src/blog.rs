@@ -786,8 +786,70 @@ impl Article {
     }
     
     
-    // =====Update-image=====
+    // Updates an article.  Use the newer, preferred method update()
+    // which takes a reference to a connection instead of an owned connection.
+    // The article being saved must exist already.  The method looks for
+    // an article with the same `aid` as the `self`'s `aid`.
     pub fn save(&self, conn: DbConn) -> Result<String, String> {
+        let vtags: Vec<String> = self.tags.clone();
+        let tagstr = format!( 
+            "{{{}}}", vtags
+            .iter()
+            // .split(",")
+            .map(|s| s.trim().to_lowercase())
+            .filter(|s| s.as_str() != "")
+            .map(|s| format!("\"{}\"", s))
+            // .map(|s| format!("\"{}\"", s.trim().to_lowercase()))
+            .collect::<Vec<_>>()
+            .join(",")
+            // .replace(",''")
+        );
+        let now = Local::now().naive_local();
+        let qrystr = format!("
+            UPDATE articles 
+                SET title = '{title}',
+                    body = '{body}',
+                    tag = '{tag}',
+                    description = '{desc}',
+                    markdown = '{src}',
+                    image = '{img}',
+                    modified = '{modified}'
+                WHERE aid = {aid}
+            ", 
+                    // posted = '{posted}',
+            title=&self.title, 
+            // posted=slash_quotes(self.posted), 
+            body=&self.body,
+            tag=tagstr,
+            desc=&self.description,
+            src=&self.markdown,
+            img=&self.image,
+            aid=self.aid,
+            modified=&now
+        );
+        
+        // println!("Generated update query:\n{}", qrystr);
+        
+        if let Ok(num) = conn.execute(&qrystr, &[]) {
+            if num == 1 {
+                Ok(format!("Article {} successfully updated", self.aid))
+            } else if num > 1 {
+                println!("Update query updated too many rows.");
+                Err("Multiple rows updated".to_string())
+            } else {
+                println!("Update query updated no rows.");
+                Err(String::new())
+            }
+        } else {
+            println!("Update query failed.");
+            Err(String::new())
+        }
+        
+    } 
+    
+    // Same as the save() method except it takes a reference to a connection.
+    // This is the preferred method for updating/saving an existing article.
+    pub fn update(&self, conn: &DbConn) -> Result<String, String> {
         let vtags: Vec<String> = self.tags.clone();
         let tagstr = format!( 
             "{{{}}}", vtags

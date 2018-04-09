@@ -393,7 +393,8 @@ pub fn refresh_content(start: GenTimer,
                       ) -> Express {
     
     
-    cache::update_article_caches(&conn, &*article_cache, &*multi_aids, &*num_articles);
+    // cache::update_article_caches(&conn, &*article_cache, &*multi_aids, &*num_articles);
+    cache::update_all_caches(&conn, &*article_cache, &*multi_aids, &*num_articles, &*text_cache);
     
     
     /* 
@@ -1115,8 +1116,22 @@ pub fn hbs_logout_user(admin: Option<UserCookie>, mut cookies: Cookies) -> Resul
 // ROUTES: /all_tags through /article
 
 #[post("/create", data = "<form>")]
-pub fn hbs_article_process(start: GenTimer, form: Form<ArticleForm>, conn: DbConn, admin: AdministratorCookie, user: Option<UserCookie>, encoding: AcceptCompression) -> Express {
+pub fn hbs_article_process(start: GenTimer, 
+                           form: Form<ArticleForm>, 
+                           conn: DbConn, 
+                           article_cache: State<ArticleCacheLock>, 
+                           multi_aids: State<TagAidsLock>,
+                           num_articles: State<NumArticles>, 
+                           text_cache: State<TextCacheLock>, 
+                           admin: AdministratorCookie, 
+                           user: Option<UserCookie>, 
+                           encoding: AcceptCompression
+                          ) -> Express {
     // let start = Instant::now();
+    
+    
+    // cache::update_all_caches(&conn, &*article_cache, &*multi_aids, &*num_articles);
+    
     
     let output: Template;
     
@@ -1136,6 +1151,7 @@ pub fn hbs_article_process(start: GenTimer, form: Form<ArticleForm>, conn: DbCon
     match result {
         Ok(article) => {
             // let article = articlesrc.to_article();
+            cache::update_all_caches(&conn, &*article_cache, &*multi_aids, &*num_articles, &*text_cache);
             let title = article.title.clone();
             output = hbs_template(TemplateBody::Article(article), None, Some(title), String::from("/create"), Some(admin), user, None, Some(start.0));
         },
@@ -1535,7 +1551,16 @@ pub fn hbs_edit(start: GenTimer, aid: u32, conn: DbConn, admin: AdministratorCoo
 
 #[post("/edit", data = "<form>")]
 // pub fn hbs_edit_process(start: GenTimer, form: Form<Article>, conn: DbConn, admin: AdministratorCookie, user: Option<UserCookie>, encoding: AcceptCompression) -> Flash<Redirect> {
-pub fn hbs_edit_process(start: GenTimer, form: Form<ArticleWrapper>, conn: DbConn, admin: AdministratorCookie, encoding: AcceptCompression) -> Flash<Redirect> {
+pub fn hbs_edit_process(start: GenTimer, 
+                        form: Form<ArticleWrapper>, 
+                        conn: DbConn, 
+                        article_cache: State<ArticleCacheLock>, 
+                        multi_aids: State<TagAidsLock>,
+                        num_articles: State<NumArticles>, 
+                        text_cache: State<TextCacheLock>, 
+                        admin: AdministratorCookie, 
+                        encoding: AcceptCompression
+                       ) -> Flash<Redirect> {
     
     let cr_options = ComrakOptions { ext_header_ids: Some("section-".to_string()), .. COMRAK_OPTIONS };
     
@@ -1548,9 +1573,11 @@ pub fn hbs_edit_process(start: GenTimer, form: Form<ArticleWrapper>, conn: DbCon
     }
     
     // println!("Processing Article info: {}", article.info());
-    let result = article.save(conn);
+    let result = article.update(&conn);
     match result {
         Ok(k) => {
+            cache::update_all_caches(&conn, &*article_cache, &*multi_aids, &*num_articles, &*text_cache);
+            
             Flash::success(Redirect::to(&format!("/edit/{}", &article.aid)), &k)
         },
         Err(ref e) if e == "" => {
@@ -1727,7 +1754,15 @@ pub fn hbs_delete_confirm(start: GenTimer, aid: u32, conn: DbConn, admin: Admini
 }
 
 #[post("/process_delete/<aid>")]
-pub fn hbs_process_delete(aid: u32, conn: DbConn, admin: AdministratorCookie, user: Option<UserCookie>) -> Result<Flash<Redirect>, Redirect> {
+pub fn hbs_process_delete(aid: u32, 
+                          conn: DbConn, 
+                          article_cache: State<ArticleCacheLock>, 
+                          multi_aids: State<TagAidsLock>,
+                          num_articles: State<NumArticles>, 
+                          text_cache: State<TextCacheLock>, 
+                          admin: AdministratorCookie, 
+                          user: Option<UserCookie>
+                         ) -> Result<Flash<Redirect>, Redirect> {
     let qrystr = format!("DELETE FROM articles WHERE aid = {}", aid);
     
     // println!("Delete query:\n{}\n", &qrystr);
@@ -1735,6 +1770,8 @@ pub fn hbs_process_delete(aid: u32, conn: DbConn, admin: AdministratorCookie, us
     if let Ok(num) = conn.execute(&qrystr, &[]) {
         if num == 1 {
             // println!("Delete succeeded");
+            cache::update_all_caches(&conn, &*article_cache, &*multi_aids, &*num_articles, &*text_cache);
+            
             Ok( Flash::success(Redirect::to("/manage"), &format!("Article {} successfully deleted.", aid)) )
         } else if num == 0 {
             println!("Delete failed - no articles deleted.");

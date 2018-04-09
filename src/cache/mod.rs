@@ -779,6 +779,10 @@ pub fn update_text_cache(conn: &DbConn, text_cache: &TextCacheLock, multi_aids: 
     
 }
 
+// When an article is created, updated, or deleted all caches (except content caches)
+//   must be updated, even the text cache; the text cache contains the RSS feed
+//   which should be updated whenever the article cache is modified
+#[inline]
 pub fn update_all_caches(conn: &DbConn,
                          article_cache: &ArticleCacheLock, 
                          multi_aids: &TagAidsLock, 

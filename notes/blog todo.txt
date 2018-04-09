@@ -103,6 +103,8 @@ Caching
 	
 
 Blogr-Fixes
+	Add calls to update_all_caches(conn, article, multi, num, text)
+
 	Does the article table's update trigger save modified timestamp?
 		Now it does.  In the fulltxt_articles_update() trigger function added line before return:
 		new.modified := now() AT TIME ZONE 'UTC';
