@@ -381,11 +381,11 @@ TagAidsLock: (aids_lock: AidsCache.pages, tags_loc: TagsCache.tags)
 pub fn refresh_content(start: GenTimer, 
                        conn: DbConn,
                        article_cache: State<ArticleCacheLock>,
-                       text_cache: State<TextCacheLock>,
                        multi_aids: State<TagAidsLock>,
+                       num_articles: State<NumArticles>,
+                       text_cache: State<TextCacheLock>,
                        context_state: State<ContentContext>, 
                        cache_state: State<ContentCacheLock>,
-                       number_articles: State<NumArticles>,
                        admin: AdministratorCookie, 
                        user: Option<UserCookie>, 
                        encoding: AcceptCompression, 
@@ -393,6 +393,10 @@ pub fn refresh_content(start: GenTimer,
                       ) -> Express {
     
     
+    cache::update_article_caches(&conn, &*article_cache, &*multi_aids, &*num_articles);
+    
+    
+    /* 
     if let Ok(mut article_cache) = article_cache.lock.write() {
         // *article_cache = ArticleCacheLock::new( ArticleCache::load_cache(&conn) );
         *article_cache = ArticleCache::load_cache(&conn);
@@ -423,6 +427,7 @@ pub fn refresh_content(start: GenTimer,
     }
     
     number_articles.0.store( article_cache.num_articles() as usize, Ordering::Relaxed );
+     */
     // if let Ok(num_articles) = number_articles.write() {
     //     *num_articles = NumArticles( article_cache.num_articles() );
     // } else {

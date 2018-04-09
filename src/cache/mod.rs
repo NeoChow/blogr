@@ -731,9 +731,9 @@ pub fn load_articles_map(conn: &DbConn) -> Option<HashMap<u32, Article>> {
 
 
 pub fn update_article_caches(conn: &DbConn,
-                             article_cache: ArticleCacheLock, 
-                             multi_aids: TagAidsLock, 
-                             num_articles: NumArticles
+                             article_cache: &ArticleCacheLock, 
+                             multi_aids: &TagAidsLock, 
+                             num_articles: &NumArticles
                             ) -> bool {
     let mut output = true;
     if let Ok(mut article_cache) = article_cache.lock.write() {
@@ -766,7 +766,7 @@ pub fn update_article_caches(conn: &DbConn,
 }
 
 
-pub fn update_text_cache(conn: &DbConn, text_cache: TextCacheLock, multi_aids: TagAidsLock) -> bool {
+pub fn update_text_cache(conn: &DbConn, text_cache: &TextCacheLock, multi_aids: &TagAidsLock) -> bool {
     
     if let Ok(mut text_cache) = text_cache.lock.write() {
         // *text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids) );
