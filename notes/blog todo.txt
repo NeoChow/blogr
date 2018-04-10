@@ -16,6 +16,8 @@ Non-Blog
 	Modify the 3d sphere to have like a red outline or something different
 
 Articles
+	An article about using Templates with modified HTTP headers/compression
+
 	Add the jqMath javascript library
 
 	Add all of the javascript and css packages/modules/plugins/scripts that I use
@@ -103,6 +105,25 @@ Caching
 	
 
 Blogr-Fixes
+	Need some way to specify the language for source code files in static content
+		Maybe add metadata to all files with a .meta extension??
+
+
+	Figure out GitHub releases - how to use them, how to make releases, update releases, etc.0
+
+	Update ttl / client-side caching / expiration to 2592000 seconds
+
+	Update to Rocket to at least version 3.6, preferrably 3.8
+
+	Rocket version 3.6 has a Rocket.state() method to retrieve state from an instance
+		Maybe this could be used to preload all content pages???
+		Not sure how atm, need to use responder (or maybe Request guard) to get contents
+
+	Add a little link with the hyperlink icon to the right of the title text field
+		on the create/edit pages.  The link could be generated via handlebars or
+		through javascript.  Handlebars would just have to add a link next to the
+		title text box, with a link to {{base_url}}article/{{body.aid}}/{{body.title}}
+
 	Add calls to update_all_caches(conn, article, multi, num, text)
 
 	Does the article table's update trigger save modified timestamp?

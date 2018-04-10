@@ -41,6 +41,8 @@ use brotli;
 use libflate::gzip;
 use libflate::deflate;
 use titlecase::*;
+use htmlescape::*;
+
 
 use ::serde::{Deserialize, Serialize};
 use serde_json::{Value, Error};
@@ -426,8 +428,16 @@ impl PageContext {
         if let Some(file) = PageFormat::get_file(path) {
             let title = titlize(&name);
             
-            let body = String::from_utf8_lossy(&file).into_owned().replace("{{base_url}}", BLOG_URL);
+            // let body = String::from_utf8_lossy(&file).into_owned().replace("{{base_url}}", BLOG_URL);
+            // let body = String::from_utf8_lossy(&file)
+            //            .into_owned()
+            //            .replace("{{base_url}}", BLOG_URL);
             
+            // let body = String::from_utf8_lossy(&file)
+            //            .into_owned()
+            //            .replace("{{base_url}}", BLOG_URL);
+            let body = encode_minimal(&String::from_utf8_lossy(&file))
+                       .replace("{{base_url}}", BLOG_URL);
             Ok(
                 PageContext {
                     uri: name.clone(),
