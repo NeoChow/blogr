@@ -126,9 +126,7 @@ pub fn download() -> Express {
 ```
 
 ### Markdown
-This is just a little side note, and a personal recommendation.
-
-If you are making a blog or a website with a lot of content I would highly recommend using markdown.  I have used the `Comrak` crate and found it to be fast and powerful.
+This is just a little side note, and a personal recommendation: if you are making a blog or a website with a lot of content I would highly recommend using markdown.  I have used the `Comrak` crate and found it to be fast and powerful.
 [Using Markdown with Comrak in Rust]({{base_url}}content/markdown-comrak)
 
 <!--

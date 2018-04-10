@@ -119,7 +119,7 @@ pub mod articles {
             }
             Ok(CtxBody( TemplateArticlesPages::new(articles, pagination, total_items, info_opt, i) ))
         } else {
-            let i = info::info(Some(format!("No articles found")), "/".to_owned(), admin, user, gen, uhits, encoding, javascript, msg);
+            let i = info::info(Some(format!("No articles found")), "/".to_owned(), admin, user, gen, uhits, encoding, msg, javascript);
             Err(CtxBody( TemplateGeneral::new("No articles found.".to_owned(), i) ))
         }
     }
@@ -197,7 +197,7 @@ pub mod article {
             }
             Ok(CtxBody( TemplateArticle::new(article, i) ))
         } else {
-            let i = info::info(Some(format!("Article {} not found", aid)), "/article".to_owned(), admin, user, gen, uhits, encoding, javascript, msg);
+            let i = info::info(Some(format!("Article {} not found", aid)), "/article".to_owned(), admin, user, gen, uhits, encoding, msg, javascript);
             Err(CtxBody( TemplateGeneral::new("The article could not be found.".to_owned(), i) ))
         }
     }
@@ -259,10 +259,10 @@ pub mod tag {
             if let Some((articles, total_items)) = multi_aids.tag_articles(article_cache, tag, &pagination) {
                 let javascript: Option<String> = None;
                 let info_opt: Option<String> = None;
-                let i = info::info( Some(format!("Showing articles with tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+                let i = info::info( Some(format!("Showing articles with tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
                 Ok(CtxBody( TemplateArticlesPages::new(articles, pagination.clone(), total_items, info_opt, i) ))
             } else {
-                let i = info::info( Some(format!("No articles to display for tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+                let i = info::info( Some(format!("No articles to display for tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
                 Err(CtxBody( TemplateGeneral::new(format!("No artiles displayed for tag {}", tag), i) ))
             }
             
@@ -270,15 +270,15 @@ pub mod tag {
             if let Some((articles, total_items)) = cache::pages::tag::fallback(tag, &pagination, conn) {
                 let javascript: Option<String> = None;
                 let info_opt: Option<String> = None;
-                let i = info::info( Some(format!("Showing articles with tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+                let i = info::info( Some(format!("Showing articles with tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
                 Ok(CtxBody( TemplateArticlesPages::new(articles, pagination.clone(), total_items, info_opt, i) ))
             } else {
-                let i = info::info( Some(format!("No articles to display for tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+                let i = info::info( Some(format!("No articles to display for tag '{}'", &tag)), "/tag".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
                 Err(CtxBody( TemplateGeneral::new(format!("No artiles displayed for tag {}", tag), i) ))
             }
         } else {
             println!("SUPER ERROR: Cache disabled and cache fallback disabled");
-            let i = info::info( Some("Error".to_owned()), "/tag".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+            let i = info::info( Some("Error".to_owned()), "/tag".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
             Err(CtxBody( TemplateGeneral::new("Error retrieving articles.".to_owned(), i) ))
         }
     }
@@ -305,7 +305,7 @@ pub mod tag {
     // This is used to cache what articles correspond with each tag
     pub fn load_tag_aids(conn: &DbConn, tag: &str) -> Option<Vec<u32>> {
         // look up all ArticleId's for the given tag
-        let qrystr = format!("SELECT aid FROM articles WHERE '{}' = ANY(tag)", tag.to_lowercase());
+        let qrystr = format!("SELECT aid FROM articles WHERE '{}' = ANY(tag) ORDER BY modified DESC", tag.to_lowercase());
         let result = conn.query(&qrystr, &[]);
         if let Ok(rst) = result {
             let aids: Vec<u32> = rst.iter().map(|row| row.get(0)).collect();
@@ -353,10 +353,10 @@ pub mod tags {
     {
         // unimplemented!()
         if let Some(all_tags) = multi_aids.retrieve_tags() {
-            let i = info::info( Some("Tag Cloud".to_owned()), "/all_tags".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+            let i = info::info( Some("Tag Cloud".to_owned()), "/all_tags".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
             Ok(CtxBody( TemplateTags::new(all_tags.clone(), i) ))
         } else {
-            let i = info::info( Some("Error".to_owned()), "/all_tags".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+            let i = info::info( Some("Error".to_owned()), "/all_tags".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
             Err(CtxBody( TemplateGeneral::new("Error retrieving tags".to_owned(), i) ))
         }
     }
@@ -394,10 +394,10 @@ pub mod author {
         if let Some((articles, total_items)) = multi_aids.author_articles(article_lock, author, &pagination) {
             let javascript: Option<String> = None;
             let info_opt: Option<String> = None;
-            let i = info::info( Some("Showing articles by author".to_owned()), "/author".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+            let i = info::info( Some("Showing articles by author".to_owned()), "/author".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
                 Ok(CtxBody( TemplateArticlesPages::new(articles, pagination.clone(), total_items, info_opt, i) ))
         } else {
-            let i = info::info( Some( "No articles to display".to_owned() ), "/author".to_owned(), admin, user, gen, uhits, encoding, javascript, msg );
+            let i = info::info( Some( "No articles to display".to_owned() ), "/author".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
             Err(CtxBody( TemplateGeneral::new("No articles found for specified author.".to_owned(), i) ))
         }
         
@@ -428,7 +428,7 @@ pub mod author {
     // pub fn load_author_articles(conn: &DbConn, userid: u32) -> Option<Vec<u32>> {
     pub fn load_author_articles(conn: &DbConn, userid: u32) -> Option<Vec<u32>> {
         // unimplemented!()
-        let qry = conn.query(&format!("SELECT aid FROM articles WHERE author = {}", userid), &[]);
+        let qry = conn.query(&format!("SELECT aid FROM articles WHERE author = {} ORDER BY modified DESC", userid), &[]);
         if let Ok(result) = qry {
             let aids: Vec<u32> = result.iter().map(|row| row.get(0)).collect();
             Some(aids)

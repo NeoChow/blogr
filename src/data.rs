@@ -87,7 +87,7 @@ impl DbConn {
         let qryrst: Result<_, _> = if qrystr != "" {
             self.query(qrystr, &[])
         } else {
-            self.query(&format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid)", DESC_LIMIT), &[])
+            self.query(&format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) ODER BY a.modified DESC", DESC_LIMIT), &[])
         };
         if let Ok(result) = qryrst {
             let mut articles: Vec<Article> = Vec::new();
@@ -121,7 +121,7 @@ impl DbConn {
     /// Runs a query returning articles from the database.  If the text passed in is equal to "" then the default 
     /// query is to return all articles with full body content.
     pub fn articles_full(&self, qrystr: &str) -> Option<Vec<Article>> {
-        let qry = if qrystr != "" { qrystr } else { "SELECT a.aid, a.title, a.posted, a.body, a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified  FROM articles a JOIN users u ON (a.author = u.userid)" };
+        let qry = if qrystr != "" { qrystr } else { "SELECT a.aid, a.title, a.posted, a.body, a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified  FROM articles a JOIN users u ON (a.author = u.userid) ORDER BY a.modified DESC" };
         self.articles(qry)
     }
 }

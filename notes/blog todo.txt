@@ -58,6 +58,8 @@ Server
 			sudo cp -r private ~/backups/<backup_name>
 
 Theme
+	Maybe make the table of contents scroll with screen like the header does
+
 	Maybe add styling for a caption inside a pre that is before a code tag
 		The caption will tell what file the code is, or a short description
 
@@ -109,11 +111,23 @@ Caching
 	
 
 Blogr-Fixes
+	Do a code cleanup - remove excess comments
+
+	The main page should sort articles by date added, desc
+		right now I'm not sure there is any sorting
+			it just pulls from cache in random order
+		maybe use multi page articles with the ArticleIds sorted based on date added desc
+	Other multi article pages should sort by date added (descending)
+		
+
 	Allow Ampersands in titles, and maybe others like:
 	 !?'-_&(),.
 
 	Maybe add image and modification date to articles
 		when using full articles for single article paginated content
+		Right now when a page with paginated articles only has a single article
+			to display on a page, it will not show the image or modification date
+		Maybe the modification date and image fields are not being set?
 
 	Add disclaimer saying I am not liable for any issues from the code
 		and that all code is licensed under the MIT license
