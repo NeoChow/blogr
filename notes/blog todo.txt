@@ -109,6 +109,12 @@ Caching
 	
 
 Blogr-Fixes
+	Allow Ampersands in titles, and maybe others like:
+	 !?'-_&(),.
+
+	Maybe add image and modification date to articles
+		when using full articles for single article paginated content
+
 	Add disclaimer saying I am not liable for any issues from the code
 		and that all code is licensed under the MIT license
 	Add privacy policy saying I *MAY* log the number of times each IP address visits a uri
@@ -349,6 +355,10 @@ Blogr-Fixes
 
 
 Blogr-Features
+	Maybe add a page to show which images are used
+		Or display which images each articles uses on the admin manage page
+		- Use a SQL query to select the article id, title, and image
+
 	Articles iterator could more easily enable pagination
 
 	Could make a struct called Articles that holds a Vec<Article>

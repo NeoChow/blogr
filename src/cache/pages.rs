@@ -219,6 +219,8 @@ pub mod article {
     {
         let article_rst = article_state.retrieve_article(aid);
         
+        let javascript = Some("enable_toc(true);".to_owned());
+        
         let ctx: Result<CtxBody<TemplateArticle>, CtxBody<TemplateGeneral>>
              = cache::pages::article::context(aid,
                                               article_rst, 
@@ -229,7 +231,7 @@ pub mod article {
                                               Some(uhits), 
                                               Some(encoding),
                                               None,
-                                              None
+                                              javascript
                                              );
         // let express: Express = cache::template(ctx);
         // express
