@@ -16,6 +16,10 @@ Non-Blog
 	Modify the 3d sphere to have like a red outline or something different
 
 Articles
+	Add an article about using comrak for rendering markdown.
+
+	Add a breif article about generating compressed content with brotli and libflate
+
 	An article about using Templates with modified HTTP headers/compression
 
 	Add the jqMath javascript library
@@ -105,6 +109,10 @@ Caching
 	
 
 Blogr-Fixes
+	Add disclaimer saying I am not liable for any issues from the code
+		and that all code is licensed under the MIT license
+	Add privacy policy saying I *MAY* log the number of times each IP address visits a uri
+
 	Need some way to specify the language for source code files in static content
 		Maybe add metadata to all files with a .meta extension??
 
