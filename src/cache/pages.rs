@@ -178,7 +178,7 @@ pub mod article {
                    javascript: Option<String>
                   ) -> Result<CtxBody<TemplateArticle>, CtxBody<TemplateGeneral>>
     {
-        let javascript: Option<String> = None;
+        // let javascript: Option<String> = None;
         
         // macro_rules! ctx_info {
         //     ( $title:expr, $page:expr ) => {
@@ -188,10 +188,10 @@ pub mod article {
         // let i = ctx_info!("Article", "/");
         
         if let Some(article) = body {
-            let i = info::info(Some(article.title.clone()), "/article".to_owned(), admin, user, gen, uhits, encoding, javascript, msg);
+            let i = info::info(Some(article.title.clone()), "/article".to_owned(), admin, user, gen, uhits, encoding, msg, javascript);
             Ok(CtxBody( TemplateArticle::new(article, i) ))
         } else if let Some(article) = cache::pages::article::fallback(aid, conn) {
-            let i = info::info(Some(article.title.clone()), "/article".to_owned(), admin, user, gen, uhits, encoding, javascript, msg);
+            let i = info::info(Some(article.title.clone()), "/article".to_owned(), admin, user, gen, uhits, encoding, msg, javascript);
             if !PRODUCTION {
                 println!("Article {} served from fallacbk instead of cache", aid);
             }
