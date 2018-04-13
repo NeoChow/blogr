@@ -111,6 +111,8 @@ Caching
 	
 
 Blogr-Fixes
+	Use IndexMap instead of HashMap for all cache module stuffs
+
 	Do a code cleanup - remove excess comments
 
 	The main page should sort articles by date added, desc
