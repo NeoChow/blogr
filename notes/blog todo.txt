@@ -74,6 +74,9 @@ Theme
 		https://stackoverflow.com/questions/7839164/is-there-a-css-cross-browser-value-for-width-moz-fit-content
 		https://stackoverflow.com/questions/26151746/what-is-the-ie-equivalent-of-moz-fit-content-and-moz-center/26151871
 
+Compatibility
+	Maybe add a <noscript> containing a submit form after the items per page selection boxes
+
 Organization
 	Make blogr into blogre as a library and binary project
 		In the lib.rs import all of the modules
@@ -111,6 +114,11 @@ Caching
 	
 
 Blogr-Fixes
+	Add an option to prevent the table of contents from being displayed
+		Add a metadata field option
+		Maybe add a div to disable the toc <div id="disable-toc"></div>
+			If the #disable-toc id is found then do not run the toc javascript code
+
 	Use IndexMap instead of HashMap for all cache module stuffs
 
 	Do a code cleanup - remove excess comments
