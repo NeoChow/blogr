@@ -117,6 +117,7 @@ Blogr-Fixes
 		right now I'm not sure there is any sorting
 			it just pulls from cache in random order
 		maybe use multi page articles with the ArticleIds sorted based on date added desc
+		Or could look for a crate that has an ordered hashmap
 	Other multi article pages should sort by date added (descending)
 		
 

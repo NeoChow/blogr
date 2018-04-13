@@ -66,6 +66,8 @@ extern crate htmlescape;
 extern crate rss;
 extern crate evmap;
 
+#[macro_use] extern crate indexmap;
+use indexmap::IndexMap;
 // extern crate dotenv;
 
 // #[macro_use] extern crate log;

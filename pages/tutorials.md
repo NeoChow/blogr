@@ -21,6 +21,7 @@
 - [Rocket Web Apps]({{base_url}}content/rust-rocket-web-apps) - Tutorial on web app design and example modules to help you get started with your own Rocket powered web app written in Rust
 - [Rust-Auth-Login]({{base_url}}content/rocket-auth-login) - Explains how to use the Rocket-auth-login module to create web apps with authentication and multiple user roles
 - [Rust-Auth-Login Repo](https://github.com/vishusandy/rocket-auth-login) - The GitHub repository for the RocketAuthLogin code.  This crate can be used to help with login and authentication.
+- 
 
 ## Rust Code
 The following source code files may provide useful inspiration for your own projects.

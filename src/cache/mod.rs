@@ -28,8 +28,9 @@ use evmap::*;
 use comrak::{markdown_to_html, ComrakOptions};
 use titlecase::titlecase;
 
-// mod body_options;
-// mod page_routes;
+// extern crate indexmap;
+use indexmap::IndexMap;
+
 
 pub mod body;
 use body::*;
@@ -78,6 +79,7 @@ pub struct ArticleCacheLock {
 
 pub struct ArticleCache {
     pub articles: HashMap<u32, Article>,
+    // pub articles: IndexMap<u32, Article>,
 }
 
 impl ArticleCache {
@@ -89,6 +91,7 @@ impl ArticleCache {
             }
             ArticleCache{ articles: map }
         } else {
+            // ArticleCache{ articles: HashMap::new() }
             ArticleCache{ articles: HashMap::new() }
         }
     }
