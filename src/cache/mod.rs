@@ -78,21 +78,22 @@ pub struct ArticleCacheLock {
 }
 
 pub struct ArticleCache {
-    pub articles: HashMap<u32, Article>,
-    // pub articles: IndexMap<u32, Article>,
+    // pub articles: HashMap<u32, Article>,
+    pub articles: IndexMap<u32, Article>,
 }
 
 impl ArticleCache {
     pub fn load_cache(conn: &DbConn) -> Self {
         if let Some(articles) = conn.articles_full("") {
-            let mut map: HashMap<u32, Article> = HashMap::new();
+            // let mut map: HashMap<u32, Article> = HashMap::new();
+            let mut map: IndexMap<u32, Article> = IndexMap::new();
             for article in articles {
                 map.insert(article.aid, article);
             }
             ArticleCache{ articles: map }
         } else {
             // ArticleCache{ articles: HashMap::new() }
-            ArticleCache{ articles: HashMap::new() }
+            ArticleCache{ articles: IndexMap::new() }
         }
     }
 }
