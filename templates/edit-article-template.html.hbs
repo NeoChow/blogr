@@ -19,6 +19,9 @@
         <!-- <header id="header-article-modify" class="v-article-header" style="background: url('{{info.base_url}}imgs/vishus-1.jpg') center center no-repeat;"> -->
             <div class="v-article-header-sub">
                 <h2 class="v-article-title">
+                    <a href="{{info.base_url}}article/{{body.aid}}" onclick="return confirm_action('You are about to leave the edit page.  All changes will be lost.  Continue?')" title="View Article">
+                        View Article <i class="fa fa-external-link-square" aria-hidden="true"></i>
+                    </a>
                     <input name="title" type="text" value="{{body.title}}" maxlength="120" class="v-centered-input v-form-control form-control" id="inputTitle" placeholder="Title">
                 </h2>
                 <div class="row">

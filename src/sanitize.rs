@@ -1,7 +1,8 @@
 
-
+use rocket_auth_login::*;
 use regex::Regex;
 use htmlescape::*;
+use super::MAX_CREATE_TITLE;
 
 pub fn sanitize_tag(tag: &str) -> String {
     lazy_static! {
@@ -97,8 +98,11 @@ pub fn sanitize_body(string: String) -> String {
 
 pub fn sanitize_title(string: String) -> String {
     // set max length to 120 characters
-    encode_minimal(&string)
-    // unimplemented!()
+    use rocket_auth_login::sanitization::filter_non_characters;
+
+    filter_non_characters(&string[..MAX_CREATE_TITLE])
+
+    // encode_minimal(&string)
 }
 
 pub fn sanitize_tags(string: String) -> String {

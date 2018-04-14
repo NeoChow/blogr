@@ -144,7 +144,7 @@ Blogr-Fixes
 		and that all code is licensed under the MIT license
 	Add privacy policy saying I *MAY* log the number of times each IP address visits a uri
 
-	Need some way to specify the language for source code files in static content
+	ALREADY IMPLEMENTED - Need some way to specify the language for source code files in static content
 		Maybe add metadata to all files with a .meta extension??
 
 
