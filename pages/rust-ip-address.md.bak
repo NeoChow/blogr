@@ -1,0 +1,8 @@
+
+# Find IP Address In Rust
+
+## Nginx Setup
+First you have to make sure you have your server configured correctly.  If you are using a reverse proxy setup (using a webserver like nginx or apache to forward requests to the Rust web app) you must make the webserver forward the IP address to the Rust app.
+
+
+

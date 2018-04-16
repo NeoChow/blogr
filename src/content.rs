@@ -297,9 +297,6 @@ impl ContentCacheLock {
         
     }*/
     
-    // pub fn retrieve() -> 
-    
-    
 }
 
 pub fn titlize(name: &str) -> String {
