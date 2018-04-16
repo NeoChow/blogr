@@ -15,12 +15,7 @@ use rocket::request::{FlashMessage, Form, FromForm};
 use rocket::data::FromData;
 use rocket::response::content::Html;
 use rocket::State;
-// use rocket::request::{Form, FlashMessage};
 use rocket::http::{Cookie, Cookies, RawStr};
-// use auth::userpass::UserPass;
-// use auth::status::{LoginStatus,LoginRedirect};
-// use auth::dummy::DummyAuthenticator;
-// use auth::authenticator::Authenticator;
 use regex::Regex;
 use titlecase::titlecase;
 
@@ -34,10 +29,7 @@ use rocket::http::hyper::header::{Headers, ContentDisposition, DispositionType, 
 
 
 use super::*;
-// use routes::*;
-// use routes::pages::*;
 use cache::*;
-// use content::*;
 use content::{destruct_cache, destruct_context};
 use cache::body::*;
 use cache::pages::*;
@@ -56,7 +48,6 @@ use ral_user::*;
 use templates::*;
 use xpress::*;
 use accept::*;
-// use ::templates::*;
 
 
 use comrak::{markdown_to_html, ComrakOptions};
@@ -68,8 +59,6 @@ fn err_file_name(name: &str) -> PathBuf {
         // println!("Climbing directory tree into: {}", &dir.display());
         dir.pop();
         // println!("Loading into directory: {}", &dir.display());
-        // dir.push("log");
-        // dir.set_file_name(name);
         if cfg!(target_os = "windows") {
             dir.set_file_name(&format!("logs\\{}", name));
         } else {
@@ -115,7 +104,6 @@ pub mod tagcloud {
                         uhits: UniqueHits
                     ) -> Express 
     {
-        // unimplemented!()
         let express: Express = cache::pages::tags::serve(&conn,
                                                         &multi_aids,
                                                         admin,
@@ -228,7 +216,6 @@ pub mod article {
 
     #[get("/article")]
     pub fn hbs_article_not_found(start: GenTimer, conn: DbConn, admin: Option<AdministratorCookie>, user: Option<UserCookie>, encoding: AcceptCompression, uhits: UniqueHits) -> Express {
-        // let start = Instant::now();
         let output: Template = hbs_template(TemplateBody::General(alert_danger("Article not found")), None, Some("Article not found".to_string()), String::from("/article"), admin, user, None, Some(start.0));
         let end = start.0.elapsed();
         // println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
@@ -334,8 +321,6 @@ pub mod articles {
     {
         let fmsg = fmsg(flash);
         
-        // Get pagination info to build the welcome message
-        // let NumArticles(total_items) = *num_articles;
         let NumArticles(ref items_total) = *num_articles;
         let total_items = items_total.load(Ordering::SeqCst) as u32;
         let (ipp, cur_page, num_pages) = pagination.page_data(total_items);
@@ -359,7 +344,6 @@ Feel free to contact me at the email address at the bottom of the page.</p>
         page_info.push_str( &info );
         
         let page_msg = Some(page_info);
-        // let page_info: Option<String> = None;
         
         let express: Express = cache::pages::articles::serve(&*article_lock, 
                                                              pagination, 

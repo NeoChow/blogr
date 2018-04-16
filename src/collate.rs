@@ -10,15 +10,12 @@ use rocket::request::{FlashMessage, Form, FromForm, FormItems, FromRequest, Requ
 use rocket::response::content::Html;
 use rocket::response::{self, Response, content, NamedFile, Redirect, Flash, Responder, Content};
 use rocket::State;
-// use rocket::{Request, Data, Outcome, Response};
 use rocket_contrib::Template;
 
 use regex::Regex;
 use std::io::prelude::*;
 
 use super::BLOG_URL;
-
-// pub struct Hi;
 
 
 /* SQL
@@ -49,18 +46,7 @@ pub struct Pagination {
 
 
 fn link<T: Collate>(page: &Page<T>, cur_page: u32, text: &str) -> String {
-    // let url = T::link(page, cur_page-1);
     let url = T::link(page, cur_page);
-    // <a href="" class="active"></a>
-    // <a href=""></a>
-    // let mut link = String::with_capacity(url.len() + text.len() + 15 + 10);
-    // link.push_str(" <a href=\"");
-    // link.push_str(&url);
-    // link.push_str("\">");
-    // link.push_str(text);
-    // link.push_str("</a> ");
-    // link
-    // <li class="page-item"><a class="page-link" href="#">1</a></li>
     let mut link = String::with_capacity(url.len() + text.len() + 70 + 10);
     link.push_str(" <li class=\"page-item\"><a class=\"page-link\" href=\"");
     link.push_str(&url);
@@ -71,15 +57,7 @@ fn link<T: Collate>(page: &Page<T>, cur_page: u32, text: &str) -> String {
 }
 fn link_active<T: Collate>(page: &Page<T>, cur_page: u32, text: &str) -> String {
     let url = T::link(page, cur_page);
-    // <a href="" class="active"></a>
-    // <a href=""></a>
     let mut link = String::with_capacity(url.len() + text.len() + 30 + 20);
-    // link.push_str(" <a href=\"");
-    // link.push_str(&url);
-    // link.push_str("\" class=\"active\">[");
-    // link.push_str(text);
-    // link.push_str("]</a> ");
-    // link
     let mut link = String::with_capacity(url.len() + text.len() + 120 + 20);
     link.push_str(" <li class=\"page-item active\"><a class=\"page-link\" href=\"");
     link.push_str(&url);
@@ -91,9 +69,6 @@ fn link_active<T: Collate>(page: &Page<T>, cur_page: u32, text: &str) -> String 
 
 
 impl<T: Collate> Page<T> {
-    
-    
-    /* 0 1 2 3 4    5 6 7 8 9    10 11 12 13 14 */
     /// Returns the index number of the first item on the page.
     /// If there are 5 items per page and the current page is 3
     /// then the start() would return 10
@@ -120,9 +95,6 @@ impl<T: Collate> Page<T> {
     
         
     pub fn sql(&self, query: &str, orderby: Option<&str>) -> String {
-    // pub fn sql(&self, total_items: u32, query: &str, orderby: Option<&str>) -> String {
-        // let (ipp, cur, num_pages) = self.page_data(total_items);
-        
         let mut qrystr: String;
         if let Some(order) = orderby {
             // orderby text, plus offset/limit is 20 characters, plus 20 character extra buffer
@@ -201,7 +173,6 @@ Bootstrap:
 
     
     pub fn navigation(&self, total_items: u32) -> String {
-        // <a href="{base}{route}[?[page=x][[&]ipp=y]]">{page}</a>
         let ipp = self.settings.ipp() as u32;
         // integer division rounds towards zero, so if it does not evenly divide add 1
         let num_pages = if total_items % ipp != 0 {
@@ -280,24 +251,16 @@ Bootstrap:
         //     back
         //     );
         
-        // html.push_str(r#"<div class="v-collate row">"#);
         
         // Before Tablizing Pagination
-        // html.push_str(r#"<nav><ul class="pagination">"#);
         html.push_str(r#"<div class="row"><div class="v-pagnav-before col"></div><div class="v-pagnav-nav col"><nav><ul class="pagination">"#);
         
-        // html.push_str(r#"<div class="v-collate-prevnext col-2">"#);
         if cur != 1 {
-            // html.push_str( &link(&self, cur-1, "[Previous]") );
-            // NEW - html.push_str("\n<li class=\"page-item\">");
             html.push_str( &link(&self, cur-1, "Previous") );
-            // NEW - html.push_str("</li>\n");
         } else {
             html.push_str(r#"<li class="page-item disabled"><span class="page-link">Previous</span></li>"#);
         }
-        // html.push_str("</div>");
         
-        // html.push_str(r#"<div class="v-collate-left col-3">"#);
         if pages_left.len() != 0 {
             for page in pages_left {
                 html.push_str( &link(&self, page, &page.to_string()) );
@@ -311,14 +274,10 @@ Bootstrap:
                 html.push_str( &link(&self, page, &page.to_string()) );
             }
         }
-        // html.push_str("</div>");
-        
-        // html.push_str(r#"<div class="v-collate-cur">"#);
+
         html.push_str( &link_active(&self, cur, &cur.to_string()) );
-        // html.push_str("</div>");
         if html.capacity() != html_capacity { println!("0 Capacity has changed from {} to: {}", html_capacity, html.capacity()); }
         
-        // html.push_str(r#"<div class="v-collate-right col-3">"#);
         if pages_right.len() != 0 {
             // print next page link
             // print link to all pages in the vector
@@ -334,27 +293,12 @@ Bootstrap:
                 html.push_str( &link(&self, page, &page.to_string()) );
             }
         }
-        // html.push_str("</div>");
         
-        // html.push_str(r#"<div class="v-collate-prevnext col-2">"#);
-        // if cur != num_pages {
-        //     html.push_str( &link(&self, cur+1, "[Next]") );
-        // }
         if cur != num_pages {
-            // html.push_str( &link(&self, cur-1, "[Previous]") );
             html.push_str( &link(&self, cur+1, "Next") );
         } else {
             html.push_str(r#"<li class="page-item disabled"><span class="page-link">Next</span></li>"#);
         }
-        
-        // html.push_str("</ul></nav>");
-        
-//         html.push_str( &format!(r##"</ul></nav></div>
-// <div class="v-pagnav-after col"> 
-// <form action="{}{}" method="GET" class="ipp-form" id="ipp-form">
-// <input type="hidden" class="ipp-total-items" id="ipp-total-items" value="{}">
-// <input type="hidden" class="ipp-curpage" id="ipp-cur-page" name="page" value="{}"># Articles 
-// <select name="ipp" class="pagination-ipp" id="pagination-ipp" size="1">"##, &BLOG_URL[..BLOG_URL.len()-1], &self.route, total_items, self.cur_page));
         
         html.push_str( &format!(r##"</ul></nav></div>
 <div class="v-pagnav-after col"> 
@@ -373,19 +317,11 @@ Bootstrap:
         if T::min_ipp() <= 35 && T::max_ipp() >= 35 { if self.settings.ipp() == 35 { html.push_str(r#"<option value="35" SELECTED>35</option>"#); } else { html.push_str(r#"<option value="35">35</option>"#); } }
         if T::min_ipp() <= 40 && T::max_ipp() >= 40 { if self.settings.ipp() == 40 { html.push_str(r#"<option value="40" SELECTED>40</option>"#); } else { html.push_str(r#"<option value="40">40</option>"#); } }
         if T::min_ipp() <= 50 && T::max_ipp() >= 50 { if self.settings.ipp() == 50 { html.push_str(r#"<option value="50" SELECTED>50</option>"#); } else { html.push_str(r#"<option value="50">50</option>"#); } }
-  // <option value="volvo">Volvo</option>
-  // <option value="saab">Saab</option>
-  // <option value="fiat">Fiat</option>
-  // <option value="audi">Audi</option>
         html.push_str(r##"
 </select>
 </form>
 </div>
 </div>"##);
-        
-        // html.push_str("</div>");
-        
-        // html.push_str("</div>");
         
         if html.capacity() != html_capacity { println!("1 Capacity has changed from {} to: {}", html_capacity, html.capacity()); }
         

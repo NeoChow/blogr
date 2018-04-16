@@ -18,7 +18,6 @@ impl<'a, 'r> FromRequest<'a, 'r> for Referrer {
             Outcome::Success(Referrer(Some(refer.to_string())))
         } else {
             Outcome::Success(Referrer(None))
-            // Outcome::Forward(())
         }
     }
 }

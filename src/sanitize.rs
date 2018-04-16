@@ -74,9 +74,6 @@ pub fn sanitize_sql(string: String) -> String {
         static ref CLEAN_SQL: Regex = Regex::new(r#"(['"\\])"#).unwrap();
     }
     CLEAN_SQL.replace_all(&string, r"\\$1").into_owned()
-    // string.replace("'", "\'")
-    // .replace(r"\", r"\\");
-    // .replace(r#"""#, r#"\""#);
 }
 
 pub fn str_is_numeric(string: String) -> bool {
@@ -92,22 +89,18 @@ pub fn sanitize_attribute(string: String) -> String {
 
 pub fn sanitize_body(string: String) -> String {
     // escape html entities/elements
-    // unimplemented!()
     encode_minimal(&string)
 }
 
 pub fn sanitize_title(string: String) -> String {
-    // set max length to 120 characters
     use rocket_auth_login::sanitization::filter_non_characters;
-
+    // set max length to 120 characters
     filter_non_characters(&string[..MAX_CREATE_TITLE])
-
     // encode_minimal(&string)
 }
 
 pub fn sanitize_tags(string: String) -> String {
     encode_minimal(&string)
-    // unimplemented!()
 }
 pub fn split_tags(string: String) -> Vec<String> {
     let tags: Vec<String> = string.to_lowercase().split(',').filter(|t| t != &"").map(|t| sanitize_tag(t.trim())).collect();

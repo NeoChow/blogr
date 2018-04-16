@@ -9,6 +9,8 @@ use rocket_contrib::Template;
 use rocket::http::ContentType;
 use rocket::http::Header;
 use rocket::http::HeaderMap;
+use rocket::Outcome;
+use rocket::request::{FromRequest, Request};
 
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 use std::mem;
@@ -21,32 +23,14 @@ use std::io::prelude::*;
 use std::option;
 use serde_json::{Value, to_value};
 use std::borrow::Cow;
-// use std::io::BufReader;
-// use std::option::Option;
-// use std::sync::atomic::{AtomicUsize, Ordering};
-
-// use zopfli;
 use brotli;
-use rocket::request::{FromRequest, Request};
-use rocket::Outcome;
-
-
 use std::io;
-// use std::io::Read;
-// use std::io::Write;
-// use std::fs;
-
 use libflate::gzip;
-// use libflate::zlib;
 use libflate::deflate;
-
-
-use accept::*;
+// use libflate::zlib;
 
 use super::{DEFAULT_TTL, PRODUCTION};
-// use vcache::*;
-// use rocket::State;
-
+use accept::*;
 
 // Moved to settings file, keep this here for reference
 //   to make into a separate module
@@ -62,7 +46,6 @@ pub trait ExpressData {
     fn contents(self, &Request) -> Vec<u8>;
 }
 
-
 // Do not derive clone since Templates cannot be cloned
 #[derive(Debug)]
 pub enum ExData {
@@ -75,14 +58,12 @@ pub enum ExData {
 
 impl ExpressData for ExData {
     fn content_type(&self) -> ContentType {
-        // self.0.content_type()
         match self {
             &ExData::Bytes(ref data) => data.content_type(),
             &ExData::File(ref data) => data.content_type(),
             &ExData::Named(ref data) => data.content_type(),
             &ExData::String(ref data) => data.content_type(),
             &ExData::Template(ref data) => data.content_type(),
-            // &ExData::Cache(ref data) => data.content_type(),
         }
     }
     fn contents(self, req: &Request) -> Vec<u8> {
@@ -92,7 +73,6 @@ impl ExpressData for ExData {
             ExData::Named(data) => data.contents(req),
             ExData::String(data) => data.contents(req),
             ExData::Template(data) => data.contents(req),
-            // ExData::Cache(data) => data.contents(req),
         }
     }
 }
@@ -107,9 +87,6 @@ pub struct DataNamed(NamedFile);
 pub struct DataString(String);
 #[derive(Debug)]
 pub struct DataTemplate(Template);
-// #[derive(Debug)]
-// pub struct DataCache(Template);
-
 
 impl Clone for DataNamed {
     fn clone(&self) -> DataNamed {
@@ -118,8 +95,6 @@ impl Clone for DataNamed {
        DataNamed(named)
     }
 }
-
-
 
 impl ExpressData for DataBytes {
     fn content_type(&self) -> ContentType {
@@ -190,7 +165,6 @@ pub struct Express {
     extras: HashMap<String, String>,
 }
 
-
 impl ExpressData for Express {
     fn content_type(&self) -> ContentType {
         self.data.content_type()
@@ -200,8 +174,7 @@ impl ExpressData for Express {
     }
 }
 
-impl Express {
-    
+impl Express {   
     /// Alias for add_comrpession
     #[inline(always)]
     pub fn compress(mut self, encoding: AcceptCompression) -> Self {
@@ -248,9 +221,6 @@ impl Express {
         self.extras.insert(key, value);
         self
     }
-    // pub fn state(state: State<VCache>) -> Self {
-        
-    // }
     pub fn add_header<'p, H: Into<Header<'p>>>(mut self, header: H) -> Self {
         // Not the greatest solution; ideally the headers would be stored in a Vec<Header>
         // or in a HeaderMap but since those both require lifetime parameters it would
@@ -303,99 +273,30 @@ impl From<Template> for Express {
 }
 
 pub fn express_gzip(data: Vec<u8>) -> Vec<u8> {
-    // let mut output = Vec::with_capacity(data.len()+200);
-    // zopfli::compress(&zopfli::Options::default(), &zopfli::Format::Gzip, &data, &mut output).expect("Gzip compression failed.");
-    
-    // data = output;
-    
     let mut output = Vec::with_capacity(data.len()+200);
-    
-    // let mut encoder = gzip::Encoder::new(output).unwrap();
-    // io::copy(&mut data, &mut encoder).expect("Encoding GZIP stream failed");
-    // encoder.finish().into_result().unwrap();
-    
-    // let mut encoder = Encoder::new(Vec::new()).unwrap();
-    // io::copy(&mut &b"Hello World!"[..], &mut encoder).unwrap();
-    // let encoded_data = encoder.finish().into_result().unwrap();
-    
-    // let mut encoder = gzip::Encoder::new(output).unwrap();
-    // io::copy(&mut data, &mut encoder).expect("Gzip compression failed.");
-    // let data = encoder.finish().into_result().unwrap();
-    
     let mut encoder = gzip::Encoder::new(output).unwrap();
     encoder.write_all(&data).expect("Gzip compression failed.");
-    // data = encoder.finish().into_result().unwrap();
     encoder.finish().into_result().unwrap()
 }
 
 pub fn express_brotli(data: Vec<u8>) -> Vec<u8> {
     let length = data.len()+200;
     let mut output = Vec::with_capacity(length);
-    // let mut compressor = ::brotli::CompressorReader::new(Cursor::new(data), 10*1024, 9, 22);
     let mut compressor = ::brotli::CompressorReader::new(Cursor::new(data), length, 9, 22);
     let _ = compressor.read_to_end(&mut output);
-    
-    // data = output;
     output
 }
 pub fn express_deflate(data: Vec<u8>) -> Vec<u8> {
     let mut output = Vec::with_capacity(data.len()+200);
-    
-    // zopfli::compress(&zopfli::Options::default(), &zopfli::Format::Deflate, &data, &mut output).expect("Deflate compression failed.");
-    // // data = output;
-    // output
-    
     let mut encoder = deflate::Encoder::new(output);
     encoder.write_all(&data).expect("Deflate compression failed.");
-    // data = encoder.finish().into_result().unwrap();
     encoder.finish().into_result().unwrap()
-    
 }
-
 
 pub fn find_ip(request: &Request) -> Option<String> {
     let forward: &str = request.headers().get_one("X-Forwarded-For")?;
     Some(forward.to_owned())
 }
-
-/*pub fn find_ip(req: &Request) -> Ipv4Addr {
-    let mut ipaddy: Ipv4Addr = Ipv4Addr::new(0, 0, 0, 0);
-    
-    if let Some(sock) = req.remote() {
-        println!("Remote address: {}", sock.ip());
-        let ip = sock.ip();
-        // let mut ipaddy: Ipv4Addr = Ipv4Addr::new(127, 0, 0, 1);
-        
-        match ip {
-            IpAddr::V4(ip4) => {
-                ipaddy = ip4;
-                println!("Found IPv4 Address, setting ip address to IPv4 address {}", ipaddy);
-            },
-            IpAddr::V6(ip6) => {
-                if let Some(ipnew) = ip6.to_ipv4() {
-                    if ipnew == Ipv4Addr::new(0, 0, 0, 1) {
-                        println!("Ip address is invalid.  IPv6 -> IPv4 failed.");
-                        ipaddy = Ipv4Addr::new(127, 0, 0, 1);
-                    } else {
-                        ipaddy = ipnew;
-                    }
-                    
-                    println!("Found an IPv6 Address, converted successfully to IPv4: {}", ipaddy);
-                } else {
-                    println!("Found an IPv6 Address.  Attempt to convert to IPv4 failed.");
-                }
-            },
-            _ => {
-                println!("Ip Address was neither IPv4 nor IPv6.");
-            },
-        }
-    } else {
-        println!("No ip address found.");
-    }
-    
-    ipaddy
-}
-*/
 
 impl<'a> Responder<'a> for Express {
     fn respond_to(self, req: &Request) -> response::Result<'a> {
@@ -421,7 +322,6 @@ impl<'a> Responder<'a> for Express {
         // println!("Serving page using content-type: {}", &self.content_type.to_string());
         response.header(self.content_type);
         
-        
         // Do not print out any headers for TTL less than -1 (like -2)
         // This allows the cache headers to be omitted
         if self.ttl == -1 {
@@ -435,7 +335,6 @@ impl<'a> Responder<'a> for Express {
             // response.raw_header("Cache-Control", format!("max-age={}, must-revalidate", self.ttl));
             response.raw_header("Cache-Control", format!("max-age={}", self.ttl));
         }
-        
         
         let mut data = self.data.contents(req);
         

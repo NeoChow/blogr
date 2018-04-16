@@ -1,7 +1,6 @@
 
 use rocket_contrib::Template;
 use rocket::{Request, Data, Outcome, Response};
-// use rocket::response::{content, NamedFile, Redirect, Flash, Responder, Content};
 use rocket::response::{NamedFile, Redirect, Flash, Responder, Content};
 use rocket::response::content::Html;
 use rocket::data::FromData;
@@ -28,7 +27,6 @@ use evmap::*;
 use comrak::{markdown_to_html, ComrakOptions};
 use titlecase::titlecase;
 
-// extern crate indexmap;
 use indexmap::IndexMap;
 
 
@@ -65,7 +63,6 @@ pub fn make_descriptions(articles: Vec<Article>) -> Vec<Article> {
 
 
 
-// pub struct NumArticles(pub u32);
 pub struct NumArticles(pub AtomicUsize);
 
 
@@ -78,21 +75,18 @@ pub struct ArticleCacheLock {
 }
 
 pub struct ArticleCache {
-    // pub articles: HashMap<u32, Article>,
     pub articles: IndexMap<u32, Article>,
 }
 
 impl ArticleCache {
     pub fn load_cache(conn: &DbConn) -> Self {
         if let Some(articles) = conn.articles_full("") {
-            // let mut map: HashMap<u32, Article> = HashMap::new();
             let mut map: IndexMap<u32, Article> = IndexMap::new();
             for article in articles {
                 map.insert(article.aid, article);
             }
             ArticleCache{ articles: map }
         } else {
-            // ArticleCache{ articles: HashMap::new() }
             ArticleCache{ articles: IndexMap::new() }
         }
     }
@@ -151,10 +145,8 @@ impl ArticleCacheLock {
             None
         }
     }
-    // pub fn all_articles(&self, pagination: &Page<Pagination>) -> Option<(Vec<Article>, u32)> {
     pub fn all_articles<T: Collate>(&self, pagination: &Page<T>) -> Option<(Vec<Article>, u32)> {
         let mut starting = pagination.cur_page as u32;
-        // let mut ending = pagination.cur_page as u32 + pagination.settings.ipp as u32;
         let mut ending = pagination.cur_page as u32 + pagination.settings.ipp() as u32;
         
         if let Ok(article_lock) = self.lock.read() {
@@ -170,7 +162,6 @@ impl ArticleCacheLock {
                 ending = total_items - 1;
             }
             
-            // if total_items == 1 || pagination.settings.ipp == 1 || ending.saturating_sub(starting) == 0 {
             if total_items == 1 || pagination.settings.ipp() == 1 || ending.saturating_sub(starting) == 0 {
                 if let Some(aid) = aids.get(starting as usize) {
                     if let Some(article) = self.retrieve_article(*aid) {
@@ -197,43 +188,6 @@ impl ArticleCacheLock {
                 }
             }
             
-            /* 
-            let total_items = aids.len() as u32;
-            if total_items <= pagination.settings.ipp as u32 {
-                starting = 0;
-                ending = total_items;
-            } else {
-                if starting >= total_items {
-                    // show last page
-                    let starting = total_items - (pagination.settings.ipp as u32);
-                    let ending = total_items;
-                // the greater OR EQUALS part is equivelant to > total_items -1
-                } else if ending >= total_items { 
-                    let ending = total_items;
-                }
-                if starting - ending <= 0 {
-                    println!("Pagination error!  Start-Ending <= 0");
-                    return None;
-                }
-            }
-            // println!("Attempting to grab articles ({}, {}]", starting, ending);
-            let slice: &[u32] = &aids[starting as usize..ending as usize];
-            // println!("which are: {:?}", &slice);
-            let ids = slice.to_owned();
-            // The retireve_articles() opens another reader in the RwLock,
-            // but this shouldn't cause any major issues, maybe a little slower
-            if let Some(mut articles) = self.retrieve_articles(ids) {
-                articles = make_descriptions(articles);
-                let length = articles.len() as u32;
-                if length != total_items {
-                    println!("ERROR: Retrieving all articles yielded differing results.\nIt was supposed to return {} items but returned {} items.", total_items, length);
-                }
-                Some( (articles, length) )
-            } else {
-                println!("Could not retrieve all articles - retrieve_articles failed");
-                None
-            } 
-            */
         } else {
             None
         }
@@ -256,18 +210,10 @@ impl TextCache {
         let rss = cache::pages::rss::load_rss(conn);
         pages.insert("rss".to_owned(), rss);
         
-        // TagCloud is not text! It is a Vec<TagCount>
-        // // let tagcloud = cache::pages::tags::load_tagcloud(multi_aids);
-        // if let Some(tagcloud) = cache::pages::tags::load_tagcloud(multi_aids) {
-        //     pages.insert("tagcloud".to_owned(), tagcloud);
-        // }
-        
         TextCache {
             pages
         }
-        // unimplemented!()
     }
-    
 }
 impl TextCacheLock {
     pub fn new(cache: TextCache) -> Self {
@@ -281,8 +227,6 @@ impl TextCacheLock {
         } else {
             None
         }
-        
-        // unimplemented!()
     }
 }
 
@@ -290,12 +234,10 @@ impl TextCacheLock {
 
 
 
-// pub struct TagAids {
 pub struct AidsCache {
     pub pages: HashMap<String, Vec<u32>>,
 }
 pub struct TagsCache {
-    // pub tags: HashMap<String, u32>,
     pub tags: Vec<TagCount>,
 }
 
@@ -304,16 +246,6 @@ pub struct TagAidsLock {
     pub tags_lock: RwLock<TagsCache>,
 }
 
-// impl AidsCache {
-//     pub fn load_cache(conn: &DbConn) -> Self {
-//         // retrieve all distinct tags then call routes::pages::tags::tag_aids()
-//         // find all tags - use the query for the tag cloud (get tag and number of times used)
-//         // store tags and tag counts
-//         // call load_tag_aids() on each tag
-        
-//         unimplemented!()
-//     }
-// }
 impl TagsCache {
     pub fn load_cache(conn: &DbConn) -> Self {
         // Find all unique tags and store the number of times they are used
@@ -322,7 +254,6 @@ impl TagsCache {
         let qrystr = "SELECT COUNT(*) as cnt, unnest(tag) as untag FROM articles GROUP BY untag ORDER BY cnt DESC;";
         let qry = conn.query(qrystr, &[]);
         if let Ok(result) = qry {
-            // let mut pages: HashMap<String, u32> = HashMap::new();
             let mut tags: Vec<TagCount> = Vec::new();
             for row in &result {
                 let c: i64 = row.get(0);
@@ -335,7 +266,6 @@ impl TagsCache {
                     size: 0,
                 };
                 tags.push(tc);
-                // pages.insert(t, c as u32);
             }
             
             if tags.len() > 4 {
@@ -359,13 +289,9 @@ impl TagsCache {
             }
         } else {
             TagsCache {
-                // tags: HashMap::new(),
                 tags: Vec::new(),
             }
         }
-        
-        
-        // unimplemented!()
     }
 }
 
@@ -384,44 +310,16 @@ impl TagAidsLock {
         } else {
             None
         }
-        
-        
-        // unimplemented!()
     }
     // Retrieve (from the cache) all tags and the number of times they have been used
     pub fn retrieve_tags(&self) -> Option<Vec<TagCount>> {
-        // unimplemented!()
         if let Ok(all_tags) = self.tags_lock.read() {
             Some(all_tags.tags.clone())
-            
-            // let mut tags: Vec<TagCount> = Vec::new();
-            // for (tag, count) in &all_tags.tags {
-            //     let t = TagCount {
-            //         // tag: tag.clone(),
-            //         tag: titlecase(tag),
-            //         // url: titlecase(tag.trim_matches('\'')),
-            //         url: tag.trim_matches('\'').to_owned(),
-            //         count: *count,
-            //         size: 0u16,
-            //     };
-            //     tags.push(t);
-            // }
-            // Some(tags)
         } else {
             None
         }
     }
-    // pub fn tag_aids(tag: &str) -> Option<Vec<u32>> {
-    //     unimplemented!()
-    // }
     
-    // pub fn load_tag_cache(conn: &DbConn, tags: &HashMap<String, u32>) -> Vec<u32> {
-    //     unimplemented!()
-    // }
-    
-    // pub fn load_author_cache(conn: &DbConn) -> Vec<u32> {
-    //     unimplemented!()
-    // }
     pub fn load_cache(conn: &DbConn) -> Self {
         // Load tags then for each tag call 
         // cache::pages::tag::load_tag_aids(conn, tag) -> Option<Vec<u32>>
@@ -436,9 +334,7 @@ impl TagAidsLock {
         
         let mut article_cache: HashMap<String, Vec<u32>> = HashMap::with_capacity(tag_cache.tags.len() + authors.len() + 10);
         
-        // for tag in tag_cache.tags.keys() {
         for tag in tag_cache.tags.iter() {
-            // if let Some(aids) = cache::pages::tag::load_tag_aids(conn, &tag.tag.to_lowercase()) {
             if let Some(aids) = cache::pages::tag::load_tag_aids(conn, &tag.tag) {
                 let key = format!("tag/{}", &tag.tag.to_lowercase());
                 if !PRODUCTION { println!("Loading tag {}\n\t{:?}\n\trelated articles:\n\t{:#?}", &tag.url, &tag, &aids); }
@@ -469,48 +365,17 @@ impl TagAidsLock {
         TagAidsLock{ aids_lock: RwLock::new( aids), tags_lock: RwLock::new( tags ) }
     }
     
-    // pub fn multi_articles(&self, article_cache: &ArticleCacheLock, multi_page: &str, pagination: &Page<Pagination>) -> Option<(Vec<Article>, u32)> {
     pub fn multi_articles<T: Collate>(&self, article_cache: &ArticleCacheLock, multi_page: &str, pagination: &Page<T>) -> Option<(Vec<Article>, u32)> {
-        // let mut starting = pagination.cur_page as u32;
-        // let mut ending = pagination.cur_page as u32 + pagination.settings.ipp as u32;
         if let Some(aids) = self.retrieve_aids(multi_page) {
-            // println!("Attempting to retrieve author articles: {:#?}", &aids);
             let total_items = aids.len() as u32;
             let mut starting = pagination.start();
             let mut ending = pagination.end();
             
             if total_items == 0 || starting >= total_items {
                 return None;
-            // } else if ending+1 > total_items {
             } else if ending >= total_items {
-                // ending = starting - total_items;
-                // starting: 10, ending: 14, total_items: 13 (last item: 12)
-                // 
                 ending = total_items - 1;
-                // 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-                // ending = starting.saturating_sub(total_items)+1;
             }
-            // println!("showing items {} - {}", starting, ending);
-            
-            // if total_items <= pagination.settings.ipp as u32 {
-            //     starting = 0;
-            //     ending = total_items;
-            // } else {
-            //     if starting >= total_items {
-            //         // show last page
-            //         let starting = total_items - (pagination.settings.ipp as u32);
-            //         let ending = total_items;
-            //     // the greater OR EQUALS part is equivelant to > total_items -1
-            //     } else if ending >= total_items { 
-            //         let ending = total_items;
-            //     }
-            //     if starting - ending <= 0 {
-            //         println!("Pagination error!  Start-Ending <= 0");
-            //         return None;
-            //     }
-            // }
-            // println!("Attempting to grab articles ({}, {}]", starting, ending);
-            // if total_items == 1 || pagination.settings.ipp == 1 || ending.saturating_sub(starting) == 0 {
             if total_items == 1 || pagination.settings.ipp() == 1 || ending.saturating_sub(starting) == 0 {
                 if let Some(aid) = aids.get(starting as usize) {
                     if let Some(article) = article_cache.retrieve_article(*aid) {
@@ -527,16 +392,9 @@ impl TagAidsLock {
                 }
             } else {
                 let slice: &[u32] = &aids[starting as usize..(ending+1) as usize];
-                // println!("which are: {:?}", &slice);
                 let ids = slice.to_owned();
                 if let Some(mut articles) = article_cache.retrieve_articles(ids) {
                     articles = make_descriptions(articles);
-                    // let length = articles.len() as u32;
-                    // let length = total_items;
-                    
-                    // if length != total_items {
-                        // println!("ERROR: Retrieving multi-article page `{}` yielded differing results.\nIt was supposed to return {} items but returned {} items.", multi_page, total_items, length);
-                    // }
                     Some( (articles, total_items) )
                 } else {
                     println!("Could not retrieve mult-articles page for `{}` - retrieve_articles failed", multi_page);
@@ -559,121 +417,8 @@ impl TagAidsLock {
         self.multi_articles(article_cache, &multi_page, pagination)
         
     }
-    // Could make author_articles() and tag_articles generic, 
-    // take a page name &str to lookup the multi articles page.
-    // And change error message to a generic message
-    /*
-    pub fn author_articles(&self, article_cache: &ArticleCacheLock, author: u32, pagination: &Page<Pagination>) -> Option<(Vec<Article>, u32)> {
-        let mut starting = pagination.cur_page as u32;
-        let mut ending = pagination.cur_page as u32 + pagination.settings.ipp as u32;
-        if let Some(aids) = self.retrieve_aids(&format!("author/{}", &author)) {
-            // println!("Attempting to retrieve author articles: {:#?}", &aids);
-            let total_items = aids.len() as u32;
-            if total_items <= pagination.settings.ipp as u32 {
-                starting = 0;
-                ending = total_items;
-            } else {
-                if starting >= total_items {
-                    // show last page
-                    let starting = total_items - (pagination.settings.ipp as u32);
-                    let ending = total_items;
-                // the greater OR EQUALS part is equivelant to > total_items -1
-                } else if ending >= total_items { 
-                    let ending = total_items;
-                }
-                if starting - ending <= 0 {
-                    println!("Pagination error!  Start-Ending <= 0");
-                    return None;
-                }
-            }
-            // println!("Attempting to grab articles ({}, {}]", starting, ending);
-            let slice: &[u32] = &aids[starting as usize..ending as usize];
-            // println!("which are: {:?}", &slice);
-            let ids = slice.to_owned();
-            if let Some(mut articles) = article_cache.retrieve_articles(ids) {
-                articles = make_descriptions(articles);
-                let length = articles.len() as u32;
-                if length != total_items {
-                    println!("ERROR: Retrieving articles with author `{}` yielded differing results.\nIt was supposed to return {} items but returned {} items.", author, total_items, length);
-                }
-                Some( (articles, length) )
-            } else {
-                println!("Could not retrieve articles in author_articles() - retrieve_articles failed");
-                None
-            }
-            
-        } else {
-            println!("Error retrieving articles for author, retrieve_aids() failed for `author/{}`", &author);
-            None
-        }
-    }
-    // Could make this generic, see author_articles() comments above.
-    pub fn tag_articles(&self, article_cache: &ArticleCacheLock, tag: &str, pagination: &Page<Pagination>) -> Option<(Vec<Article>, u32)> {
-        let mut starting = pagination.cur_page as u32;
-        let mut ending = pagination.cur_page as u32 + pagination.settings.ipp as u32;
-        if let Some(aids) = self.retrieve_aids(&format!("tag/{}", tag.to_lowercase())) {
-            let total_items = aids.len() as u32;
-            // the greater OR EQUALS part is equivelant to > total_items -1
-            if total_items <= pagination.settings.ipp as u32 {
-                starting = 0;
-                ending = total_items;
-            } else {
-                if starting >= total_items {
-                    // show last page
-                    let starting = total_items - (pagination.settings.ipp as u32);
-                    let ending = total_items ;
-                // the greater OR EQUALS part is equivelant to > total_items -1
-                } else if ending >= total_items { 
-                    let ending = total_items;
-                }
-                if starting - ending <= 0 {
-                    return None;
-                }
-            }
-            // println!("Attempting to grab articles ({}, {}]", starting, ending);
-            let slice: &[u32] = &aids[starting as usize..ending as usize];
-            let ids = slice.to_owned();
-            if let Some(mut articles) = article_cache.retrieve_articles(ids) {
-                articles = make_descriptions(articles);
-                let length = articles.len() as u32;
-                if length != total_items {
-                    println!("ERROR: Retrieving articles with tag `{}` yielded differing results.\nIt was supposed to return {} items but returned {} items.", tag, total_items, length);
-                }
-                Some( (articles, length) )
-            } else {
-                println!("Could not retrieve articles in tag_articles() - retrieve_articles failed");
-                None
-            }
-            
-        } else {
-            println!("Error retrieving articles for tag, retrieve_aids() failed for `tag/{}`", &tag);
-            None
-        }
-        //     let ids: Vec<u32> = (starting..ending).into_iter().map(|i| i as u32).collect();
-        //     if let Some(mut articles) = article_cache.retrieve_articles(ids) {
-        //         articles = make_descriptions(articles);
-        //         let length = articles.len() as u32;
-        //         if length != total_items {
-        //             println!("ERROR: Retrieving articles with tag `{}` yielded differing results.\nIt was supposed to return {} items but returned {} items.", tag, total_items, length);
-        //         }
-        //         Some( (articles, length) )
-        //     } else {
-        //         None
-        //     }
-        // } else {
-        //     None
-        // }
-    }
-    */
-    
-    // Maybe add a function that executes a closure?
-    // pub fn unlock<F, T>(f: F) -> T  where F: Fn(i32) -> T { unimplemented!() }
 }
 
-// Is this really needed??
-// pub struct TextPages {
-//     pub pages: HashMap<String, String>,
-// }
 
 pub fn template<T: BodyContext, U: BodyContext>(body_rst: Result<CtxBody<T>, CtxBody<U>>) -> Express where T: serde::Serialize, U: serde::Serialize {
     match body_rst {
@@ -690,11 +435,6 @@ pub fn template<T: BodyContext, U: BodyContext>(body_rst: Result<CtxBody<T>, Ctx
     }
 }
 
-// pub fn express<T: BodyContext>(body: CtxBody<T>) -> Express {
-//     unimplemented!()
-// }
-
-// make a request guard to retrieve a reference to the articles?
 
 /*
     General - body text String
@@ -710,7 +450,6 @@ pub fn template<T: BodyContext, U: BodyContext>(body_rst: Result<CtxBody<T>, Ctx
 */
 
 pub fn load_all_articles(conn: &DbConn) -> Option<Vec<Article>> {
-    // unimplemented!()
     if let Some(articles) = conn.articles_full("") {
         Some(articles)
     } else {
@@ -719,13 +458,11 @@ pub fn load_all_articles(conn: &DbConn) -> Option<Vec<Article>> {
 }
 
 pub fn load_articles_map(conn: &DbConn) -> Option<HashMap<u32, Article>> {
-    // unimplemented!()
     if let Some(articles) = conn.articles_full("") {
         let mut map: HashMap<u32, Article> = HashMap::new();
         for article in articles {
             map.insert(article.aid, article);
         }
-        
         Some(map)
     } else {
         None
@@ -773,7 +510,6 @@ pub fn update_article_caches(conn: &DbConn,
 pub fn update_text_cache(conn: &DbConn, text_cache: &TextCacheLock, multi_aids: &TagAidsLock) -> bool {
     
     if let Ok(mut text_cache) = text_cache.lock.write() {
-        // *text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids) );
         *text_cache = TextCache::load_cache(&conn, &multi_aids);
         true
     } else {

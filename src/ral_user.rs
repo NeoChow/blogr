@@ -1,25 +1,19 @@
 
+
+use rocket::response::{Redirect, Flash};
+use rocket::request::FlashMessage;
+use rocket::http::{Cookie, Cookies, RawStr};
 use rocket::{Request, Outcome};
-// use rocket::request::FromRequest;
 use rocket::request::{FromRequest, FromForm, FormItems};
+
 use std::collections::HashMap;
 use std::str::{from_utf8};
 use chrono::prelude::*;
 use chrono::{NaiveDate, NaiveDateTime};
 
-use rocket::response::{Redirect, Flash};
-use rocket::request::FlashMessage;
-use rocket::http::{Cookie, Cookies, RawStr};
-
 use super::{PGCONN, MAX_ATTEMPTS, LOCKOUT_DURATION, USER_LOCK};
-// use password::*;
 use rocket_auth_login::authorization::*;
 use rocket_auth_login::sanitization::*;
-// use auth::sanitization::*;
-
-
-// const MAX_ATTEMPTS: i16 = 8;
-// const LOCKOUT_DURATION: u32 = 12; // 900 seconds = 15 minutes
 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -83,9 +77,7 @@ impl AuthorizeForm for UserForm {
         
         let lockout_qrystr = format!("SELECT u.username, u.attempts, u.lockout, LOCALTIMESTAMP as now, crypt('{pass}', u.hash_salt) = u.hash_salt as check FROM users u WHERE u.username = '{user}' AND u.lockout IS NOT NULL", user=&self.username, pass=&self.password);
         
-        // let is_user_qrystr = format!("SELECT username, attempts, lockout, LOCALTIMESTAMP as now, LOCALTIMESTAMP + interval '{lock_duration} seconds' as lock_duration  FROM users WHERE username = '{user}'", user=&self.username, lock_duration=LOCKOUT_DURATION);
         let is_user_qrystr = format!("SELECT username, attempts, lockout FROM users WHERE username = '{}'", &self.username);
-        // let is_admin_qrystr = format!("SELECT userid FROM users WHERE username = '{}' AND is_admin = '1'", &self.username);
         let password_qrystr = format!("SELECT username, attempts FROM users WHERE username = '{}' AND hash_salt = crypt('{}', hash_salt)", &self.username, &self.password);
         
         // println!("Running: {}", authstr);
@@ -115,7 +107,6 @@ impl AuthorizeForm for UserForm {
         
         // Everything after this comment is checking why the user login failed
         
-        
         // Check if the user is locked out
         if let Ok(eqry) = conn.query(&lockout_qrystr, &[]) {
             if !eqry.is_empty() && eqry.len() != 0 {
@@ -127,8 +118,6 @@ impl AuthorizeForm for UserForm {
                 let lockout = lockout_opt.expect("Error unwrapping lockout value");
                 let now: NaiveDateTime = row.get(3);
                 let valid: bool = row.get(4);
-                
-                // let now = Local::now().naive_local();
                 
                 // if the lockout has expired unlock the account but do not reset the attempts
                 if attempts >= USER_LOCK {
@@ -170,16 +159,13 @@ impl AuthorizeForm for UserForm {
                 } else {
                     // println!("User account is still locked!");
                     let lockout_diff = lockout.timestamp() - now.timestamp();
-                    // let lockout_period = if lockout_diff > 86400 {
                     let lockout_period = if lockout_diff > 7200 { //3600
                         format!("{} hours", lockout_diff/3600)
-                    // } else if lockout_diff > 3600 {
                     } else if lockout_diff > 120 {
                         format!("{} minutes", lockout_diff/60)
                     } else {
                         format!("{} seconds", lockout_diff)
                     };
-                    // return Err( AuthFail::new(self.username.clone(), "User has been locked due to excessive login attempts.  Please try again later.".to_string()) );
                     return Err( AuthFail::new(self.username.clone(), format!("User has been locked due to excessive login attempts.  Please wait for {}", lockout_period)) );
                 }
                 
@@ -240,25 +226,6 @@ impl AuthorizeForm for UserForm {
             conn.query(&inc_qrystr, &[]);
         }
         
-        
-        
-        // let attempt_qrystr = if attempts % MAX_ATTEMPTS == 0 {
-        //     // match attempts {
-        //     //     
-        //     // }
-            
-        //     let inc_qrystr = format!("UPDATE users SET attempts = attempts+1, lockout = LOCALTIMESTAMP + interval '{lockout}' WHERE username = '{user}'", user=&self.username, lockout=LOCKOUT_DURATION);
-        //     println!("Running query to lockout the user and increment attempts: {}", &inc_qrystr);
-        //     conn.query(&inc_qrystr, &[]);
-        // } else {
-        //     let inc_qrystr = format!("UPDATE users SET attempts = attempts+1 WHERE username = '{}'", &self.username);
-        //     println!("Running query to increment attempts: {}", &inc_qrystr);
-        //     conn.query(&inc_qrystr, &[]);
-        // };
-        
-        
-        
-        
         // Check if the password is correct
         if let Ok(eqry) = conn.query(&password_qrystr, &[]) {
             if eqry.is_empty() || eqry.len() == 0 {
@@ -266,44 +233,6 @@ impl AuthorizeForm for UserForm {
             }
         }
         Err(AuthFail::new(self.username.clone(), "Unknown error..".to_string()))
-    
-        
-        
-        // let conn = PGCONN.lock().unwrap();
-        // let authstr = format!(r#"
-        //     SELECT u.userid, u.username, u.display FROM users u WHERE u.username = '{username}' AND 
-        //         u.hash_salt = crypt('{password}', u.hash_salt)"#, username=&self.username, password=&self.password);
-        // let is_user_qrystr = format!("SELECT userid FROM users WHERE username = '{}'", &self.username);
-        // let password_qrystr = format!("SELECT userid FROM users WHERE username = '{}' AND hash_salt = crypt('{}', hash_salt)", &self.username, &self.password);
-        // println!("Running: {}", authstr);
-        // if let Ok(qry) = conn.query(&authstr, &[]) {
-        //     if !qry.is_empty() && qry.len() == 1 {
-        //         let row = qry.get(0);
-                
-        //         let display_opt = row.get_opt(2);
-        //         let display = match display_opt {
-        //             Some(Ok(d)) => Some(d),
-        //             _ => None,
-        //         };
-        //         return Ok(UserCookie {
-        //             userid: row.get(0),
-        //             username: row.get(1),
-        //             display,
-        //         });
-        //     }
-        // }
-        // if let Ok(eqry) = conn.query(&is_user_qrystr, &[]) {
-        //     if eqry.is_empty() || eqry.len() == 0 {
-        //         return Err(AuthFail::new(self.username.clone(), "Username was not found.".to_string()));
-        //     }
-        // }
-        // if let Ok(eqry) = conn.query(&password_qrystr, &[]) {
-        //     if eqry.is_empty() || eqry.len() == 0 {
-        //         return Err(AuthFail::new(self.username.clone(), "Invalid username / password combination.".to_string()));
-        //     }
-        // }
-        // Err(AuthFail::new(self.username.clone(), "Unknown error..".to_string()))
-        
     }
     
     fn flash_redirect(&self, ok_redir: &str, err_redir: &str, cookies: &mut Cookies) -> Result<Redirect, Flash<Redirect>> {
@@ -328,7 +257,6 @@ impl AuthorizeForm for UserForm {
                 Ok(Redirect::to(ok_redir))
             },
             Err(fail) => {
-                // let mut furl = String::from(err_redir);
                 let mut furl = String::with_capacity(err_redir.len() + fail.user.len() + 20);
                 furl.push_str(err_redir);
                 if &fail.user != "" {
@@ -386,9 +314,6 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserCookie {
         }
     }
 }
-
-
-
 
 
 

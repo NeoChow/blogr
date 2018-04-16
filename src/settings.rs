@@ -21,6 +21,8 @@ pub const DATABASE_URL: &'static str = "postgres://dbuser:dbpass@localhost/blog"
 
 
 
+
+
 // DEVELOPMENT SETTINGS
 
 #[cfg(not(production))]
@@ -114,12 +116,6 @@ const ONE_RESULT_ONE_PAGE: bool = false;
 
 
 
-
-// #[cfg(not(production))]
-// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu::new("Rust Tutorials".to_owned(), "/content/tutorials".to_owned(), "")]);
-// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu {name: "Rust Tutorials".to_owned(), url: format!("{}content/tutorials", BLOG_URL), separator: false, classes: String::new()}]);
-
-
 // Comrak Markdown rendering default settings
 #[cfg(not(production))]
 pub const COMRAK_OPTIONS: ComrakOptions = ComrakOptions {
@@ -135,11 +131,6 @@ pub const COMRAK_OPTIONS: ComrakOptions = ComrakOptions {
     ext_header_ids: None,        // None / Some("some-id-prefix-".to_string())
     ext_footnotes: true,         // Hi[^x]\n\n[^x]: A footnote here\n
 };
-
-
-
-
-
 
 
 
@@ -238,12 +229,6 @@ const ONE_RESULT_SHOW_FULL: bool = true;
 const ONE_RESULT_ONE_PAGE: bool = false;
 
 
-
-
-// #[cfg(production)]
-// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu::new("Rust Tutorials".to_owned(), "/content/tutorials".to_owned(), "")]);
-// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu {name: "Rust Tutorials".to_owned(), url: format!("{}content/tutorials", BLOG_URL), separator: false, classes: String::new()}]);
-
 // Comrak Markdown rendering default settings
 #[cfg(production)]
 pub const COMRAK_OPTIONS: ComrakOptions = ComrakOptions {
@@ -259,10 +244,6 @@ pub const COMRAK_OPTIONS: ComrakOptions = ComrakOptions {
     ext_header_ids: None,        // None / Some("some-id-prefix-".to_string())
     ext_footnotes: true,         // Hi[^x]\n\n[^x]: A footnote here\n
 };
-
-
-
-
 
 
 

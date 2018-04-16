@@ -17,8 +17,6 @@ impl<'a, 'r> FromRequest<'a, 'r> for Location {
 }
 
 
-// pub fn admin_login(request: &Request) -> Redirect {
-// pub fn admin_login(route: String) -> Redirect {
 pub fn admin_login(route: Location) -> Redirect {
     // let route = request.uri().as_str();
     let mut redir = String::with_capacity(route.0.len() + 20);

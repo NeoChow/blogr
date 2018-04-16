@@ -1,0 +1,721 @@
+
+
+management / administration / admin_tasks / admin_pages
+    edit
+    create
+    delete
+    manage
+    stats/info
+    misc
+        backup
+        refresh_content
+
+
+content
+download
+
+search
+
+users
+admins
+
+
+
+// TIME DATE TIMESTAMP NOW
+// let now = Local::now().naive_local();
+
+
+
+Markdown crates:
+- comrak has more features - allows inline html and autolink and tasklists and strikethrough and tagfilter
+                             and footnotes and superscript and tables and hardbreaks and more
+- pulldown-cmark is faster - allows inline html - can allow tables and footnotes
+- markdown - DO NOT USE THE MARKDOWN CRATE - it is extremely slow and doesn't support many features
+
+extern crate multipart;
+extern crate handlebars;
+extern crate dotenv;
+#[macro_use] extern crate log;
+extern crate env_logger;
+#[macro_use] extern crate diesel_codegen;
+#[macro_use] extern crate diesel;
+
+
+use std::cell::Cell;
+use std::rc::Rc;
+use chashmap::*;
+Rocket File Cache - Removed
+use rocket_file_cache::{Cache, CachedFile};
+use std::sync::Mutex;
+use std::path::{Path, PathBuf};
+use rocket::State;
+use concurrent_hashmap::*;
+use auth::userpass::UserPass;
+use auth::status::{LoginStatus,LoginRedirect};
+use auth::dummy::DummyAuthenticator;
+use auth::authenticator::Authenticator;
+use chrono::prelude::*;
+use multipart::server::Multipart;
+
+
+rocket
+    .manage(data::init_pg_pool())
+
+
+            // pages::hbs_view_articles,
+            // old_pages::hbs_tags_all,
+            routes::tagcloud::cache_tagcloud,
+            // old_pages::hbs_articles_tag_redirect,
+            routes::tag::cache_tag_redirect,
+            // old_pages::hbs_articles_tag,
+            routes::tag::cache_tag,
+            // old_pages::hbs_article_title,
+            routes::article::cache_article_title,
+            // old_pages::hbs_article_id,
+            routes::article::cache_article_id,
+            // old_pages::hbs_article_view,
+            routes::article::cache_article_view,
+            // old_pages::hbs_article_not_found,
+            routes::article::hbs_article_not_found,
+            // pages::hbs_search_page,
+            pages::hbs_search_redirect,
+            pages::hbs_search_results,
+            // old_pages::hbs_author_display,
+            // old_pages::hbs_author,
+            pages::hbs_about,
+            // old_pages::rss_page,
+            routes::rss::cache_rss,
+            // old_pages::hbs_index,
+            // routes::articles::cache_index,
+            // pages::hbs_admin_test,
+            // pages::hbs_admin_test_unauthorized,
+            pages::hbs_dashboard_admin_retry_redir,
+            pages::hbs_dashboard_admin_retry_redir_only,
+            
+
+
+            pages::test_article,
+            pages::test_tag,
+            pages::test_author,
+            pages::test_rss,
+            pages::test_tagcloud,
+            pages::test_home,
+            
+
+// pub const COMRAK_OPTIONS: ComrakOptions = ComrakOptions {
+//     hardbreaks: true,            // \n => <br>\n
+//     width: 120usize,             
+//     github_pre_lang: false,      
+//     ext_strikethrough: true,     // hello ~world~ person.
+//     ext_tagfilter: true,         // filters out certain html tags
+//     ext_table: true,             // | a | b |\n|---|---|\n| c | d |
+//     ext_autolink: true,          
+//     ext_tasklist: true,          // * [x] Done\n* [ ] Not Done
+//     ext_superscript: true,       // e = mc^2^
+//     ext_header_ids: None,        // None / Some("some-id-prefix-".to_string())
+//     ext_footnotes: true,         // Hi[^x]\n\n[^x]: A footnote here\n
+// };
+
+/*
+    
+    all_tags
+    /tag/<tag>
+        /tag?<tag>
+    
+    /article?<aid>
+        /article/<aid>
+        /article/<aid>/<title>
+    /article (hbs_article_not_found)
+    /rss.xml
+    /author/<authorid>
+        /author/<authorid>/<authorname>
+    /about
+    
+    
+    /pageviews
+    /pagestats
+    /pagestats/<show_errors>
+    /manage/<sortstr>/<orderstr>
+    /manage
+    
+    
+    
+    */
+
+
+// From the hbs_dashboard_admin_retry_redir() and ..._retry_user()
+// if let Referrer(Some(refer)) = referrer {
+    //     println!("Referrer: {}", &refer);
+    //     fields.insert("referrer".to_string(), refer);
+    // }
+    // // user = login::sanitization::sanitize(&user);
+    
+
+// ATTACHMENTS
+
+// let mut headers = Headers::new();
+            // headers.set(ContentDisposition {
+            //     disposition: DispositionType::Attachment,
+            //     parameters: vec![DispositionParam::Filename(
+            //       Charset::Iso_8859_1, // The character set for the bytes of the filename
+            //       None, // The optional language tag (see `language-tag` crate)
+            //       b"\xa9 Copyright 1989.txt".to_vec() // the actual bytes of the filename
+            //     )]
+            // });
+            
+
+// SEARCHING
+
+// Do a full-text search on the body and title fields
+//   on the tag field match each word against a tag,
+//   this will only match complete word matches
+//     research using array_to_tsvector() in the future
+// https://www.postgresql.org/docs/current/static/functions-textsearch.html
+
+// // NOT IMPLEMENTED YET
+// #[get("/search")]
+// pub fn hbs_search_page(start: GenTimer, conn: DbConn, admin: Option<AdministratorCookie>, user: Option<UserCookie>, encoding: AcceptCompression, uhits: UniqueHits) -> Express {
+//     //show an advanced search form
+    
+//     let output: Template = hbs_template(TemplateBody::General("Search page not implemented yet.  Please use the search form in the top right corner of the page.".to_string(), None), Some("Search".to_string()), String::from("/search"), admin, user, None, Some(start.0));
+//     let express: Express = output.into();
+//     express.compress(encoding)
+// }
+
+
+ 
+    /*
+        SELECT  
+            a.aid, 
+            a.title, 
+            a.posted,
+            a.tag, 
+            ts_rank(a.fulltxt, fqry, 32) AS rank, 
+            ts_headline('pg_catalog.english', a.body, fqry, 'StartSel = "<mark>", StopSel = "</mark>"') AS body
+        FROM 
+            articles a, 
+            plainto_tsquery('pg_catalog.english', 'handlebars or hello') fqry
+        WHERE 
+            fqry @@ a.fulltxt
+                OR
+            'cool' = ANY(a.tag)
+                AND
+            a.posted > '2017-01-01'
+                AND
+            a.posted < '2018-01-01'
+        ORDER BY 
+            rank DESC
+        LIMIT 20
+    */
+    
+    // full-text search: title, description, body
+    // entirety match 'each word' = ANY(tag)
+    
+// Old Query
+//     qrystr.push_str(r#"
+// SELECT a.aid, a.title, a.posted, a.tag, ts_rank(a.fulltxt, fqry, 32) AS rank, ts_headline('pg_catalog.english', a.body, fqry, 'StartSel = "<mark>", StopSel = "</mark>"') AS body,
+//     u.userid, u.display, u.username
+// FROM articles a JOIN users u ON (a.author = u.userid),
+// plainto_tsquery('pg_catalog.english', '"#);
+
+    // ts_headline([ config regconfig, ] document text, query tsquery [, options text ]) returns text
+    // qrystr.push_str(r#"SELECT ts_headline('english', body) FROM articles"#);
+
+
+// WHERE to_tsvector('english', body) @@ to_tsquery('english', 'friend');
+            
+
+// qrystr.push_str(" ORDER BY rank DESC");
+    // if let Some(limit) = search.limit {
+    //     // if str_is_numeric(limit) {
+    //     if limit <= 50 {
+    //         qrystr.push_str(&format!(" LIMIT {}", limit));
+    //         countqry.push_str(&format!(" LIMIT {}", limit));
+    //     } else {
+    //         qrystr.push_str(" LIMIT 50");
+    //         countqry.push_str(" LIMIT 50");
+    //     }
+    // } else {
+    //     qrystr.push_str(" LIMIT 40");
+    //     countqry.push_str(" LIMIT 40");
+    // }
+    
+// let mut articles: Vec<Article> = Vec::new();
+    // let qry = conn.query(&qrystr, &[]);
+    // let output: Template;
+    // if let Ok(result) = qry {
+    //     for row in &result {
+            
+    //         let display: Option<String> = row.get(7);
+    //         let username: String = if let Some(disp) = display { disp } else { row.get(8) };
+            
+    //         let a = Article {
+    //             aid: row.get(0),
+    //             title: row.get(1),
+    //             posted: row.get(2),
+    //             tags: row.get_opt(3).unwrap_or(Ok(Vec::<String>::new())).unwrap_or(Vec::<String>::new()),
+    //             body: row.get(5),
+    //             description: String::new(),
+    //             userid: row.get(6),
+    //             username: titlecase( &username ),
+    //         };
+    //         articles.push(a);
+    //     }
+    //     output = hbs_template(TemplateBody::Search(articles, Some(original), None), Some("Search Results".to_string()), String::from("/search"), admin, user, None, Some(start.0));
+    // } else {
+    //     println!("Query failed. Query: {}", qrystr);
+    //     output = hbs_template(TemplateBody::General(alert_danger("No results were found."), None), Some("Search Results".to_string()), String::from("/search"), admin, user, None, Some(start.0));
+    // }
+    // let end = start.0.elapsed();
+    // println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+    // let express: Express = output.into();
+    // express.compress(encoding)
+
+
+
+
+
+
+
+
+    // let options = ComrakOptions {
+    //     hardbreaks: true,            // \n => <br>\n
+    //     width: 120usize,             
+    //     github_pre_lang: false,      
+    //     ext_strikethrough: true,     // hello ~world~ person.
+    //     ext_tagfilter: true,         // filters out certain html tags
+    //     ext_table: true,             // | a | b |\n|---|---|\n| c | d |
+    //     ext_autolink: true,          
+    //     ext_tasklist: true,          // * [x] Done\n* [ ] Not Done
+    //     ext_superscript: true,       // e = mc^2^
+    //     ext_header_ids: Some("section-".to_string()),        // None / Some("some-id-prefix-".to_string())
+    //     ext_footnotes: true,         // Hi[^x]\n\n[^x]: A footnote here\n
+    // };
+    
+    // let html: String = markdown_to_html(text, &ComrakOptions::default());
+    // let html: String = markdown_to_html(text, &COMRAK_OPTIONS);
+    // html
+
+
+
+
+
+
+
+// BACKUP
+    // "C:\Program Files\PostgreSQL\10\bin\pg_dump.exe"
+    /*
+    pg_dump --file "db_backup-2.sql" --format=p --no-owner --create 
+        --no-privileges --inserts --column-inserts 
+        --dbname="postgres://vishus:Mutex7892@localhost/blog"
+    */ /*
+     "C:\Program Files\PostgreSQL\10\bin\pg_dump.exe" 
+         --file "db_backup-testy.sql" --format=p --no-owner 
+         --create --no-privileges --inserts --column-inserts 
+         --dbname="postgres://postgres:andrew@localhost/blog"
+    */ /*
+        Content-Disposition: attachment; filename="MyFileName.ext"
+        Content-Transfer-Encoding: binary
+        Content-Length: 
+    */
+    
+
+
+
+
+
+// ---/===========/-
+// --/TEST ROUTES/--
+// -/===========/---
+
+
+#[get("/test_tagcloud")]
+pub fn test_tagcloud(start: GenTimer, 
+                multi_aids: State<TagAidsLock>, 
+                // text_cache: State<TextCacheLock>, 
+                conn: DbConn, 
+                admin: Option<AdministratorCookie>, 
+                user: Option<UserCookie>, 
+                encoding: AcceptCompression, 
+                uhits: UniqueHits
+               ) -> Express
+{
+    // unimplemented!()
+    let express: Express = cache::pages::tags::serve(&conn,
+                                                     &multi_aids,
+                                                     admin,
+                                                     user,
+                                                     Some(uhits),
+                                                     Some(start.clone()),
+                                                     Some(encoding),
+                                                     None
+                                                    );
+    let end = start.0.elapsed();
+    println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+    express.compress( encoding )
+    
+}
+
+#[get("/test_rss")]
+pub fn test_rss(start: GenTimer, 
+                text_lock: State<TextCacheLock>, 
+                conn: DbConn, 
+                admin: Option<AdministratorCookie>, 
+                user: Option<UserCookie>, 
+                encoding: AcceptCompression, 
+                uhits: UniqueHits
+               ) -> Express
+{
+    let express: Express = cache::pages::rss::serve(&conn,
+                                                    &*text_lock,
+                                                    admin,
+                                                    user,
+                                                    Some(uhits),
+                                                    Some(start.clone()),
+                                                    Some(encoding),
+                                                    None
+                                                   );
+    let end = start.0.elapsed();
+    println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+    express.compress( encoding )
+}
+
+#[get("/test_author")]
+pub fn test_author(start: GenTimer, 
+                   pagination: Page<Pagination>,
+                   multi_aids: State<TagAidsLock>, 
+                   article_lock: State<ArticleCacheLock>, 
+                   conn: DbConn, 
+                   admin: Option<AdministratorCookie>, 
+                   user: Option<UserCookie>, 
+                   encoding: AcceptCompression, 
+                   uhits: UniqueHits
+                  ) -> Express 
+{
+    let author: u32 = 1;
+    let express: Express = cache::pages::author::serve(author, 
+                                                       &pagination, 
+                                                       &conn, 
+                                                       &multi_aids, 
+                                                       &article_lock,
+                                                       admin,
+                                                       user,
+                                                       Some(uhits),
+                                                       Some(start.clone()),
+                                                       Some(encoding),
+                                                       None
+                                                      );
+    let end = start.0.elapsed();
+    println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+    express.compress( encoding )
+}
+
+#[get("/test_tag")]
+pub fn test_tag(start: GenTimer, 
+                multi_aids: State<TagAidsLock>, 
+                article_state: State<ArticleCacheLock>, 
+                pagination: Page<Pagination>,
+                conn: DbConn, 
+                admin: Option<AdministratorCookie>, 
+                user: Option<UserCookie>, 
+                encoding: AcceptCompression, 
+                uhits: UniqueHits
+               ) -> Express 
+{
+    
+    let tag = "code";
+    let express: Express = cache::pages::tag::serve(tag, 
+                                                    &pagination, 
+                                                    &*multi_aids, 
+                                                    &*article_state, 
+                                                    &conn, 
+                                                    admin, 
+                                                    user, 
+                                                    Some(uhits), 
+                                                    Some(start.clone()), 
+                                                    Some(encoding), 
+                                                    None
+                                                   );
+    let end = start.0.elapsed();
+    println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+    express.compress( encoding )
+    
+}
+
+#[get("/test_article")]
+pub fn test_article(start: GenTimer, article_state: State<ArticleCacheLock>, conn: DbConn, admin: Option<AdministratorCookie>, user: Option<UserCookie>, encoding: AcceptCompression, uhits: UniqueHits) -> Express {
+    let aid = 21u32;
+    
+    // routes::pages::article::serve(aid, start, article_state, &conn, admin, user, encoding, uhits)
+    // cache::pages::article::serve(aid, start, article_state, &conn, admin, user, encoding, uhits)
+    let express: Express = cache::pages::article::serve(aid, 
+                                                        article_state, 
+                                                        &conn, 
+                                                        admin, 
+                                                        user, 
+                                                        start.clone(),
+                                                        uhits,
+                                                        encoding, 
+                                                        None
+                                );
+    let end = start.0.elapsed();
+    println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+    express.compress( encoding )
+    
+    // let article_rst = article_state.retrieve_article(aid);
+    // let ctx: Result<CtxBody<TemplateArticle>, CtxBody<TemplateGeneral>> = routes::body::article(article_rst, admin, user, Some(uhits), Some(start), None);
+    // // let express: Express = routes::template(template_name, ctx);
+    // let express: Express = routes::template(ctx);
+    
+    // // let express: Express = String::new().into();
+    // express
+}
+
+#[get("/test_home")]
+pub fn test_home(start: GenTimer, pagination: Page<Pagination>, article_lock: State<ArticleCacheLock>, conn: DbConn, admin: Option<AdministratorCookie>, user: Option<UserCookie>, encoding: AcceptCompression, uhits: UniqueHits) -> Express {
+    let page_info: Option<String> = None;
+    
+    let express: Express = cache::pages::articles::serve(&*article_lock, 
+                                                         pagination, 
+                                                         &conn, 
+                                                         admin, 
+                                                         user, 
+                                                         start.clone(), 
+                                                         uhits, 
+                                                         encoding, 
+                                                         None, 
+                                                         page_info
+                                                        );
+    let end = start.0.elapsed();
+    println!("Served in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+    express.compress( encoding )
+    
+}
+
+// #[get("/test_cache")]
+// // pub fn test_cache(articles: State<Vec<Article>>) -> Express {
+// pub fn test_cache(start: GenTimer, articles_state: State<ArticleCacheLock>, conn: DbConn, admin: Option<AdministratorCookie>, user: Option<UserCookie>, encoding: AcceptCompression, uhits: UniqueHits) -> Express {
+//     // unimplemented!()
+//     let aid = 21;
+    
+//     let output: Template;
+//     if let Ok(a) = articles_state.lock.read() {
+//         if let Some(article) = a.articles.get(&aid) {
+//             let title = article.title.clone();
+//             // println!("Article {}\n{:?}", article.aid, &article);
+//             output = hbs_template(TemplateBody::Article(article.clone()), None, Some(title), String::from("/article"), admin, user, Some("enable_toc(true);".to_owned()), Some(start.0));
+//         } else {
+//              output = hbs_template(TemplateBody::General(alert_danger(&format!("Article {} not found.", aid))), None, Some("Article Not Found".to_string()), String::from("/article"), admin, user, None, Some(start.0));
+//         }
+        
+        
+//     } else {
+//         output =  hbs_template(TemplateBody::General(alert_danger(&format!("Failed to acquire cache lock for article {}.", aid))), None, Some("Internal Error".to_string()), String::from("/article"), admin, user, None, Some(start.0));
+//     }
+//     // let express: Express = String::new().into();
+//     let end = start.0.elapsed();
+//     println!("Processed in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
+//     let express: Express = output.into();
+//     express.compress( encoding )
+// }
+
+
+
+
+
+
+
+
+// impl<'f> FromForm<'f> for AdministratorForm {
+//     type Error = &'static str;
+    
+//     fn from_form(form_items: &mut FormItems<'f>, _strict: bool) -> Result<Self, Self::Error> {
+//         // let mut user_pass = HashMap::new();
+//         let mut user: String = String::new();
+//         let mut pass: String = String::new();
+//         // let mut pass: Vec<u8> = Vec::new();
+//         let mut extras: HashMap<String, String> = HashMap::new();
+        
+//         for (key,value) in form_items {
+//             match key.as_str(){
+//                 "username" => {
+//                     // user = sanitize(&value.url_decode().unwrap_or(String::new()));
+//                     user = AdministratorForm::clean_username(&value.url_decode().unwrap_or(String::new()));
+//                 },
+//                 "password" => {
+//                     // pass = sanitize_password(&value.url_decode().unwrap_or(String::new()));
+//                     pass = AdministratorForm::clean_password(&value.url_decode().unwrap_or(String::new()));
+//                     // pass = value.bytes().collect();
+//                 },
+//                 // _ => {},
+//                 a => {
+//                     // extras.insert( a.to_string(), sanitize( &value.url_decode().unwrap_or(String::new()) ) );
+//                     extras.insert( a.to_string(), AdministratorForm::clean_extras( &value.url_decode().unwrap_or(String::new()) ) );
+//                 },
+//             }
+//         }
+        
+//         // println!("Creating login form data structure with:\nUser: {}\nPass: {}\nExtras: {:?}", user, pass, extras);
+        
+//         // Do not need to check for username / password here,
+//         // if the authentication method requires them it will
+//         // fail at that point.
+//         Ok(
+//             if extras.len() == 0 {
+//               AdministratorForm::new_form(&user, &pass, None)
+//            } else {
+//                AdministratorForm::new_form(&user, &pass, Some(extras))
+//            }
+//         )
+//     }
+// }
+
+
+// impl<'f> FromForm<'f> for LoginCont<AdministratorForm> {
+//     type Error = &'static str;
+//     
+//     fn from_form(form_items: &mut FormItems<'f>, _strict: bool) -> Result<Self, Self::Error> {
+//         // let mut user_pass = HashMap::new();
+//         let mut user: String = String::new();
+//         let mut pass: String = String::new();
+//         // let mut pass: Vec<u8> = Vec::new();
+//         let mut extras: HashMap<String, String> = HashMap::new();
+//         
+//         for (key,value) in form_items {
+//             match key.as_str(){
+//                 "username" => {
+//                     // user = sanitize(&value.url_decode().unwrap_or(String::new()));
+//                     user = AdministratorForm::clean_username(&value.url_decode().unwrap_or(String::new()));
+//                 },
+//                 "password" => {
+//                     // pass = sanitize_password(&value.url_decode().unwrap_or(String::new()));
+//                     pass = AdministratorForm::clean_password(&value.url_decode().unwrap_or(String::new()));
+//                     // pass = value.bytes().collect();
+//                 },
+//                 // _ => {},
+//                 a => {
+//                     // extras.insert( a.to_string(), sanitize( &value.url_decode().unwrap_or(String::new()) ) );
+//                     extras.insert( a.to_string(), AdministratorForm::clean_extras( &value.url_decode().unwrap_or(String::new()) ) );
+//                 },
+//             }
+//         }
+//         
+//         // println!("Creating login form data structure with:\nUser: {}\nPass: {}\nExtras: {:?}", user, pass, extras);
+//         
+//         // Do not need to check for username / password here,
+//         // if the authentication method requires them it will
+//         // fail at that point.
+//         Ok(
+//             LoginCont {
+//                 form: if extras.len() == 0 {
+//                           AdministratorForm::new_form(&user, &pass, None)
+//                        } else {
+//                            AdministratorForm::new_form(&user, &pass, Some(extras))
+//                        },
+//             }
+//         )
+//     }
+// }
+
+
+
+
+
+// MENU SETTINGS
+
+// #[cfg(not(production))]
+// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu::new("Rust Tutorials".to_owned(), "/content/tutorials".to_owned(), "")]);
+// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu {name: "Rust Tutorials".to_owned(), url: format!("{}content/tutorials", BLOG_URL), separator: false, classes: String::new()}]);
+
+
+// #[cfg(production)]
+// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu::new("Rust Tutorials".to_owned(), "/content/tutorials".to_owned(), "")]);
+// static DEFAULT_PAGE_MENU: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu {name: "Rust Tutorials".to_owned(), url: format!("{}content/tutorials", BLOG_URL), separator: false, classes: String::new()}]);
+
+
+// lazy_static! {
+//     static ref BASE: &'static str = if BLOG_URL.ends_with("/") {
+//         &BLOG_URL[..BLOG_URL.len()-1]
+//     } else {
+//         &BLOG_URL
+//     };
+// }
+
+
+
+
+
+
+// TEMPLATE STUFF
+// let secs = end.as_secs();
+            // let nanos = end.subsec_nanos();
+            // if secs != 0 {
+            //     format!("{} ms", ((end.subsec_nanos() as f64) /1000)  )
+            // } else {
+            //     format!("{}.{:08} seconds", end.as_secs(), end.subsec_nanos())
+            //     // format!("{}-{} seconds", end.as_secs(), end.subsec_nanos())
+            // }
+
+
+
+
+// FIND IP ADDRESS
+/*pub fn find_ip(req: &Request) -> Ipv4Addr {
+    let mut ipaddy: Ipv4Addr = Ipv4Addr::new(0, 0, 0, 0);
+    
+    if let Some(sock) = req.remote() {
+        println!("Remote address: {}", sock.ip());
+        let ip = sock.ip();
+        // let mut ipaddy: Ipv4Addr = Ipv4Addr::new(127, 0, 0, 1);
+        
+        match ip {
+            IpAddr::V4(ip4) => {
+                ipaddy = ip4;
+                println!("Found IPv4 Address, setting ip address to IPv4 address {}", ipaddy);
+            },
+            IpAddr::V6(ip6) => {
+                if let Some(ipnew) = ip6.to_ipv4() {
+                    if ipnew == Ipv4Addr::new(0, 0, 0, 1) {
+                        println!("Ip address is invalid.  IPv6 -> IPv4 failed.");
+                        ipaddy = Ipv4Addr::new(127, 0, 0, 1);
+                    } else {
+                        ipaddy = ipnew;
+                    }
+                    
+                    println!("Found an IPv6 Address, converted successfully to IPv4: {}", ipaddy);
+                } else {
+                    println!("Found an IPv6 Address.  Attempt to convert to IPv4 failed.");
+                }
+            },
+            _ => {
+                println!("Ip Address was neither IPv4 nor IPv6.");
+            },
+        }
+    } else {
+        println!("No ip address found.");
+    }
+    
+    ipaddy
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

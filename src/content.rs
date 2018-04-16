@@ -2,7 +2,6 @@
 use super::{BLOG_URL, COMRAK_OPTIONS, BASE, DEFAULT_PAGE_TEMPLATE, DEFAULT_PAGE_DROPDOWN, DEFAULT_PAGE_MENU, PAGE_TEMPLATES, STATIC_PAGES_DIR};
 use accept::*;
 use blog::GenTimer;
-// use static_pages::*;
 use templates::TemplateMenu;
 use xpress::*;
 use cache::{TagAidsLock, TagsCache, AidsCache};
@@ -18,7 +17,6 @@ use std::prelude::*;
 use std::ffi::OsStr;
 use std::collections::HashMap;
 use std::sync::{Mutex, Arc, RwLock};
-// use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use rocket;
 use rocket::http::Status;
@@ -30,10 +28,6 @@ use rocket::Outcome;
 use rocket::Outcome::Success;
 use rocket::response::NamedFile;
 use rocket::http::{ContentType, Header, HeaderMap};
-// use ::rocket::request::{FromRequest, FromForm, FormItems, FromFormValue, FromParam};
-// use ::rocket::outcome::Outcome;
-// use rocket::http::RawStr;
-// use rocket::response::{content, NamedFile, Redirect, Flash};
 
 use comrak::{markdown_to_html, ComrakOptions};
 use twoway;
@@ -48,8 +42,6 @@ use ::serde::{Deserialize, Serialize};
 use serde_json::{Value, Error};
 
 
-
-// pub const DEFAULT_TEMPLATE: &'static str = "static-default.html.hbs";
 
 pub fn destruct_context(ctx: ContentContext) -> (HashMap<String, PageContext>, usize) {
     let reader = ctx.pages.read().unwrap().clone();
@@ -92,7 +84,6 @@ pub const SEPARATOR: &[u8] = b"
 //      
 
 pub struct ContentContext {
-    // pub pages: RwLock<HashMap<String, ContentCached>>,
     pub pages: RwLock<HashMap<String, PageContext>>,
     pub size: AtomicUsize,
 }
@@ -102,36 +93,16 @@ pub struct ContentCacheLock {
     pub size: AtomicUsize,
 }
 
-// pub struct ContentRequest<'c, 'u> {
-// pub struct ContentRequest<'c, 'p, 'u> {
-//     pub encoding: AcceptCompression,
-//     pub cache: &'c ContentCacheLock,
-//     // pub contexts: &'c ContentContext,
-//     pub route: &'u str,
-//     pub context: &'p PageContext,
-// }
 pub struct ContentRequest {
     pub encoding: AcceptCompression,
-    // pub cache: ContentCacheLock,
     pub route: String,
     pub start: GenTimer,
-    // pub context: PageContext,
-    // pub contexts: &'c ContentContext,
 }
-// pub struct ContentCacheMap {
-//     pub pages: HashMap<String, ContentCached>,
-//     // pub size: AtomicUsize,
-//     // pub size: u64,
-// }
 
+/// The cached contents of a fully rendered page.
+/// Includes all versions of the pages for all compression methods.
 #[derive(Debug, Clone)]
 pub struct ContentCached {
-    // uses: u64,
-    // pub size: u64, // size of uncomprsesed
-    // pub total: u64, // total size of uncompressed plus all compressed versions
-    // pub gzip: Option<Vec<u8>>,
-    // pub br: Option<Vec<u8>>,
-    // pub deflate: Option<Vec<u8>>,
     pub page: Vec<u8>,
     pub gzip: Vec<u8>,
     pub br: Vec<u8>,
@@ -139,10 +110,7 @@ pub struct ContentCached {
     pub size: usize,
 }
 
-// pub struct PageCached
-
-// Maybe add a markdown field ??
-// Maybe add extension and filename fields
+/// The context passed to the handlebars templates for the Page
 #[derive(Debug, Clone, Serialize)]
 pub struct PageContext {
     pub uri: String,
@@ -161,7 +129,6 @@ pub struct PageContext {
     pub markdown: bool,
     pub extension: Option<String>,
     pub filename: Option<String>,
-    // pub info: TemplatePageInfo,
 }
 
 /// Used to retrieve html and metadata from the page
@@ -170,7 +137,7 @@ pub struct PageFormat {
     html: Vec<u8>,
 }
 
-// Used for the yaml deserialization method
+/// Used for the yaml deserialization method
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PageInfo {
     pub uri: String,
@@ -203,10 +170,7 @@ impl ContentContext {
                     let name = file.file_name().to_string_lossy().into_owned();
                     if let Ok(file_type) = file.file_type() {
                         if !file_type.is_file() {
-                            // if &name == "code" {
-                            // } else {
-                                continue;
-                            // }
+                            continue;
                         }
                     } else {
                         // if no file type can be found skip the file
@@ -342,100 +306,16 @@ pub fn titlize(name: &str) -> String {
     let title_new = name.to_owned()
         .replace("-", " ")
         .replace("_", " ")
-        // .replace("'", "")
-        // .replace("\"", "")
-        // .replace("!", "")
-        // .replace("@", "")
-        // .replace("#", "")
-        // .replace("$", "")
-        // .replace("%", "")
-        // .replace("^", "")
-        // .replace("&", "")
-        // .replace("*", "")
-        // .replace("(", "")
-        // .replace(")", "")
-        // .replace("=", "")
-        // .replace(",", "")
-        // .replace(".", "")
-        // .replace("/", "")
         ;
     titlecase(&title_new)
 }
 
 
 impl PageContext {
-    
-    /*pub fn simple_metadata(path: &Path, ext: &str, body: Vec<u8>) -> Result<PageContext, String> {
-        let stem_opt = path.file_stem();
-        if let Some(stem) = stem_opt {
-            let name = stem.to_string_lossy().into_owned();
-            
-            
-            let title = titlize(&name);
-            // println!("Creating metadata for file stem: {} with title: {}", &name, &title);
-            
-            let mut code: bool = false;
-            
-            let ext = ext.to_lowercase();
-            
-            // let lang = match &ext {
-            //     "html" | "htm" | "xhtml" => { code = false; "html" },
-            //     _ => { "" },
-            // };
-            
-            let body = String::from_utf8_lossy(&body).into_owned().replace("{{base_url}}", BLOG_URL);
-            
-            Ok(
-                PageContext {
-                    uri: name,
-                    title: title,
-                    body: if code { markdown_to_html(&body, &COMRAK_OPTIONS) } else { body },
-                    template: DEFAULT_PAGE_TEMPLATE.to_owned(),
-                    js: None,
-                    description: Some("".to_owned()),
-                    gentime: String::new(),
-                    base_url: BLOG_URL.to_owned(),
-                    admin: false,
-                    user: false,
-                    menu: None,
-                    menu_dropdown: None,
-                    dropdown: String::new(),
-                }
-            )
-            
-            
-        } else {
-            Err(format!("Could not find file stem for `{}`", path.display()))
-        }
-        
-    }
-    pub fn load_simple(path: &Path, ext: &str) -> Result<Self, String> {
-        if let Ok(mut file) = File::open(path) {
-            if let Ok(metadata) = file.metadata() {
-                let mut buffer: Vec<u8> = Vec::with_capacity( (metadata.len() + 50) as usize );
-                file.read_to_end(&mut buffer);
-                
-                PageContext::simple_metadata(path, ext, buffer)
-                
-            } else {
-                Err( format!("Could not load metadata for {}", path.display()) )
-            }
-        } else {
-            Err( format!("Could not load file for {}", path.display()) )
-        }
-    }*/
     pub fn load_code(path: &Path, name: String, ext: &str) -> Result<PageContext, String> {
         if let Some(file) = PageFormat::get_file(path) {
             let title = titlize(&name);
             
-            // let body = String::from_utf8_lossy(&file).into_owned().replace("{{base_url}}", BLOG_URL);
-            // let body = String::from_utf8_lossy(&file)
-            //            .into_owned()
-            //            .replace("{{base_url}}", BLOG_URL);
-            
-            // let body = String::from_utf8_lossy(&file)
-            //            .into_owned()
-            //            .replace("{{base_url}}", BLOG_URL);
             let body = encode_minimal(&String::from_utf8_lossy(&file))
                        .replace("{{base_url}}", BLOG_URL);
             Ok(
@@ -555,47 +435,6 @@ impl PageContext {
             Err(format!("Could not load contents of {}", path.display()))
         }
     }
-    
-    /*pub fn load(path: &Path) -> Result<Self, String> {
-        // call PageFormat::get_file()
-        // then PageFormat::get_parts()
-        // then PageFormat::parse_metadata()
-        
-        let file_opt = PageFormat::get_file(path);
-        if let Some(file) = file_opt {
-                
-            // let file: Vec<u8> = PageFormat::get_file(path);
-            // let mut file: Vec<u8> = Vec::with_capacity(contents.len()+10);
-            // file.extend_from_slice(contents);
-            
-            let parts_opt = PageFormat::get_parts(file);
-            if let Some(parts) = parts_opt {
-                // if print {
-                    // println!("Yaml:\n`{:?}`\n\nHtml:\n`{:?}`", parts.yaml, parts.html);
-                // }
-                // Some(parts)
-                // let context = parts.parse_metadata();
-                // context
-                if let Some(meta) = parts.parse_metadata() {
-                    Ok(meta)
-                } else {
-                    Err(format!("Could not load metadata for: {}", path.display()))
-                }
-            } else {
-                if let Ok() = PageContext::load_simple() {
-                    
-                } else {
-                    Err(format!("Failed to load parts of: {}.", path.display()))
-                }
-            }
-        } else {
-            Err(format!("Could not load file: {} ", path.display()))
-        }
-    }
-    // Not sure what render() was supposed to do really...
-    // pub fn render(&self) -> PageContext {
-    //     unimplemented!()
-    // }*/
 }
 
 
@@ -672,14 +511,11 @@ impl PageFormat {
         
         let mut uri = String::new();
         let mut title = String::new();
-        // let mut template = String::new();
         let mut template = DEFAULT_PAGE_TEMPLATE.to_owned();
         let mut js = None;
         let mut description = None;
         let mut admin = false;
         let mut user = false;
-        // let mut menu: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu {name: "Rust Tutorials".to_owned(), url: "content/tutorials".to_owned(), separator: false, classes: String::new()}]);
-        // let mut menu: Option<Vec<TemplateMenu>> = Some(vec![TemplateMenu::new("Rust Tutorials".to_owned(), "/content/tutorials".to_owned(), "")]);
         let mut menu: Option<Vec<TemplateMenu>> = DEFAULT_PAGE_MENU.clone();
         let mut menu_dropdown: Option<Vec<TemplateMenu>> = DEFAULT_PAGE_DROPDOWN.clone();
         let mut dropdown: String = String::new();
@@ -727,14 +563,6 @@ impl PageFormat {
         }
         
         
-        // What is going on here??
-        // let mut title_ok = false;
-        // for temp in PAGE_TEMPLATES {
-        //     if &title == temp {
-        //         title_ok = true;
-        //     }
-        // }
-        
         let mut temp_ok = false;
         for temp in PAGE_TEMPLATES {
             if &template == temp {
@@ -747,14 +575,10 @@ impl PageFormat {
             Some(PageContext {
                 uri,
                 title: title,
-                // title: if &title != "" { title } else { String::new() },
                 template: if temp_ok && &template != "" { template } else { DEFAULT_PAGE_TEMPLATE.to_owned() },
                 js,
                 description,
                 body: {
-                    // String::from_utf8_lossy(&self.html).into_owned().trim().to_owned()
-                    
-                    // /* Pre-replace */ let body = String::from_utf8_lossy(&self.html).into_owned();
                     let body = String::from_utf8_lossy(&self.html).into_owned().replace("{{base_url}}", BLOG_URL);
                     if markdown {
                         // let cr_options = ComrakOptions { ext_header_ids: Some("section-".to_string()), .. COMRAK_OPTIONS };
@@ -784,7 +608,6 @@ impl PageFormat {
 
 /// Takes a byte vector and converts to a TemplateMenu vector.
 pub fn json_menu(json: &[u8]) -> Option<Vec<TemplateMenu>> {
-    // Some(String::from_utf8_lossy(&self.yaml[fs+1..end]).into_owned().trim().to_owned());
     let des: Result<Vec<TemplateMenu>, _> = ::serde_json::from_slice(json);
     
     if let Ok(d) = des {
@@ -809,9 +632,9 @@ pub fn bytes_are_true(bytes: &[u8], default: bool) -> bool {
     }
     if &bytes[pos..pos+4] == b"true" 
     || &bytes[pos..pos+3] == b"yes" 
-    || &bytes[pos..pos+4] == b"Yes" 
+    || &bytes[pos..pos+3] == b"Yes" 
     || &bytes[pos..pos+4] == b"True" 
-    || &bytes[pos..pos+4] == b"1" 
+    || &bytes[pos..pos+1] == b"1" 
     || &bytes[pos..pos+2] == b"on" 
     || &bytes[pos..pos+2] == b"On" {
         !default
@@ -877,7 +700,6 @@ impl PageInfo {
 
 
 
-// impl<'a, 'c, 'u> Responder<'a> for ContentRequest<'c, 'u> {
 impl<'a> Responder<'a> for ContentRequest 
 {
     fn respond_to(self, req: &Request) -> response::Result<'a> 
@@ -889,25 +711,9 @@ impl<'a> Responder<'a> for ContentRequest
         //   and pull the compression method/original (specified by encoding.preferred()) from the cache
         // if not then create the new cache entry
         
-        // let cache: Result<_, _>;
-        
-        //     cache = self.cache.pages.read();
-        //     if let Ok(cache) = self.cache.pages.read() {
-        //         // cache_entry = cache.get(self.route);
-        //         // cache_entry = cache.get(self.route).map(|r| *r);
-        //         cache_entry = cache.get(self.route);
-        //     } else {
-        //         cache_entry = None;
-        //     }
-        // }
-        
-        // Replacing self.cache and self.context
-        
         // DEBUG PRINT - println!("Responding to static page: {}", &self.route);
         
         let context_state = req.guard::<State<ContentContext>>().unwrap();
-        // let context_state_lock = req.guard::<State<ContentContext>>().unwrap();
-        // let context_state = context_state_lock;
         let ctx_pages_rst = context_state.pages.read();
         let ctx_pages;
         if let Ok(ctxpages) = ctx_pages_rst {
@@ -916,16 +722,11 @@ impl<'a> Responder<'a> for ContentRequest
             return Err(Status::InternalServerError);
         }
         let cache_state = req.guard::<State<ContentCacheLock>>().unwrap();
-        
-        
-        
         /*  1. Check for existence of uri in cache map (the content page route already checks for existence of page context for the given uri)
             2. If uri is not in cache map look for it in the context map (has to be in there but double check - don't use unwrap())
                    Add combined size of ContentCached fields to ContentCacheLock's size field
                        Use a checked add so the size never overflows, it just reaches a max value
-            
         */
-        
         
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // To improve performance: instead of cloning the byte vector:
@@ -934,9 +735,7 @@ impl<'a> Responder<'a> for ContentRequest
         //   then do xresp.streamed_body( Cursor::new(body_bytes_reference) )
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         
-        // let cache_map = content_cache.cache.pages.read().unwrap();
         {
-            // let cache_map = cache_state.pages.read().unwrap();
             let cache_map_lock = cache_state.pages.read();
             let cache_map;
             if let Ok(cm) = cache_map_lock {
@@ -945,11 +744,9 @@ impl<'a> Responder<'a> for ContentRequest
                 return Err(Status::InternalServerError)
             }
             let cache_uri_opt = cache_map.get(&self.route);
-            // let mut output_contents: Vec<u8> = Vec::new();
             
             if let Some(cache_uri) = cache_uri_opt {
-                // DEBUG PRINT - 
-                println!("Page exists in cache");
+                // DEBUG PRINT - println!("Page exists in cache");
                 
                 let mut body_bytes = match self.encoding.preferred() {
                     Uncompressed => { cache_uri.page.clone() },
@@ -965,10 +762,8 @@ impl<'a> Responder<'a> for ContentRequest
                 return express.respond_to(req)
             }
         }
-            // DEBUG PRINT - 
-            println!("Page not found in cache, generating cache for page");
+            // DEBUG PRINT - println!("Page not found in cache, generating cache for page");
             
-            // if let Some(ctx) = context_state.pages.get(&self.route) {
             if let Some(ctx) = ctx_pages.get(&self.route) {
                 
                 // DEBUG PRINT - println!("Retrieved context");
@@ -993,7 +788,7 @@ impl<'a> Responder<'a> for ContentRequest
                     {
                         let mut buffer = Vec::with_capacity(output_contents.len() + 200);
                         let mut gzip_encoder = gzip::Encoder::new(buffer).unwrap();
-                        gzip_encoder.write_all(&output_contents).expect("hi gzip"); // .expect("Gzip compression failed.");
+                        gzip_encoder.write_all(&output_contents).expect("Compresing gzip failed"); // .expect("Gzip compression failed.");
                         gzip = gzip_encoder.finish().into_result().unwrap_or(Vec::new());
                     }
                     
@@ -1001,7 +796,6 @@ impl<'a> Responder<'a> for ContentRequest
                     {
                         let length = output_contents.len()+200;
                         let mut buffer = Vec::with_capacity(length);
-                        // let mut compressor = ::brotli::CompressorReader::new(Cursor::new(data), 10*1024, 9, 22);
                         let mut compressor = ::brotli::CompressorReader::new(Cursor::new(&output_contents), length, 9, 22);
                         let _ = compressor.read_to_end(&mut buffer);
                         br = buffer;
@@ -1018,8 +812,6 @@ impl<'a> Responder<'a> for ContentRequest
                     
                     // DEBUG PRINT - print!(" Finished! Compressed versions of page have been generated.\n");
                     
-                    // resp.set_streamed_body(  Cursor::new( output_contents )  );
-                    
                     // Find the best compression algorithm for the client
                     let mut supported = 0u8;
                     let headers = req.headers();
@@ -1028,7 +820,6 @@ impl<'a> Responder<'a> for ContentRequest
                         if encoding.contains("deflate") { supported |= ::accept::DEFLATE; }
                         if encoding.contains("br") { supported |= ::accept::BROTLI; }
                     }
-                    // let accepted = AcceptCompression { supported };
                     let accepted = AcceptCompression::new(supported);
                     let compression = accepted.preferred();
                     // Set the correct version of the contents based on best supported compression algorithm
@@ -1072,7 +863,6 @@ impl<'a> Responder<'a> for ContentRequest
                     // insert new_cache into cache map, make sure to unlock it for write access
                     {
                         // let mut wcache = cache_state.pages.write().unwrap();
-                        // wcache.insert(self.route.clone(), new_cache);
                         let mut wcache = cache_state.pages.write().unwrap();
                         wcache.insert(self.route.clone(), new_cache.clone());
                         
@@ -1082,16 +872,13 @@ impl<'a> Responder<'a> for ContentRequest
                     
                     // DEBUG PRINT - println!("Responder finished, returning response..");
                     
-                    // Outcome::Success( resp )
                     let end = self.start.0.elapsed();
                     println!("Content processed in {}.{:09} seconds", end.as_secs(), end.subsec_nanos());
                 
                     Ok( resp )
                     
                 } else {
-                    // Outcome::Failure("Responder failed to extract response body.")
                     // fail - uri not found in context map
-                    // Err("Responder failed to extract response body")
                     println!("Responder failed to extract response body");
                     Err(Status::ImATeapot)
                 }
@@ -1099,186 +886,9 @@ impl<'a> Responder<'a> for ContentRequest
                 
             } else {
                 println!("Responder failed to find uri `{}` in the context map.", &self.route);
-                // Outcome::Failure("Responder failed to find uri in context map")
-                // Err("Responder failed to find uri in context map")
                 Err(Status::NotFound)
             }
         // }
-        
-        
-        /*
-        // let content_context_map = req.guard::<ContentContext>();
-        // let content_cache = req.guard::<ContentCacheLock>();
-        let content_context_map_rst =  req.guard::<State<ContentContext>>();
-        let content_cache_rst =  req.guard::<State<ContentCacheLock>>();
-        // if content_context_map_rst == 0usize {}
-        if let Success(content_context) = content_context_map_rst {
-            if let Success(content_cache2) = content_cache_rst {
-                let content_cache = content_cache2.inner();
-                // let content_context_opt = content_context_map.get(&self.route);
-                
-                // cache_entry = self.cache.pages.read().unwrap().get(self.route);
-                // if let Some(content_context) = content_context_opt {
-                    if let Ok(cache) = content_cache.cache.pages.read() 
-                    {
-                    // if let Ok(cache) = self.cache.pages.read() {
-                        let cache_entry: Option<&ContentCached>;
-                        cache_entry = cache.get(&self.route);
-                        // if let Some(cache_entry) = cache.get(&self.route) {
-                        // output_contents is used as a variable to reference in output_bytes
-                        //   when there is no existing cache entry for the uri
-                        let mut output_contents: Vec<u8> = Vec::new();
-                        
-                        if let Some(entry) = cache_entry {
-                            let entry = cache_entry.unwrap(); // ok because this is guaranteed to be something
-                            let mut output_bytes: &Vec<u8> = &Vec::new();
-                            match self.encoding.preferred() 
-                            {
-                                CompressionEncoding::Uncompressed => { output_bytes = &entry.page; },
-                                CompressionEncoding::Brotli => { output_bytes = &entry.br; },
-                                CompressionEncoding::Gzip => { output_bytes = &entry.gzip; },
-                                CompressionEncoding::Deflate => { output_bytes = &entry.deflate; },
-                            }
-                            
-                            // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-                            // To improve performance: instead of cloning the vector:
-                            //   make a String::new() that is converted .into() an Express instance
-                            //   then do xresp.streamed_body( Cursor::new(output_bytes) )
-                            // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-                            
-                            output_contents = output_bytes.clone();
-                            let express: Express = output_contents.into();
-                            express.respond_to(req) // do not use express.compress(encoding) as the contents are already compressed!!!
-                            
-                            // let mut xresp = express.respond_to(req).unwrap_or_default();
-                            // xresp.streamed_body(Cursor::new( output_bytes ))
-                                
-                        }
-                         else 
-                        {
-                            
-                            
-                            // let template: Template = Template::render(self.context.template.clone(), &self.context);
-                            let template: Template = Template::render(content_context.template.clone(), &content_context);
-                            
-                            // let bytes: Vec<u8> = Vec::new();
-                            let express: Express = template.into();
-                            
-                            let mut xresp = express.respond_to(req).unwrap_or_default();
-                            // let mut tresp = template.respond_to(req).unwrap_or_default();
-                            // xresp.set_streamed_body(Cursor::new( output_bytes )); // need to use set_streamed_body() when not using a response builder
-                            
-                            
-                            // Performance:
-                            // make the if let Some(body) for the xresp.body_bytes() not assign to a variable
-                            // instead move all of the compression and the entry: ContentCached struct initialization
-                            //   into the if statement, and make an else statement that creates a BLANK entry (otherwise it will have to create the blank entry over and over again)
-                            
-                            // output_contents = if let Some(body) = xresp.body_bytes() {
-                            //     body
-                            // } else {
-                            //     Vec::new()
-                            // };
-                            let mut output_contents: Vec<u8> = Vec::new();
-                            let entry: ContentCached;
-                            if let Some(body) = xresp.body_bytes() 
-                            {
-                                output_contents = body;
-                                let gzip: Vec<u8>;
-                                {
-                                    let mut buffer = Vec::with_capacity(output_contents.len() + 200);
-                                    let mut gzip_encoder = gzip::Encoder::new(buffer).unwrap();
-                                    gzip_encoder.write_all(&output_contents).expect("hi gzip"); // .expect("Gzip compression failed.");
-                                    gzip = gzip_encoder.finish().into_result().unwrap_or(Vec::new());
-                                }
-                                
-                                let br: Vec<u8>;
-                                {
-                                    let length = output_contents.len()+200;
-                                    let mut buffer = Vec::with_capacity(length);
-                                    // let mut compressor = ::brotli::CompressorReader::new(Cursor::new(data), 10*1024, 9, 22);
-                                    let mut compressor = ::brotli::CompressorReader::new(Cursor::new(&output_contents), length, 9, 22);
-                                    let _ = compressor.read_to_end(&mut buffer);
-                                    br = buffer;
-                                }
-                                
-                                let deflate: Vec<u8>;
-                                {
-                                    let mut buffer = Vec::with_capacity(output_contents.len()+200);
-                                    let mut encoder = deflate::Encoder::new(buffer);
-                                    encoder.write_all(&output_contents); //.expect("Deflate compression failed.");
-                                    deflate = encoder.finish().into_result().unwrap_or(Vec::new());
-                                    
-                                }
-                                
-                                let output_length = output_contents.len();
-                                let gzip_length = gzip.len();
-                                let br_length = br.len();
-                                let deflate_length = deflate.len();
-                                
-                                entry = ContentCached 
-                                {
-                                    page: output_contents,
-                                    gzip,
-                                    br,
-                                    deflate,
-                                    // size: output_contents.len() + gzip.len() + br.len() + deflate.len(),
-                                    size: output_length + gzip_length + br_length + deflate_length,
-                                };
-                            } 
-                            else 
-                            {
-                                let output_length = output_contents.len();
-                                output_contents = Vec::new();
-                                entry = ContentCached 
-                                {
-                                    page: output_contents,
-                                    gzip: Vec::new(),
-                                    br: Vec::new(),
-                                    deflate: Vec::new(),
-                                    size: output_length,
-                                };
-                            }
-                            {
-                                // let map_rst = self.cache.pages.write();
-                                let map_rst = content_cache.pages.write();
-                                if let Ok(mut map) = map_rst 
-                                {
-                                    map.insert(self.route.to_owned(), entry.clone());
-                                }
-                            }
-                            
-                            // Add entry
-                            // Add total size to the cache.size:
-                            //   br.len() + gzip.len() + deflate.len() + output_contents.len()
-                            
-                            // need to set the body because the body_bytes() method consumes it
-                            // which is ok because it gets 
-                            
-                            let output = match self.encoding.preferred() 
-                            {
-                                CompressionEncoding::Uncompressed => { entry.page },
-                                CompressionEncoding::Brotli => { entry.br },
-                                CompressionEncoding::Gzip => { entry.gzip },
-                                CompressionEncoding::Deflate => { entry.deflate },
-                            };
-                            
-                            xresp.set_streamed_body(  Cursor::new( output )  );
-                            Ok(xresp)
-                        }
-                    } else {
-                        Err(Status::BadRequest)
-                    }
-                // } else {
-                //     Err(Status::BadRequest)
-                // }
-            } else {
-                Err(Status::ImATeapot)
-            }
-        } else {
-            Err(Status::ImATeapot)
-        }
-        */
     }
 }
 

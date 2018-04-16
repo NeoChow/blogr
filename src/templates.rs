@@ -1,34 +1,20 @@
 
 use rocket_contrib::Template;
-// use handlebars::Handlebars;
 
 use std::collections::{HashMap, BTreeMap};
 use chrono::{NaiveDate, NaiveDateTime};
-use titlecase::titlecase;
 use std::time::{Instant, Duration};
-
-
-// use ::serde::{Deserialize, Serialize};
-
-
-// use cookie_data::*;
-
-// not used anymore
-// use admin_auth::*;
-// use user_auth::*;
+use std::path::{Path, PathBuf};
+use std::env;
+use titlecase::titlecase;
 
 use super::{BLOG_URL, INTERNAL_IMGS, BASE, DEFAULT_PAGE_MENU};
 use blog::*;
 use collate::*;
 use layout::*;
-// use users;
-
 use ral_administrator::*;
 use ral_user::*;
 
-
-use std::path::{Path, PathBuf};
-use std::env;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct TagCount {
@@ -38,11 +24,8 @@ pub struct TagCount {
     pub size: u16,
 }
 
-//  style="background: url('') center center no-repeat"
-
 /// The TemplateBody struct determines which template is used and what info is passed to it
 #[derive(Debug, Clone)]
-// pub enum TemplateBody<T: Collate> {
 pub enum TemplateBody {
     General(String), // page content and optional message
     Article(Article), // article and optional message
@@ -53,7 +36,6 @@ pub enum TemplateBody {
         u32,                // total number of items
         Option<String>,     // page information - "Showing page x of y - z items found"
     ), 
-    // Search(Vec<Article>, Option<String>, Option<String>), // articles and an optional message
     Search(Vec<Article>, Option<Search>), // articles and an optional message
     Login (
         String, // Form Action URL
@@ -70,28 +52,10 @@ pub enum TemplateBody {
     // need to find a way to indicate which column is being sorted on and which way its sorted
     // manage/desc|asc/date
     // turn sort into sort display
-    
-    // Manage(String, String, Vec<Article>, Page<Pagination>, u32, Sort, Option<String>), // Edit action, delete action, articles, pagination, total items, sort info
-    // Manage(Vec<Article>, Page<Pagination>, u32, Sort), // Articles, pagination, total items, sort info
-    // Manage(Vec<Article>, Page<T>, u32, Sort), // Articles, pagination, total items, sort info
     Manage(Vec<Article>, Page<Pagination>, u32, Sort), // Articles, pagination, total items, sort info
-    
     Tags(Vec<TagCount>), // list of tags and their counts, and optional message
     
-    // Stats(Vec<PageStats>, usize) // list of page stats items and the total number of hits
-    
 }
-
-
-
-// #[derive(Debug, Clone, Serialize)]
-// pub struct PageStats {
-//     pub route: String,
-//     pub ip: String,
-//     pub visits: usize,
-//     pub hits: usize,
-//     pub uhits: usize,
-// }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TemplateMenu {
@@ -165,13 +129,6 @@ pub struct TemplateGeneral {
     pub info: TemplateInfo,
 
 }
-// #[derive(Debug, Clone, Serialize)]
-// pub struct TemplateStats {
-//     pub items: Vec<PageStats>,
-//     pub total: usize,
-//     pub visitors: usize,
-//     pub info: TemplateInfo,
-// }
 #[derive(Debug, Clone, Serialize)]
 pub struct TemplateArticle {
     pub body: ArticleDisplay,
@@ -210,24 +167,13 @@ pub struct TemplateManage {
     pub info: TemplateInfo,
 }
 
-
-
 // END TEMPLATEBODY STRUCTS
 
-// let end = start.elapsed();
-// println!("Served in {}.{:08} seconds", end.as_secs(), end.subsec_nanos());
 
 
 
 
 pub fn create_menu(page: &str, admin_opt: &Option<AdministratorCookie>, user_opt: &Option<UserCookie>) -> (Vec<TemplateMenu>, Vec<TemplateMenu>) {
-    
-    // let mut pages: Vec<TemplateMenu> = vec![
-    //     TemplateMenu::new(String::from("Home"), String::from("/"), page),
-    //     TemplateMenu::new(String::from("Rust Tutorials"), String::from("/content/tutorials"), page),
-    //     TemplateMenu::new(String::from("Tags"), String::from("/all_tags"), page),
-    //     TemplateMenu::new(String::from("About"), String::from("/content/about-me"), page),
-    // ];
     let mut pages: Vec<TemplateMenu> = DEFAULT_PAGE_MENU.clone().unwrap_or(vec![
         TemplateMenu::new(String::from("Home"), String::from("/"), page),
         TemplateMenu::new(String::from("Rust Tutorials"), String::from("/content/tutorials"), page),
@@ -237,23 +183,15 @@ pub fn create_menu(page: &str, admin_opt: &Option<AdministratorCookie>, user_opt
     
     // Displays both admin and user menus if user is logged in as both
     let mut admin_pages: Vec<TemplateMenu> = Vec::new();
-    // if admin_opt.is_some() && user_opt.is_some() {
-    //     admin_pages.push( TemplateMenu::separator() );
-    // }
-    
-    // admin_pages.push( TemplateMenu { separator: true, name: "User Menu".to_string(), url: String::new(), classes: String::new() });
     admin_pages.push( TemplateMenu::header("User Menu"));
     
     if user_opt.is_some() {
         admin_pages.push( TemplateMenu::new(String::from("User Dashboard"), String::from("/user"), page) );
-        // admin_pages.push( TemplateMenu::separator() );
         admin_pages.push( TemplateMenu::new(String::from("Logout User"), String::from("/user_logout"), page) );
     } else {
         admin_pages.push( TemplateMenu::new(String::from("User Login"), String::from("/user"), page) );
     }
-    // admin_pages.push( TemplateMenu::separator() );
     
-    // admin_pages.push( TemplateMenu { separator: true, name: "Admin Menu".to_string(), url: String::new(), classes: String::new() });
     admin_pages.push( TemplateMenu::header("Admin Menu"));
     
     if admin_opt.is_some() {
@@ -262,26 +200,17 @@ pub fn create_menu(page: &str, admin_opt: &Option<AdministratorCookie>, user_opt
         admin_pages.push( TemplateMenu::new(String::from("Page Statistics"), String::from("/pagestats/false"), page) );
         admin_pages.push( TemplateMenu::with_class(String::from("Database Backup"), String::from("/backup"), String::from("\" target=\"_blank"), page) );
         admin_pages.push( TemplateMenu::new(String::from("Refresh Content"), String::from("/refresh_content"), page) );
-        // admin_pages.push( TemplateMenu::separator() );
         admin_pages.push( TemplateMenu::new(String::from("Logout Administrator"), String::from("/admin_logout"), page) );
     } else {
         admin_pages.push( TemplateMenu::new(String::from("Admin Login"), String::from("/admin"), page) );
     }
-    // if admin_opt.is_none() && user_opt.is_none() {
-    //     pages.push( TemplateMenu::new(String::from("User Login"), String::from("/user"), page) );
-    //     pages.push( TemplateMenu::new(String::from("Admin Login"), String::from("/admin"), page) );
-    // }
     
     (pages, admin_pages)
 }
 
-// lazy_static! {
-//     static ref BASE: &'static str = if BLOG_URL.ends_with("/") {
-//         &BLOG_URL[..BLOG_URL.len()-1]
-//     } else {
-//         &BLOG_URL
-//     };
-// }
+
+
+
 
 impl TemplateMenu {
     pub fn new(name: String, url: String, current_page: &str) -> TemplateMenu {
@@ -346,8 +275,6 @@ impl TemplateMenu {
     }
 }
 
-
-
 impl TemplateInfo {
     pub fn new( title: Option<String>, 
                 admin: Option<AdministratorCookie>, 
@@ -363,14 +290,7 @@ impl TemplateInfo {
             let end = inst.elapsed();
             format!("{}.{:09} seconds", end.as_secs(), end.subsec_nanos())
             
-            // let secs = end.as_secs();
-            // let nanos = end.subsec_nanos();
-            // if secs != 0 {
-            //     format!("{} ms", ((end.subsec_nanos() as f64) /1000)  )
-            // } else {
-            //     format!("{}.{:08} seconds", end.as_secs(), end.subsec_nanos())
-            //     // format!("{}-{} seconds", end.as_secs(), end.subsec_nanos())
-            // }
+            
         } else { 
             String::new() 
         };
@@ -397,7 +317,6 @@ impl TemplateInfo {
             logged_in: if admin.is_some() || user.is_some() { true } else { false },
             is_admin: if admin.is_some() { true } else { false },
             is_user: if user.is_some() { true } else { false },
-            // username: if let Some(a) = admin { titlecase(&a.username.clone()) } else if let Some(u) = user { titlecase(&u.username.clone()) } else { String::new() },
             dropdown: if &username != "" { username.clone() } else { "Login".to_string() },
             username,
             js,
@@ -411,8 +330,6 @@ impl TemplateInfo {
     }
 }
 
-
-
 impl TemplateGeneral  {
     pub fn new(content: String, info: TemplateInfo) -> TemplateGeneral {
         TemplateGeneral {
@@ -421,16 +338,6 @@ impl TemplateGeneral  {
         }
     }
 }
-// impl TemplateStats  {
-//     pub fn new(stats: Vec<PageStats>, total: usize, info: TemplateInfo) -> TemplateGeneral {
-//         TemplateGeneral {
-//             stats,
-//             total,
-//             visitors: 0, // not implemented yet
-//             info
-//         }
-//     }
-// }
 impl TemplateArticle {
     pub fn new(content: Article, info: TemplateInfo) -> TemplateArticle {
         TemplateArticle {
@@ -550,7 +457,6 @@ impl TemplateTags {
     }
 }
 impl TemplateArticlesPages {
-    // pub fn new(content: Vec<Article>, page: Page<Pagination>, total_items: u32, info_opt: Option<String>, info: TemplateInfo) -> TemplateArticlesPages {
     pub fn new<T: Collate>(content: Vec<Article>, page: Page<T>, total_items: u32, info_opt: Option<String>, info: TemplateInfo) -> TemplateArticlesPages {
         let mut articles: Vec<ArticleDisplay> = content.iter().map(|a| a.to_display()).collect();
         TemplateArticlesPages {
@@ -562,11 +468,9 @@ impl TemplateArticlesPages {
     }
 }
 impl TemplateManage {
-    // pub fn new(content: Vec<Article>, page: Page<Pagination>, total_items: u32, sort: Sort, info: TemplateInfo) -> TemplateManage {
     pub fn new<T: Collate>(content: Vec<Article>, page: Page<T>, total_items: u32, sort: Sort, info: TemplateInfo) -> TemplateManage {
         let mut articles: Vec<ArticleDisplay> = content.iter().map(|a| a.to_display()).collect();
         TemplateManage {
-            // action_url,
             body: articles,
             links: page.navigation(total_items),
             sort: sort.to_display(),

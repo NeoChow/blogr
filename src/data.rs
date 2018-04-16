@@ -1,5 +1,4 @@
 
-// use rocket;
 use ::rocket::request::{self, FromRequest, FromForm, FormItems};
 use rocket::{Request, State, Outcome};
 use ::rocket::config::{Config, Environment};
@@ -11,31 +10,21 @@ use chrono::{NaiveDate, NaiveDateTime};
 
 use titlecase::titlecase;
 
-use blog::*;
-// not used anymore
-// use users::*;
-// use cookie_data::*;
-
-// use rocket::request::{self, FromRequest};
 
 use r2d2;
 use r2d2_postgres;
 use r2d2_postgres::{PostgresConnectionManager, TlsMode};
-// use postgres::{Connection, TlsMode};
 use postgres::Connection;
 use postgres;
 use postgres::params::{ConnectParams, Host};
-// use postgres::SslMode;
-// use postgres::TlsMode;
 
 use std::ops::Deref;
 use std;
 use std::env;
-// use dotenv::dotenv;
+
+
+use blog::*;
 use super::{DATABASE_URL, DESC_LIMIT};
-// use diesel;
-// use diesel::prelude::*;
-// use diesel::pg::PgConnection;
 
 
 // https://github.com/sfackler/rust-postgres/issues/128
@@ -58,21 +47,13 @@ type Pool = r2d2::Pool<PostgresConnectionManager>;
 
 /// Creates the database connection pool
 pub fn init_pg_pool() -> Pool {
-    // let conn_str = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let config = r2d2::Config::default();
-    
-    // let manager = PostgresConnectionManager::new("postgres://postgres:andrew@localhost/blog", TlsMode::None).unwrap();
-    
-    // dotenv().ok();
-    // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let manager = PostgresConnectionManager::new(DATABASE_URL, TlsMode::None).expect("Could not connect to database using specified connection string.");
     
     r2d2::Pool::new(config, manager).expect("Could not create database pool")
 }
 
 pub fn init_pg_conn() -> Connection {
-    // let conn_str = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    // Connection::connect("postgres://postgres:andrew@localhost/blog", postgres::TlsMode::None).unwrap()
     Connection::connect(DATABASE_URL, postgres::TlsMode::None).unwrap()
 }
 
@@ -103,7 +84,6 @@ impl DbConn {
                     posted: row.get(2),
                     body: row.get(3),
                     tags: row.get_opt(4).unwrap_or(Ok(Vec::<String>::new())).unwrap_or(Vec::<String>::new()).into_iter().map(|s| s.trim_matches('\'').trim().to_string()).filter(|s| s.as_str() != "").collect(),
-                    // tags: row.get_opt(4).unwrap_or(Ok(Vec::<String>::new())).unwrap_or(Vec::<String>::new()).into_iter().map(|s| s.trim().trim_matches('\'').to_string()).collect(),
                     description: row.get_opt(5).unwrap_or(Ok(String::new())).unwrap_or(String::new()),
                     userid: row.get(6),
                     username: titlecase( &username ),
@@ -153,42 +133,11 @@ impl Deref for DbConn {
 
 
 pub fn establish_connection() -> Connection {
-    // dotenv().ok();
-    // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    // PgConnection::establish(&database_url).expect("Error connecting to {}", database_url);
-    // Connection::connect("postgres://postgres@localhost:5433", TlsMode::None).unwrap()
-    // Connection::connect(database_url, postgres::TlsMode::None).unwrap()
     Connection::connect(DATABASE_URL, postgres::TlsMode::None).unwrap()
 }
 
 // Commented out because the DotEnv crate isn't required anywhere else
 // and these functions are not used.  They are left here because they
 // could be useful at some point, someday but not immediately.
-//
-// pub fn establish_connection_dotenv() -> Connection {
-//     dotenv().ok();
-//     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-//     Connection::connect(database_url, postgres::TlsMode::None).unwrap()
-// }
-
-
-
-// Possible way to retrieve a user
-// pub trait HasUsername {
-//     fn username(&self) -> String;
-//     fn retrieve_user(&self) -> Self;
-// }
-
-// impl HasUsername for AdminCookie {
-//     fn username(&self) -> String {
-//         self.username.clone()
-//     }
-//     fn retrieve_user(&self) -> Self {
-//         unimplemented!()
-//     }
-// }
-
-
-
 
 

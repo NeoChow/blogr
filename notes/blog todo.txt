@@ -7,6 +7,8 @@ SCSS
 	Maybe benchmark string != "" vs string.len() == 0  for empty string checks
 
 Non-Blog
+	Figure out GitHub releases - how to use them, how to make releases, update releases, etc.0
+
 	What is high logic font manager thing program
 
 	Maybe add a semi-transparent diagnal 'tv-lines' type stripe going over the sphere
@@ -16,6 +18,8 @@ Non-Blog
 	Modify the 3d sphere to have like a red outline or something different
 
 Articles
+	udpate the Shannon Entropy article
+
 	Add an article about using comrak for rendering markdown.
 
 	Add a breif article about generating compressed content with brotli and libflate
@@ -56,6 +60,16 @@ Server
 			cp -r templates ~/backups/<backup_name>
 			cp -r static ~/backups/<backup_name>
 			sudo cp -r private ~/backups/<backup_name>
+
+Blog App
+
+	Update to Rocket to at least version 3.6, preferrably 3.8
+
+	Rocket version 3.6 has a Rocket.state() method to retrieve state from an instance
+		Maybe this could be used to preload all content pages???
+		Not sure how atm, need to use responder (or maybe Request guard) to get contents
+
+
 
 Theme
 	Maybe make the table of contents scroll with screen like the header does
@@ -119,20 +133,7 @@ Blogr-Fixes
 		Maybe add a div to disable the toc <div id="disable-toc"></div>
 			If the #disable-toc id is found then do not run the toc javascript code
 
-	Use IndexMap instead of HashMap for all cache module stuffs
-
 	Do a code cleanup - remove excess comments
-
-	The main page should sort articles by date added, desc
-		right now I'm not sure there is any sorting
-			it just pulls from cache in random order
-		maybe use multi page articles with the ArticleIds sorted based on date added desc
-		Or could look for a crate that has an ordered hashmap
-	Other multi article pages should sort by date added (descending)
-		
-
-	Allow Ampersands in titles, and maybe others like:
-	 !?'-_&(),.
 
 	Maybe add image and modification date to articles
 		when using full articles for single article paginated content
@@ -140,64 +141,10 @@ Blogr-Fixes
 			to display on a page, it will not show the image or modification date
 		Maybe the modification date and image fields are not being set?
 
-	Add disclaimer saying I am not liable for any issues from the code
-		and that all code is licensed under the MIT license
-	Add privacy policy saying I *MAY* log the number of times each IP address visits a uri
-
-	ALREADY IMPLEMENTED - Need some way to specify the language for source code files in static content
-		Maybe add metadata to all files with a .meta extension??
-
-
-	Figure out GitHub releases - how to use them, how to make releases, update releases, etc.0
-
 	Update ttl / client-side caching / expiration to 2592000 seconds
-
-	Update to Rocket to at least version 3.6, preferrably 3.8
-
-	Rocket version 3.6 has a Rocket.state() method to retrieve state from an instance
-		Maybe this could be used to preload all content pages???
-		Not sure how atm, need to use responder (or maybe Request guard) to get contents
-
-	Add a little link with the hyperlink icon to the right of the title text field
-		on the create/edit pages.  The link could be generated via handlebars or
-		through javascript.  Handlebars would just have to add a link next to the
-		title text box, with a link to {{base_url}}article/{{body.aid}}/{{body.title}}
-
-	Add calls to update_all_caches(conn, article, multi, num, text)
-
-	Does the article table's update trigger save modified timestamp?
-		Now it does.  In the fulltxt_articles_update() trigger function added line before return:
-		new.modified := now() AT TIME ZONE 'UTC';
-
-	Make a function cache::ArticleCacheLock::update_articles() to update the article cache
-		It will re-load the article cache, pulling changes from database
-	Whenever an article is updated or added or deleted run the update_articles() function
-	It should look like: update_articles(&self) -> bool
-
-	Make javascript look for an html tag with the 'js-toc' id (or something like that)
-		and if one doesnt exist create it at the top of the page
-		Use this tag to put the table of contents into4
-
-	udpate the Shannon Entropy article
-
-	finish the blog-organization page
-
-	Finish the titlize() funciton in the content module
-		remember it converts a filename to a TITLE, so convert a - to a space
-		and other suitable transformations.  Some of the new added replace()'s
-		may be WRONG as it was late at night and thought it was title to uri
-
-	Eventually add smarter static page uri's.  Instead of just using the file name replace
-		certain symbols with hyphens or nothing.  Make a uri() function or something.
-	Make the uri an optional field, just pass the file name in 	
 
 	Do the default headers added by Express override any explicit headers?
 		Do the default headers added for File/NamedFile override any custom set ones?
-
-	Make refresh_content refresh the article, text, and multi-article caches
-		Make a function to do this
-	Call the above function every few hours, make a new setting to determine this
-		This could be a fairing?
 
 	Finish making the cache a setting.
 		Finish the fallback functions in the cache::pages module
@@ -208,14 +155,11 @@ Blogr-Fixes
 		pub fn instead_of(pagination: Page<Pagination>)
 		change  TemplateArticlesPages & TemplateManage
 			TemplateBody
-			
 
 	Update cache::pages module's context() and serve() functions to take a generic pagination parameter
 		pub fn something<T: Collate>(pagination: Page<T>)
 		instead of
 		pub fn something(pagination: Page<Pagination>)
-
-	Add welcome message to / index route
 
 	Maybe update all pagination functions to be generic like
 		pub fn something<T: Collate>(pagination: Page<T>)
@@ -864,6 +808,64 @@ Rocket-auth-login:
 
 
 DONE
+
+	Use IndexMap instead of HashMap for all cache module stuffs
+
+	The main page should sort articles by date added, desc
+		right now I'm not sure there is any sorting
+			it just pulls from cache in random order
+		maybe use multi page articles with the ArticleIds sorted based on date added desc
+		Or could look for a crate that has an ordered hashmap
+	Other multi article pages should sort by date added (descending)
+		
+	Allow Ampersands in titles, and maybe others like:
+	 !?'-_&(),.
+
+	Add disclaimer saying I am not liable for any issues from the code
+		and that all code is licensed under the MIT license
+	Add privacy policy saying I *MAY* log the number of times each IP address visits a uri
+
+	ALREADY IMPLEMENTED - Need some way to specify the language for source code files in static content
+		Maybe add metadata to all files with a .meta extension??
+
+	Add a little link with the hyperlink icon to the right of the title text field
+		on the create/edit pages.  The link could be generated via handlebars or
+		through javascript.  Handlebars would just have to add a link next to the
+		title text box, with a link to {{base_url}}article/{{body.aid}}/{{body.title}}
+
+	Add calls to update_all_caches(conn, article, multi, num, text)
+
+	Does the article table's update trigger save modified timestamp?
+		Now it does.  In the fulltxt_articles_update() trigger function added line before return:
+		new.modified := now() AT TIME ZONE 'UTC';
+
+	Make a function cache::ArticleCacheLock::update_articles() to update the article cache
+		It will re-load the article cache, pulling changes from database
+	Whenever an article is updated or added or deleted run the update_articles() function
+	It should look like: update_articles(&self) -> bool
+
+	Make javascript look for an html tag with the 'js-toc' id (or something like that)
+		and if one doesnt exist create it at the top of the page
+		Use this tag to put the table of contents into4
+
+
+	Finish the titlize() funciton in the content module
+		remember it converts a filename to a TITLE, so convert a - to a space
+		and other suitable transformations.  Some of the new added replace()'s
+		may be WRONG as it was late at night and thought it was title to uri
+
+	Eventually add smarter static page uri's.  Instead of just using the file name replace
+		certain symbols with hyphens or nothing.  Make a uri() function or something.
+	Make the uri an optional field, just pass the file name in 	
+
+	Make refresh_content refresh the article, text, and multi-article caches
+		Make a function to do this
+	Call the above function every few hours, make a new setting to determine this
+		This could be a fairing?
+
+	Add welcome message to / index route
+
+
 	How to store tagcloud?  It's a Vec<TagCount> NOT A STRING.  Maybe find a HashMap
 		that can store different types??  So far only RSS and About use text.
 		Maybe make a separate cache??? :(

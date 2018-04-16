@@ -1,7 +1,6 @@
 
 use rocket_contrib::Template;
 use rocket::{Request, Data, Outcome, Response};
-// use rocket::response::{content, NamedFile, Redirect, Flash, Responder, Content};
 use rocket::response::{NamedFile, Redirect, Flash, Responder, Content};
 use rocket::response::content::Html;
 use rocket::data::FromData;
@@ -80,7 +79,6 @@ pub mod info {
         let (pages, admin_pages) = create_menu(&page, &admin, &user);
         let info = TemplateInfo::new(title, admin, user, js, gen.map(|g| g.0), page, pages, admin_pages, msg);
         info
-        // unimplemented!()
     }
 }
 
@@ -101,7 +99,6 @@ pub mod articles {
                   ) -> Result<CtxBody<TemplateArticlesPages>, CtxBody<TemplateGeneral>>
     {
         let javascript: Option<String> = None;
-        // let info_opt: Option<String> = None;
         // macro_rules! ctx_info {
         //     ( $title:expr, $page:expr ) => {
         //         info::info(if $title == "" { None } else { Some($title.to_owned()) }, $page.to_owned(), admin, user, gen, uhits, encoding, javascript, msg)
@@ -139,9 +136,6 @@ pub mod articles {
                  info_opt: Option<String>
                 ) -> Express 
     {
-        // let article_rst = article_state.retrieve_article(aid);
-        
-        // let ctx: Result<CtxBody<TemplateArticle>, CtxBody<TemplateGeneral>>
         let ctx = cache::pages::articles::context(conn,
                                                     pagination,
                                                     &*article_lock,
@@ -178,8 +172,6 @@ pub mod article {
                    javascript: Option<String>
                   ) -> Result<CtxBody<TemplateArticle>, CtxBody<TemplateGeneral>>
     {
-        // let javascript: Option<String> = None;
-        
         // macro_rules! ctx_info {
         //     ( $title:expr, $page:expr ) => {
         //         info::info(if $title == "" { None } else { Some($title.to_owned()) }, $page.to_owned(), admin, user, gen, uhits, encoding, javascript, msg)
@@ -233,8 +225,6 @@ pub mod article {
                                               None,
                                               javascript
                                              );
-        // let express: Express = cache::template(ctx);
-        // express
         cache::template(ctx)
     }
 }
@@ -300,7 +290,6 @@ pub mod tag {
         let javascript: Option<String> = None;
         cache::template( cache::pages::tag::context(&t, conn, &pagination, article_state, multi_aids, admin, user, uhits, gen, encoding, msg, javascript) )
     }
-    // pub fn db_tag_aids(conn: &DbConn, tag: &str) -> Option<Vec<u32>> {
     // This function is used to fill the multi article cache.  
     // This is used to cache what articles correspond with each tag
     pub fn load_tag_aids(conn: &DbConn, tag: &str) -> Option<Vec<u32>> {
@@ -323,12 +312,6 @@ pub mod tag {
             None
         }
     }
-    // pub fn lookup_articles(tag: &str, pagination: Page<Pagination>, multi_aids: &TagAidsLock, article_cache: ArticleCacheLock) -> Option<(Vec<u32>, u32)> {
-    //     // multi_aids.retrieve_tag_aids(&format!("tag/{}", tag))
-    //     // multi_aids.retrieve_aids(&format!("tag/{}", tag))
-    //     // multi_aids.tag_articles(tag, starting, ending, multi_aids)
-    //     multi_aids.tag_articles(article_cache, tag, pagination)
-    // }
     // The fallback() should return the current page of articles and the total number of articles
     pub fn fallback<T: Collate>(tag: &str, pagination: &Page<T>, conn: &DbConn) -> Option<(Vec<Article>, u32)> {
         // conn.articles(&format!("SELECT a.aid, a.title, a.posted, a.body, a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified  FROM articles a JOIN users u ON (a.author = u.userid) WHERE '{}' = ANY(tag)", tag))
@@ -351,7 +334,6 @@ pub mod tags {
                    javascript: Option<String>
                   ) -> Result<CtxBody<TemplateTags>, CtxBody<TemplateGeneral>> 
     {
-        // unimplemented!()
         if let Some(all_tags) = multi_aids.retrieve_tags() {
             let i = info::info( Some("Tag Cloud".to_owned()), "/all_tags".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
             Ok(CtxBody( TemplateTags::new(all_tags.clone(), i) ))
@@ -400,8 +382,6 @@ pub mod author {
             let i = info::info( Some( "No articles to display".to_owned() ), "/author".to_owned(), admin, user, gen, uhits, encoding, msg, javascript );
             Err(CtxBody( TemplateGeneral::new("No articles found for specified author.".to_owned(), i) ))
         }
-        
-        // unimplemented!()
     }
     #[inline]
     pub fn serve<T: Collate>(author: u32,
@@ -418,16 +398,10 @@ pub mod author {
     ) -> Express {
         let javascript: Option<String> = None;
         cache::template( cache::pages::author::context(author, &pagination, conn, multi_aids, article_lock, admin, user, uhits, gen, encoding, msg, javascript) )
-        
-        // unimplemented!()
     }
     
-    // Find all authors, their user id, their username, and display name
-    // pub fn load_authors() -> Vec<(u32, String, String)> {
     // Find all authors' user ids
-    // pub fn load_author_articles(conn: &DbConn, userid: u32) -> Option<Vec<u32>> {
     pub fn load_author_articles(conn: &DbConn, userid: u32) -> Option<Vec<u32>> {
-        // unimplemented!()
         let qry = conn.query(&format!("SELECT aid FROM articles WHERE author = {} ORDER BY modified DESC", userid), &[]);
         if let Ok(result) = qry {
             let aids: Vec<u32> = result.iter().map(|row| row.get(0)).collect();
@@ -438,7 +412,6 @@ pub mod author {
         }
     }
     pub fn load_authors(conn: &DbConn) -> Vec<u32> {
-        // unimplemented!()
         let qry = conn.query("SELECT userid FROM users", &[]);
         if let Ok(result) = qry {
             let users: Vec<u32> = result.iter().map(|row| row.get(0)).collect();
@@ -455,9 +428,6 @@ pub mod rss {
     use super::*;
     #[inline]
     pub fn serve(conn: &DbConn, 
-                //  pagination: &Page<Pagination>,
-                //  multi_aids: &TagAidsLock, 
-                //  article_state: &ArticleCacheLock, 
                  text_lock: &TextCacheLock,
                  admin: Option<AdministratorCookie>, 
                  user: Option<UserCookie>, 
@@ -470,7 +440,6 @@ pub mod rss {
         let javascript: Option<String> = None;
         let content = text_lock.retrieve_text("rss").unwrap_or("Could not load RSS feed.".to_owned());
         let express: Express = content.into();
-        // express.set_content_type(ContentType::XML).compress(encoding)
         express.set_content_type(ContentType::XML)
     }
     pub fn load_rss(conn: &DbConn) -> String {
@@ -484,7 +453,6 @@ pub mod rss {
             for article in &articles {
                 let mut link = String::with_capacity(BLOG_URL.len()+20);
                 link.push_str(BLOG_URL);
-                // link.push_str("article?aid=");
                 link.push_str("article/");
                 link.push_str(&article.aid.to_string());
                 link.push_str("/");
@@ -511,9 +479,7 @@ pub mod rss {
                     .title(article.title.clone())
                     .link(link)
                     .description(desc.to_string())
-                    // .author("Andrew Prindle".to_string())
                     .author(article.username.clone())
-                    // .categories()
                     .guid(guid)
                     .pub_date(date_posted)
                     .build();
@@ -523,10 +489,6 @@ pub mod rss {
                     Err(e) => println!("Could not create rss article {}.  Error: {}", article.aid, e),
                 }
             }
-            // Items:
-            // title    link    description author  categories  guid    pub_date
-            // Channels:
-            // title    link    description categories  language    copyright   rating  ttl
             let mut search_link = String::with_capacity(BLOG_URL.len()+10);
             search_link.push_str(BLOG_URL);
             search_link.push_str("search");
@@ -556,17 +518,9 @@ pub mod rss {
             output.push_str(r#"<?xml version="1.0"?>"#);
             output.push_str(&rss_output);
             output
-            // let express: Express = output.into();
-            // rss = express.set_content_type(ContentType::XML).compress(encoding);
-            //     // set_ttl(-1)
-            //     // .add_extra("Content-Type".to_string(), "application/rss+xml".to_string())
         } else {
             let output = String::from("Could not create RSS feed.");
             output
-            // let express: Express = output.into();
-            // // Do not need to compress output with such a small string.
-            // // express.compress(encoding).set_content_type(ContentType::XML
-            // rss = express;
         }
     }
 }

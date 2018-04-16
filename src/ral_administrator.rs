@@ -1,22 +1,19 @@
 
+use rocket::response::{Redirect, Flash};
+use rocket::request::FlashMessage;
+use rocket::http::{Cookie, Cookies, RawStr};
 use rocket::{Request, Outcome};
-// use rocket::request::FromRequest;
 use rocket::request::{FromRequest, FromForm, FormItems};
+
 use std::collections::HashMap;
 use std::str::{from_utf8};
 use chrono::prelude::*;
 use chrono::{NaiveDate, NaiveDateTime};
 
-use rocket::response::{Redirect, Flash};
-use rocket::request::FlashMessage;
-use rocket::http::{Cookie, Cookies, RawStr};
-
-use super::{PGCONN, MAX_ATTEMPTS, LOCKOUT_DURATION, ADMIN_LOCK, PRODUCTION};
-// use password::*;
 use rocket_auth_login::authorization::*;
 use rocket_auth_login::sanitization::*;
-// use auth::sanitization::*;
 
+use super::{PGCONN, MAX_ATTEMPTS, LOCKOUT_DURATION, ADMIN_LOCK, PRODUCTION};
 
 
 
@@ -70,26 +67,19 @@ impl AuthorizeForm for AdministratorForm {
     fn authenticate(&self) -> Result<Self::CookieType, AuthFail> {
         let conn = PGCONN.lock().unwrap();
         
-        // Could make two queries: authstr and failstr
-        // authstr is same as is, gets user data
-        // failstr returns the username, is_admin, a bool indicating whether password was correct,
-        //     and the attempts and lockout status/date
-        
         let authstr = format!(r#"
             SELECT u.userid, u.username, u.display FROM users u WHERE u.username = '{username}' AND is_admin = true AND 
                 u.hash_salt = crypt('{password}', u.hash_salt) AND lockout IS NULL"#, username=&self.username, password=&self.password);
         
         let lockout_qrystr = format!("SELECT u.username, u.attempts, u.lockout, LOCALTIMESTAMP as now, crypt('{pass}', u.hash_salt) = u.hash_salt as check FROM users u WHERE u.username = '{user}' AND u.lockout IS NOT NULL", user=&self.username, pass=&self.password);
         
-        // let is_user_qrystr = format!("SELECT username, attempts, lockout, LOCALTIMESTAMP as now, LOCALTIMESTAMP + interval '{lock_duration} seconds' as lock_duration  FROM users WHERE username = '{user}'", user=&self.username, lock_duration=LOCKOUT_DURATION);
         let is_user_qrystr = format!("SELECT username, attempts, lockout FROM users WHERE username = '{}'", &self.username);
         let is_admin_qrystr = format!("SELECT userid FROM users WHERE username = '{}' AND is_admin = '1'", &self.username);
         let password_qrystr = format!("SELECT username, attempts FROM users WHERE username = '{}' AND hash_salt = crypt('{}', hash_salt)", &self.username, &self.password);
         
         // println!("Running: {}", authstr);
         
-        // Checking to see if user credentials are valid
-        // does not work if user is locked out
+        // Checking to see if user credentials are valid - does not work if user is locked out
         if let Ok(qry) = conn.query(&authstr, &[]) {
             if !qry.is_empty() && qry.len() == 1 {
                 let row = qry.get(0);
@@ -123,17 +113,11 @@ impl AuthorizeForm for AdministratorForm {
                 let now: NaiveDateTime = row.get(3);
                 let valid: bool = row.get(4);
                 
-                // let now = Local::now().naive_local();
-                
                 // next lock that occurs after 
                 if attempts >= ADMIN_LOCK {
                     return Err(AuthFail::new(self.username.clone(), "Brute force attack detected, account locked.  Talk to administrator to unlock.".to_string()));
                 } else if now > lockout {
                 // if the lockout has expired unlock the account but do not reset the attempts
-                // if now > lockout {
-                    // do not increment attempt it will be incremented when calling authenticate() again
-                    // println!("Lockout has expired, valid: {}", valid);
-                    
                     if valid {
                         let unlock_qrystr = format!("UPDATE users SET lockout = NULL, attempts = 0 WHERE username = '{}' RETURNING userid, username, display", &self.username);
                         // println!("Lockout has expired, credentials valid, running: {}", unlock_qrystr);
@@ -158,38 +142,25 @@ impl AuthorizeForm for AdministratorForm {
                         }
                     } else {
                         let unlock_qrystr = format!("UPDATE users SET lockout = NULL WHERE username = '{}'", &self.username);
-                        
                         // println!("Lockout has expired. Running: {}", unlock_qrystr);
                         conn.query(&unlock_qrystr, &[]);
                         
                         return Err(AuthFail::new(self.username.clone(), "Account Unlocked.  Invalid username / password combination.".to_string()));
                     }
-                    
-                    // return self.authenticate();
                 } else {
                     // println!("User account is still locked!");
-                    // return Err( AuthFail::new(self.username.clone(), "User has been locked due to excessive login attempts.  Please try again later.".to_string()) );
-                    
-                    // println!("User account is still locked!");
                     let lockout_diff = lockout.timestamp() - now.timestamp();
-                    // let lockout_period = if lockout_diff > 86400 {
                     let lockout_period = if lockout_diff > 7200 { //3600
                         format!("{} hours", lockout_diff/3600)
-                    // } else if lockout_diff > 3600 {
                     } else if lockout_diff > 120 {
                         format!("{} minutes", lockout_diff/60)
                     } else {
                         format!("{} seconds", lockout_diff)
                     };
-                    // return Err( AuthFail::new(self.username.clone(), "User has been locked due to excessive login attempts.  Please try again later.".to_string()) );
                     return Err( AuthFail::new(self.username.clone(), format!("User has been locked due to excessive login attempts.  Please wait for {}", lockout_period)) );
-                    
                 }
-                
             }
         }
-        
-        // let mut user_lock: Option<NaiveDateTime> = Local::now().naive_local();;
         
         let mut attempts: i16 = 0;
         
@@ -205,11 +176,6 @@ impl AuthorizeForm for AdministratorForm {
             }
         }
         
-        
-        
-        
-        
-        
         // Check if the user is an administrator
         if let Ok(eqry) = conn.query(&is_admin_qrystr, &[]) {
             if eqry.is_empty() || eqry.len() == 0 {
@@ -220,34 +186,11 @@ impl AuthorizeForm for AdministratorForm {
             }
         }
         
-        // if adding one to the attempts made it evenly divide into MAX_ATTEMPTS
-        // then it means the user account should be locked
-        // if attempts % MAX_ATTEMPTS == 0 {
-        //     let lock 
-        // }
-        // // recent tries
-        // let tries = attempts % MAX_ATTEMPTS;
         attempts += 1;
-        // println!("{} have made {} attempts to login.", &self.username, attempts);
-        // Check the remainder of attempts divided by MAX_ATTEMPTS
-        // If the result is 0 that means they have already tried the maximum number of attempts
-        //   before the user account is locked
-        // The remainder is used so the total attempts can be tracked without having to reset it
-        //   after each lockout has ended
-        
-        // let attempt_qrystr = if attempts % MAX_ATTEMPTS == 0 {
-        //     let inc_qrystr = format!("UPDATE users SET attempts = attempts+1, lockout = LOCALTIMESTAMP + interval '{lockout}' WHERE username = '{user}'", user=&self.username, lockout=LOCKOUT_DURATION);
-        //     println!("Running query to lockout the user and increment attempts: {}", &inc_qrystr);
-        //     conn.query(&inc_qrystr, &[]);
-        // } else {
-        //     let inc_qrystr = format!("UPDATE users SET attempts = attempts+1 WHERE username = '{}'", &self.username);
-        //     println!("Running query to increment attempts: {}", &inc_qrystr);
-        //     conn.query(&inc_qrystr, &[]);
-        // };
         let lock_interval: u32;
         if attempts % MAX_ATTEMPTS == 0 {
             // make the lockout intervals increase as attempts increase
-            // note: currently no formula or algorithm used to increase duration,
+            // note: currently no formula or fancy algorithm used to increase duration,
             //         just basically picking numbers to multiply by
             if attempts < (MAX_ATTEMPTS * 2) {
                 lock_interval = LOCKOUT_DURATION;
@@ -274,8 +217,6 @@ impl AuthorizeForm for AdministratorForm {
             // println!("Running query to increment attempts: {}", &inc_qrystr);
             conn.query(&inc_qrystr, &[]);
         }
-        
-        
         
         // Check if the password is correct
         if let Ok(eqry) = conn.query(&password_qrystr, &[]) {
@@ -308,7 +249,6 @@ impl AuthorizeForm for AdministratorForm {
                 Ok(Redirect::to(ok_redir))
             },
             Err(fail) => {
-                // let mut furl = String::from(err_redir);
                 let mut furl = String::with_capacity(err_redir.len() + fail.user.len() + 20);
                 furl.push_str(err_redir);
                 if &fail.user != "" {
@@ -327,7 +267,6 @@ impl AuthorizeForm for AdministratorForm {
         }
     }
     
-    
     fn new_form(user: &str, pass: &str, _extras: Option<HashMap<String, String>>) -> Self {
         AdministratorForm {
             username: user.to_string(),
@@ -343,7 +282,6 @@ impl AuthorizeForm for AdministratorForm {
             },
         }
     }
-    
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for AdministratorCookie {
@@ -367,104 +305,6 @@ impl<'a, 'r> FromRequest<'a, 'r> for AdministratorCookie {
         }
     }
 }
-
-
-
-
-// impl<'f> FromForm<'f> for AdministratorForm {
-//     type Error = &'static str;
-    
-//     fn from_form(form_items: &mut FormItems<'f>, _strict: bool) -> Result<Self, Self::Error> {
-//         // let mut user_pass = HashMap::new();
-//         let mut user: String = String::new();
-//         let mut pass: String = String::new();
-//         // let mut pass: Vec<u8> = Vec::new();
-//         let mut extras: HashMap<String, String> = HashMap::new();
-        
-//         for (key,value) in form_items {
-//             match key.as_str(){
-//                 "username" => {
-//                     // user = sanitize(&value.url_decode().unwrap_or(String::new()));
-//                     user = AdministratorForm::clean_username(&value.url_decode().unwrap_or(String::new()));
-//                 },
-//                 "password" => {
-//                     // pass = sanitize_password(&value.url_decode().unwrap_or(String::new()));
-//                     pass = AdministratorForm::clean_password(&value.url_decode().unwrap_or(String::new()));
-//                     // pass = value.bytes().collect();
-//                 },
-//                 // _ => {},
-//                 a => {
-//                     // extras.insert( a.to_string(), sanitize( &value.url_decode().unwrap_or(String::new()) ) );
-//                     extras.insert( a.to_string(), AdministratorForm::clean_extras( &value.url_decode().unwrap_or(String::new()) ) );
-//                 },
-//             }
-//         }
-        
-//         // println!("Creating login form data structure with:\nUser: {}\nPass: {}\nExtras: {:?}", user, pass, extras);
-        
-//         // Do not need to check for username / password here,
-//         // if the authentication method requires them it will
-//         // fail at that point.
-//         Ok(
-//             if extras.len() == 0 {
-//               AdministratorForm::new_form(&user, &pass, None)
-//            } else {
-//                AdministratorForm::new_form(&user, &pass, Some(extras))
-//            }
-//         )
-//     }
-// }
-
-
-// impl<'f> FromForm<'f> for LoginCont<AdministratorForm> {
-//     type Error = &'static str;
-//     
-//     fn from_form(form_items: &mut FormItems<'f>, _strict: bool) -> Result<Self, Self::Error> {
-//         // let mut user_pass = HashMap::new();
-//         let mut user: String = String::new();
-//         let mut pass: String = String::new();
-//         // let mut pass: Vec<u8> = Vec::new();
-//         let mut extras: HashMap<String, String> = HashMap::new();
-//         
-//         for (key,value) in form_items {
-//             match key.as_str(){
-//                 "username" => {
-//                     // user = sanitize(&value.url_decode().unwrap_or(String::new()));
-//                     user = AdministratorForm::clean_username(&value.url_decode().unwrap_or(String::new()));
-//                 },
-//                 "password" => {
-//                     // pass = sanitize_password(&value.url_decode().unwrap_or(String::new()));
-//                     pass = AdministratorForm::clean_password(&value.url_decode().unwrap_or(String::new()));
-//                     // pass = value.bytes().collect();
-//                 },
-//                 // _ => {},
-//                 a => {
-//                     // extras.insert( a.to_string(), sanitize( &value.url_decode().unwrap_or(String::new()) ) );
-//                     extras.insert( a.to_string(), AdministratorForm::clean_extras( &value.url_decode().unwrap_or(String::new()) ) );
-//                 },
-//             }
-//         }
-//         
-//         // println!("Creating login form data structure with:\nUser: {}\nPass: {}\nExtras: {:?}", user, pass, extras);
-//         
-//         // Do not need to check for username / password here,
-//         // if the authentication method requires them it will
-//         // fail at that point.
-//         Ok(
-//             LoginCont {
-//                 form: if extras.len() == 0 {
-//                           AdministratorForm::new_form(&user, &pass, None)
-//                        } else {
-//                            AdministratorForm::new_form(&user, &pass, Some(extras))
-//                        },
-//             }
-//         )
-//     }
-// }
-
-
-
-
 
 
 
