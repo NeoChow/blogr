@@ -349,7 +349,9 @@ function submit_markdown(html) {
 // https://github.com/ndabas/toc
 // https://ndabas.github.io/toc/
 function enable_toc(is_article=false) {
-        // console.log("TOC enabled");
+    var is_disabled = document.getElementById("disable-toc");
+    if(is_disabled) { return; }
+    // console.log("TOC enabled");
     $(document).ready(function() {
         // console.log("Running toc");
         $('#toc').toc({
@@ -387,7 +389,8 @@ function fix_toc(is_article) {
 }
 
 function top_links() {
-    $("h1,h2").not(".v-article-title").after("<div class='a-top-div'><a class='a-top' href='#top'>Top</a></div>");
+    // $("h1,h2").not(".v-article-title").after("<div class='a-top-div'><a class='a-top' href='#top'>Top</a></div>");
+    $("h1,h2,h3,h4").not(".v-article-title").after("<div class='a-top-div'><a class='a-top' href='#top'>Top</a></div>");
 }
 
 // http://jsfiddle.net/SLQpM/23/

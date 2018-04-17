@@ -1,0 +1,65 @@
+
+/*
+.v-code-lite {
+    background: #22222288;
+    border: 1px solid #de6d11;
+
+}
+*/
+
+
+
+.v-code-lite {
+    background: #88888822 !important;
+}
+
+
+.v-code-lite pre code.hljs {
+
+    border: 0px;
+    padding: 0px 1.2em 1em 1.2em;
+
+}
+
+
+
+.v-code {
+
+    background: #8888880a;
+    /*background: #222222aa;*/
+    overflow-x: auto;
+    border-radius: 1em;
+    border: 1px solid #de6d11;
+
+}
+
+.v-code pre {
+    margin-bottom: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

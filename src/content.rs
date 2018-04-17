@@ -129,6 +129,8 @@ pub struct PageContext {
     pub markdown: bool,
     pub extension: Option<String>,
     pub filename: Option<String>,
+    pub downloadable: bool,
+    pub disable_toc: bool,
 }
 
 /// Used to retrieve html and metadata from the page
@@ -333,6 +335,8 @@ impl PageContext {
                     markdown: false,
                     extension: Some(ext.to_owned()),
                     filename: Some(name),
+                    downloadable: true,
+                    disable_toc: false,
                 }
             )
         } else {
@@ -363,6 +367,8 @@ impl PageContext {
                     markdown: false,
                     extension: None,
                     filename: Some(name),
+                    downloadable: true,
+                    disable_toc: false,
                 }
             )
         } else {
@@ -401,6 +407,8 @@ impl PageContext {
                             markdown: true,
                             extension: None,
                             filename: Some(name),
+                            downloadable: true,
+                            disable_toc: false,
                         }
                     )
                 }
@@ -425,6 +433,8 @@ impl PageContext {
                         markdown: true,
                         extension: None,
                         filename: Some(name),
+                        downloadable: true,
+                        disable_toc: false,
                     }
                 )
             }
@@ -517,6 +527,8 @@ impl PageFormat {
         let mut menu_dropdown: Option<Vec<TemplateMenu>> = DEFAULT_PAGE_DROPDOWN.clone();
         let mut dropdown: String = String::new();
         let mut markdown = true;
+        let mut downloadable = true;
+        let mut disable_toc = false;
         
         while let Some(end) = next_field(&self.yaml, pos) {
             // let end = e + pos;
@@ -545,6 +557,8 @@ impl PageFormat {
                     "menu-dropdown" | "dropdown-menu" | "menu_dropdown" | "dropdown_menu" => { menu_dropdown = json_menu(&self.yaml[fs+1..end]); },
                     "dropdown" | "dropdown_name" | "menu_name" | "dropdown-name" | "menu-name" => { dropdown = String::from_utf8_lossy(&self.yaml[fs+1..end]).into_owned().trim().to_owned(); },
                     "markdown" | "md" => { markdown = bytes_are_true(val_range, false) },
+                    "downloadable" | "download" | "source" => { downloadable = bytes_are_true(&self.yaml[fs+1..end], false); },
+                    "disable_toc" | "disable-toc" | "no-table-of-contents" | "no_table_of_contents" => { disable_toc = bytes_are_true(&self.yaml[fs+1..end], false); },
                     _ => {},
                 }
                 
@@ -595,6 +609,8 @@ impl PageFormat {
                 markdown,
                 extension: None,
                 filename: None,
+                downloadable,
+                disable_toc,
             })
         } else {
             // println!("Required fields missing for PageContext:\nuri: `{}`\ntitle: `{}`", &uri, &title);
@@ -613,7 +629,22 @@ pub fn json_menu(json: &[u8]) -> Option<Vec<TemplateMenu>> {
         println!("Error deserializing the json menu:\n{:?}\n in: `{}`", e, String::from_utf8_lossy(json).into_owned());
         None
     } else {
-        println!("Error :(");
+        println!("Json menu error :(");
+        None
+    }
+}
+
+// Safely check to see if a slice of bytes matches a specific value.
+// This will check to make sure the byte slice is not smaller than the
+// value, which would panic.
+pub fn safe_check_bytes(bytes: &[u8], start: usize, value: &[u8]) -> Option<()> {
+    if start+value.len() <= bytes.len() {
+        if &bytes[start..(start+value.len())] == value {
+            Some( () )
+        } else {
+            None
+        }
+    } else {
         None
     }
 }
@@ -627,17 +658,66 @@ pub fn bytes_are_true(bytes: &[u8], default: bool) -> bool {
         }
         pos += 1;
     }
-    if &bytes[pos..pos+4] == b"true" 
-    || &bytes[pos..pos+3] == b"yes" 
-    || &bytes[pos..pos+3] == b"Yes" 
-    || &bytes[pos..pos+4] == b"True" 
-    || &bytes[pos..pos+1] == b"1" 
-    || &bytes[pos..pos+2] == b"on" 
-    || &bytes[pos..pos+2] == b"On" {
-        !default
-    } else { 
-        default
+    
+    if default == false {
+        if safe_check_bytes(&bytes, pos, b"true").is_some()
+        || safe_check_bytes(&bytes, pos, b"True").is_some()
+        || safe_check_bytes(&bytes, pos, b"yes").is_some()
+        || safe_check_bytes(&bytes, pos, b"Yes").is_some()
+        || safe_check_bytes(&bytes, pos, b"1").is_some()
+        || safe_check_bytes(&bytes, pos, b"on").is_some()
+        || safe_check_bytes(&bytes, pos, b"On").is_some()
+        || safe_check_bytes(&bytes, pos, b"Enabled").is_some()
+        || safe_check_bytes(&bytes, pos, b"enabled").is_some()
+        || safe_check_bytes(&bytes, pos, b"Enable").is_some()
+        || safe_check_bytes(&bytes, pos, b"enable").is_some() {
+            true
+        } else {
+            false
+        }
+    } else {
+        if safe_check_bytes(&bytes, pos, b"false").is_some()
+        || safe_check_bytes(&bytes, pos, b"False").is_some()
+        || safe_check_bytes(&bytes, pos, b"no").is_some()
+        || safe_check_bytes(&bytes, pos, b"No").is_some()
+        || safe_check_bytes(&bytes, pos, b"0").is_some()
+        || safe_check_bytes(&bytes, pos, b"off").is_some()
+        || safe_check_bytes(&bytes, pos, b"off").is_some()
+        || safe_check_bytes(&bytes, pos, b"Disabled").is_some()
+        || safe_check_bytes(&bytes, pos, b"disabled").is_some()
+        || safe_check_bytes(&bytes, pos, b"Disable").is_some()
+        || safe_check_bytes(&bytes, pos, b"disabled").is_some() {
+            false
+        } else {
+            true
+        }
     }
+    
+    // if default == false {
+    //     if &bytes[pos..pos+4] == b"true" 
+    //     || &bytes[pos..pos+3] == b"yes" 
+    //     || &bytes[pos..pos+3] == b"Yes" 
+    //     || &bytes[pos..pos+4] == b"True" 
+    //     || &bytes[pos..pos+1] == b"1" 
+    //     || &bytes[pos..pos+2] == b"on" 
+    //     || &bytes[pos..pos+2] == b"On" {
+    //         true
+    //     } else {
+    //         false
+    //     }
+    // } else {
+    //     if &bytes[pos..pos+5] == b"false" 
+    //     || &bytes[pos..pos+2] == b"no" 
+    //     || &bytes[pos..pos+2] == b"No" 
+    //     || &bytes[pos..pos+5] == b"False" 
+    //     || &bytes[pos..pos+1] == b"0" 
+    //     || &bytes[pos..pos+3] == b"off" 
+    //     || &bytes[pos..pos+3] == b"Off" {
+    //         false
+    //     } else {
+    //         true
+    //     }
+    // }
 }
 
 /// Find next newline character until the end is reached.
@@ -686,6 +766,8 @@ impl PageInfo {
             markdown: false,
             extension: None,
             filename: None,
+            downloadable: true,
+            disable_toc: false,
         };
         context
     }

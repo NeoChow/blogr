@@ -128,6 +128,46 @@ Caching
 	
 
 Blogr-Fixes
+	don't show copy button for just <code> tags, it must be <pre><code> blocks
+
+	Add the following to the css file:
+	code {		
+		border: 1px solid #888888;
+		padding: 2px 6px;
+		margin: 3px;
+		display: inline-block;
+		border-radius: 3px;
+	}
+	.hljs-ln-numbers {
+	    background-color: #ffffff10;
+	}
+	.hljs-ln-line {
+	    padding-left: .5em;
+	}
+	table.hljs-ln tr:first-of-type td {
+	    padding-top: .5em;
+	}
+	table.hljs-ln tr:last-of-type td {
+	    padding-bottom: .5em
+	}
+	pre code {
+	    padding: 0px;
+	}
+
+	and remove the padding from .hljs
+
+	change background color for tr:nth-of-type(2n) td.jljs-ln-code
+		to background-color: #ffffff0b instead of #ffffff08
+
+	Does the bytes_are_true() work correctly??
+		If the bytes are true then it returns opposite of the default
+		What if default is true?
+
+	Maybe try parsing metadata from all content pages not just markdown pages
+		Does the template function correctly when set to the code template?
+			How does the languge get specified?
+			How to specify the language and other context settings??
+
 	Add an option to prevent the table of contents from being displayed
 		Add a metadata field option
 		Maybe add a div to disable the toc <div id="disable-toc"></div>

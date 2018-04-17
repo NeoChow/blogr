@@ -2,16 +2,22 @@
 
 ## Dotenv
 Cargo.toml:
-`dotenv = "0.10.1"`
+```
+dotenv = "0.10.1"
+```
 
-// Load environmental variables from the .env file
+Load environmental variables from the .env file
+```rust
 extern crate dotenv;
 use dotenv::dotenv;
 
-dotenv().ok();
+fn main() {
+    dotenv().ok();
+}
+```
 
 ## Testing
-To show println output: cargo test -- --color always --nocapture
+To show println output: `cargo test -- --color always --nocapture`
 `cargo test -- --nocapture`
 Or use: `set RUST_TEST_NOCAPTURE=1`
 The tests dir treats all rust files in it as a test, you must still use the #[test]
@@ -26,7 +32,7 @@ mod tests {
     #[test]
     #[should_panic]
     // or use:
-    #[should_panic(expected = "Guess value must be less than or equal to 100")]
+    #[should_panic(expected = "Some message")]
     fn it_works2() {
     }
     #[test]
@@ -41,8 +47,10 @@ test single item by specifing its name like:
 `cargo test test_a`
 
 #### Find And Run Specific Test
-or specify part of the name and it will match part of the test name
+or specify part of the name and it will match part of the test name.
+The following will run all tests beginning with 'test_'
 `cargo test test_`
+
 
 #### Test Concurrency
 Setting Testing Concurrency (defaults number of threads to number of coress)
