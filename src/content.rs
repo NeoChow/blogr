@@ -187,12 +187,29 @@ impl ContentContext {
                     
                     let load_rst = match ext.as_ref() {
                         "html" | "htm" | "xhtml" => { PageContext::load_plain(&path, name) },
-                        "md" | "page" => {
+                        "md" | "page" | "meta" | "metadata" => {
                             let stem = if let Some(stem_os) = path.file_stem() {
                                 stem_os.to_string_lossy().into_owned()
                             } else { name };
                             PageContext::load_metadata(&path, stem)
                         },
+                        "code" => {
+                            // PageContext
+                            let subtext: Option<String> = if let Some(s) = path.file_stem() {
+                                let subname = s.to_string_lossy().into_owned();
+                                if let Some(sub) = subname.rfind('.') {
+                                    let ss = &subname[sub..];
+                                    Some(ss.to_owned())
+                                } else { None }
+                            } else { None };
+                            
+                            let subext: Option<String> = None;
+                            let stem = if let Some(stem_os) = path.file_stem() {
+                                stem_os.to_string_lossy().into_owned()
+                            } else { name };
+                            
+                            PageContext::load_code_metadata(&path, stem, subext)
+                        }
                         // If no extension assume it is a markdown file
                         //   or it could also be viewed as code without syntax highlighting
                         "" => { PageContext::load_metadata(&path, name) },
@@ -311,6 +328,77 @@ pub fn titlize(name: &str) -> String {
 
 
 impl PageContext {
+    pub fn load_code_metadata(path: &Path, name: String, subext: Option<String>) -> Result<Self, String> {
+        if let Some(file) = PageFormat::get_file(path) {
+            if let Some(parts) = PageFormat::get_parts(&file) {
+                
+                // Thought about using Option.ok_or_else() but it
+                // is nicer to be able to still load the file even
+                // if the metadata can't be parsed
+                // parts.parse_metadata().ok_or_else(|| format!())
+                
+                if let Some(mut meta) = parts.parse_metadata() {
+                    if &meta.template ==  DEFAULT_PAGE_TEMPLATE {
+                        meta.template = "page-code-template".to_owned();
+                    }
+                    meta.extension = subext;
+                    Ok(meta)
+                } else {
+                    let title = titlize(&name);
+                    let body = String::from_utf8_lossy(&file).into_owned().replace("{{base_url}}", BLOG_URL);
+                    Ok(
+                        PageContext {
+                            uri: name.clone(),
+                            title: title,
+                            body: markdown_to_html(&body, &COMRAK_OPTIONS),
+                            template: "page-code-template".to_owned(),
+                            js: None,
+                            description: None,
+                            gentime: String::new(),
+                            base_url: BLOG_URL.to_owned(),
+                            admin: false,
+                            user: false,
+                            menu: DEFAULT_PAGE_MENU.clone(),
+                            menu_dropdown: DEFAULT_PAGE_DROPDOWN.clone(),
+                            dropdown: String::new(),
+                            markdown: true,
+                            extension: subext,
+                            filename: Some(name),
+                            downloadable: false,
+                            disable_toc: false,
+                        }
+                    )
+                }
+            } else {
+                let title = titlize(&name);
+                let body = String::from_utf8_lossy(&file).into_owned().replace("{{base_url}}", BLOG_URL);
+                Ok(
+                    PageContext {
+                        uri: name.clone(),
+                        title: title,
+                        body: markdown_to_html(&body, &COMRAK_OPTIONS),
+                        template: "page-template".to_owned(),
+                        js: None,
+                        description: None,
+                        gentime: String::new(),
+                        base_url: BLOG_URL.to_owned(),
+                        admin: false,
+                        user: false,
+                        menu: DEFAULT_PAGE_MENU.clone(),
+                        menu_dropdown: DEFAULT_PAGE_DROPDOWN.clone(),
+                        dropdown: String::new(),
+                        markdown: false,
+                        extension: subext,
+                        filename: Some(name),
+                        downloadable: true,
+                        disable_toc: false,
+                    }
+                )
+            }
+        } else {
+            Err(format!("Could not load contents of {}", path.display()))
+        }
+    }
     pub fn load_code(path: &Path, name: String, ext: &str) -> Result<PageContext, String> {
         if let Some(file) = PageFormat::get_file(path) {
             let title = titlize(&name);
@@ -407,7 +495,7 @@ impl PageContext {
                             markdown: true,
                             extension: None,
                             filename: Some(name),
-                            downloadable: true,
+                            downloadable: false,
                             disable_toc: false,
                         }
                     )
@@ -529,6 +617,8 @@ impl PageFormat {
         let mut markdown = true;
         let mut downloadable = true;
         let mut disable_toc = false;
+        let mut extension: Option<String> = None;
+        let mut filename: Option<String> = None;
         
         while let Some(end) = next_field(&self.yaml, pos) {
             // let end = e + pos;
@@ -539,7 +629,9 @@ impl PageFormat {
                 let fs = f + pos;
                 // println!("Found field separator @ {fs}.  {pos} .. {fs}: .. {end}", fs=fs, pos=pos, end=end);
                 
-                let k = String::from_utf8_lossy(&self.yaml[pos..fs]).into_owned();
+                let k = String::from_utf8_lossy(&self.yaml[pos..fs]).to_lowercase();
+                // let k = String::from_utf8_lossy(&self.yaml[pos..fs]).into_owned();
+                // let key = k.trim().to_lowercase();
                 let key = k.trim();
                 // println!("Found key: `{}`, val: `{}`", key, String::from_utf8_lossy(&self.yaml[fs+1..end]));
                 
@@ -559,6 +651,8 @@ impl PageFormat {
                     "markdown" | "md" => { markdown = bytes_are_true(val_range, false) },
                     "downloadable" | "download" | "source" => { downloadable = bytes_are_true(&self.yaml[fs+1..end], false); },
                     "disable_toc" | "disable-toc" | "no-table-of-contents" | "no_table_of_contents" => { disable_toc = bytes_are_true(&self.yaml[fs+1..end], false); },
+                    "ext" | "extension" | "language" | "lang" => { extension = Some(String::from_utf8_lossy(&self.yaml[fs+1..end]).into_owned().trim().to_owned()) },
+                    "file" | "filename" => { filename = Some(String::from_utf8_lossy(&self.yaml[fs+1..end]).into_owned().trim().to_owned()) },
                     _ => {},
                 }
                 
@@ -607,8 +701,8 @@ impl PageFormat {
                 menu_dropdown,
                 dropdown,
                 markdown,
-                extension: None,
-                filename: None,
+                extension,
+                filename,
                 downloadable,
                 disable_toc,
             })

@@ -81,22 +81,25 @@
       <div class="col">
         <h1 class="v-centered-text" style="">{{filename}}</h1>
       </div>
+      {{~#if downloadable~}}
       <div class="col-2">
         <form action="{{base_url}}download/{{filename}}" class="download-form" style="">
           <button class="btn btn-success" style="float: left;/*! clear: left; */">Download</button>
         </form>
       </div>
+      {{~/if~}}
     </div>
   </div>
-  
   {{~/if~}}
 <pre><code class="{{extension}} hljs">
 {{{body}}}
 </code></pre>
   {{~#if filename~}}
+  {{~#if downloadable~}}
   <form action="{{base_url}}download/{{filename}}" class="download-form">
     <button class="btn btn-success">Download</button>
   </form>
+  {{~/if~}}
   {{~/if~}}
 </div>
 <footer id="v-footer">

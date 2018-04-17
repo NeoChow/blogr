@@ -128,6 +128,17 @@ Caching
 	
 
 Blogr-Fixes
+	For .code files look for a sub-extension (something.sub.code)
+
+	Answer: NO - Should markdown pages show a download button?
+		For pages with metadata downloadable would default to enabled
+		If no metadata, a markdown page can have a default value of disabled for downloadable
+		All markdown pages with metadata and do not specify downloadable, it will be downloadable
+
+	Make a .code extension for use in the content module
+		The extension indicates the file should be parsed for metadata then load the code template
+	Also make a .meta that is parsed as metadata
+
 	don't show copy button for just <code> tags, it must be <pre><code> blocks
 
 	Add the following to the css file:

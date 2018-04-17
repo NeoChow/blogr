@@ -71,7 +71,7 @@
   </form>
 </div>
 </nav>
-
+{{~#if disable_toc~}}<div id="disable-toc"></div>{{/if}}
 <div id="v-body">
 <div class="v-content v-toc-body" style="background: #282C30 url({{base_url}}assets/sphere-trans2.png) no-repeat bottom center fixed;">
 <div id="toc"></div>
@@ -96,7 +96,7 @@
 </div>
 <script src="{{base_url}}{{> common/assets-js-after }}"></script>
 <script>
-  enable_toc();
+  {{#if disable_toc}}{{else}}enable_toc();{{/if}}
   hljs.initHighlightingOnLoad();
 {{~#if js~}}
 {{{js}}}
