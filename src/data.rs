@@ -65,11 +65,20 @@ impl DbConn {
     /// If called like: conn.articles("") it will return all articles.  The description of the article is used if it exists otherwise a truncated body is returned; to return articles will their full body contents use `conn.articles_full("")`.
     pub fn articles(&self, qrystr: &str) -> Option<Vec<Article>> {
         
-        let qryrst: Result<_, _> = if qrystr != "" {
-            self.query(qrystr, &[])
+        let qrystring: String;
+        let qrystr = if qrystr == "" {
+            qrystring = format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) ORDER BY a.posted DESC", DESC_LIMIT);
+            &qrystring
         } else {
-            self.query(&format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) ODER BY a.posted DESC", DESC_LIMIT), &[])
+            qrystr
         };
+        
+        // let qryrst: Result<_, _> = if qrystr != "" {
+            // self.query(qrystr, &[])
+        // } else {
+            // self.query(&format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) ODER BY a.posted DESC", DESC_LIMIT), &[])
+        // };
+        let qryrst = self.query(&qrystr, &[]);
         if let Ok(result) = qryrst {
             let mut articles: Vec<Article> = Vec::new();
             for row in &result {
@@ -95,6 +104,7 @@ impl DbConn {
             }
             Some(articles)
         } else {
+            println!("Attempted to retrieve articles using the following query: {}", qrystr);
             None
         }
     }

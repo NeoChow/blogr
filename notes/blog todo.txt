@@ -128,6 +128,53 @@ Caching
 	
 
 Blogr-Fixes
+	ARTICLE - make an article about the &* syntax and the deref operator
+
+	Allow RSS to show articles only for a specified tag or author
+		change cache::pages::rss::load_rss() to take optional author and tag filters
+		change the initial call to load_rss() from the cache::TextCache::load_cache()
+			to have no author or tag filters in the load_rss() function call
+		Either make the article cache hold cached versions of filtered RSS pages
+		Or make it generated new each time
+			Might as well make it cached, it shouldn't add that much more code
+		make the text cache load all RSS pages
+			cache::TextCache::load_cache()
+		Use the TagAidsLock's aids_lock field which contains AidsCache
+			the pages field in AidsCache contains a HashMap<String, Vec<u32>>
+		All tag pages are identified by tag/<tag>
+		Use  TagAidsLock.retrieve_tags("tag/<tag>")  to retrieve all articles for a tag
+			Use above to generate RSS
+		ACTUALLY: generate an RSS feed for each tag and each author.  Do not allow to filter
+			on both author and tag.
+
+	Double check the seo-friendly article url that RSS generates maches the ones in the templates
+
+	Add Xpress method for attachments (downloading files)
+
+
+	Research adding an async function to handle log functionality
+		Make a separate Rust project to research this
+		Want to eventually log all ip addresses, what page, and when they visit
+		As well as the regular logging already in place, but could be modified
+			down the road to use all async
+			but start just with a struct with the following info:
+	GlobalStats {
+		total_unique: 
+		// ips: HashMap<String, visits: u32>
+		log: Vec<(ip: String|IpAddress, when: Instant, page: String)>,
+		visitors: HashMap<String|IpAddress, visits: u32>
+	}
+
+	Also reseasrch how fast it is to handle an ip in String form vs ip address/socket
+		If it is faster to use an ip address use that instead of a string
+
+
+	Maybe ensure xpress module adds content length header when available
+		For cached static pages this is easy to do
+		Chunked transfer works well with content length header
+	Ensure that compress() method of the xpress module changes
+		content length headers to the new size of comrpessed body
+
 	For .code files look for a sub-extension (something.sub.code)
 
 	Answer: NO - Should markdown pages show a download button?

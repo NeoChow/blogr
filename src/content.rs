@@ -331,12 +331,6 @@ impl PageContext {
     pub fn load_code_metadata(path: &Path, name: String, subext: Option<String>) -> Result<Self, String> {
         if let Some(file) = PageFormat::get_file(path) {
             if let Some(parts) = PageFormat::get_parts(&file) {
-                
-                // Thought about using Option.ok_or_else() but it
-                // is nicer to be able to still load the file even
-                // if the metadata can't be parsed
-                // parts.parse_metadata().ok_or_else(|| format!())
-                
                 if let Some(mut meta) = parts.parse_metadata() {
                     if &meta.template ==  DEFAULT_PAGE_TEMPLATE {
                         meta.template = "page-code-template".to_owned();
@@ -364,7 +358,7 @@ impl PageContext {
                             markdown: true,
                             extension: subext,
                             filename: Some(name),
-                            downloadable: false,
+                            downloadable: true,
                             disable_toc: false,
                         }
                     )
@@ -377,7 +371,7 @@ impl PageContext {
                         uri: name.clone(),
                         title: title,
                         body: markdown_to_html(&body, &COMRAK_OPTIONS),
-                        template: "page-template".to_owned(),
+                        template: "page-code-template".to_owned(),
                         js: None,
                         description: None,
                         gentime: String::new(),

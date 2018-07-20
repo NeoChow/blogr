@@ -20,8 +20,11 @@ use std::ffi::OsStr;
 use std::collections::HashMap;
 use std::sync::{Mutex, Arc, RwLock};
 use std::sync::atomic::AtomicUsize;
-
 use std::borrow::Cow;
+
+use rss::{Channel, ChannelBuilder, Guid, GuidBuilder, Item, ItemBuilder, Category, CategoryBuilder, TextInput, TextInputBuilder, extension};
+use chrono::{DateTime, TimeZone, NaiveDateTime, Utc};
+use urlencoding::encode;
 
 use evmap::*;
 use comrak::{markdown_to_html, ComrakOptions};
@@ -442,10 +445,79 @@ pub mod rss {
         let express: Express = content.into();
         express.set_content_type(ContentType::XML)
     }
+    pub fn serve_filter(tag: Option<&str>,
+                        author: Option<u32>,
+                        multi_aids: &TagAidsLock,
+                        article_lock: &ArticleCacheLock,
+                        admin: Option<AdministratorCookie>, 
+                        user: Option<UserCookie>, 
+                        uhits: Option<UniqueHits>, 
+                        gen: Option<GenTimer>, 
+                        encoding: Option<AcceptCompression>,
+                        msg: Option<String>,
+                       ) -> Express 
+    {
+        
+        let express: Express = String::new().into();
+        express.set_content_type(ContentType::XML)
+    }
+    
+    /*
+    pub fn filter_rss(tag: Option<&str>, author: Option<u32>) -> Option<String>
+    {
+        // if both tag and author are set:
+        // go through either all articles with the given tag OR author
+        // then make sure each article also has the other filter value
+        let mut articles: Vec<&Article> = Vec::new();
+        let blog_link: String;
+        if tag.is_some() && author.is_some() {
+            let t = tag.unwrap();
+            let a = author.unwrap();
+            
+            
+            
+        } else if let Some(t) = tag {
+            
+        } else if let Some(a) = author {
+            
+        }
+        
+        for article in &articles {
+            
+        }
+        let mut search_link = String::with_capacity(BLOG_URL.len()+10);
+        search_link.push_str(BLOG_URL);
+        search_link.push_str("search");
+        
+        let searchbox = TextInputBuilder::default()
+            .title("Search")
+            .name("q")
+            .description("Search articles")
+            .link(search_link)
+            .build()
+            .expect("Could not create text input item in RSS channel.");
+        
+        let channel = ChannelBuilder::default()
+            .title("Vishus Blog")
+            .link(blog_link)
+            .description("A programming and development blog about Rust, Javascript, and Web Development.")
+            .language("en-us".to_string())
+            .copyright("2017 Andrew Prindle".to_string())
+            .ttl(720.to_string()) // half a day, 1440 minutes in a day
+            .items(article_items)
+            .text_input(searchbox)
+            .build()
+            .expect("Could not create RSS channel.");
+        
+        let rss_output = channel.to_string();
+        let mut output = String::with_capacity(rss_output.len() + 30);
+        output.push_str(r#"<?xml version="1.0"?>"#);
+        output.push_str(&rss_output);
+        output
+    }
+    */
     pub fn load_rss(conn: &DbConn) -> String {
-        use rss::{Channel, ChannelBuilder, Guid, GuidBuilder, Item, ItemBuilder, Category, CategoryBuilder, TextInput, TextInputBuilder, extension};
-        use chrono::{DateTime, TimeZone, NaiveDateTime, Utc};
-        use urlencoding::encode;
+        
         
         let result = conn.articles("");
         if let Some(articles) = result {

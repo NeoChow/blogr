@@ -226,21 +226,47 @@ pub mod article {
 
 pub mod rss {
     use super::*;
-
+    /*
+    #[get("/author_feed/<author>")]
+    pub fn rss_author_filter(start: GenTimer,
+                      author: u32,
+                      text_lock: State<TextCacheLock>, 
+                      encoding: AcceptCompression, 
+                      uhits: UniqueHits
+                     ) -> Express
+    {
+        
+    }
+    #[get("/tag_feed/<tag>")]
+    pub fn rss_tag_filter(start: GenTimer,
+                          tag: String,
+                          text_lock: State<TextCacheLock>, 
+                          encoding: AcceptCompression, 
+                          uhits: UniqueHits
+                         ) -> Express
+    {
+        
+    }
+*/
     #[get("/rss.xml")]
     pub fn cache_rss(start: GenTimer,
                     text_lock: State<TextCacheLock>,
                     conn: DbConn,
-                    admin: Option<AdministratorCookie>,
-                    user: Option<UserCookie>,
+                    // Removing user roles because they are not needed
+                    // they are used for templates only
+                    // and RSS feeds are currently Strings
+                    // admin: Option<AdministratorCookie>,
+                    // user: Option<UserCookie>,
                     encoding: AcceptCompression,
                     uhits: UniqueHits
                 ) -> Express {
         
         let express: Express = cache::pages::rss::serve(&conn,
                                                         &*text_lock,
-                                                        admin,
-                                                        user,
+                                                        // admin,
+                                                        // user,
+                                                        None,
+                                                        None,
                                                         Some(uhits),
                                                         Some(start.clone()),
                                                         Some(encoding),

@@ -120,6 +120,10 @@ const ONE_RESULT_ONE_PAGE: bool = false;
 #[cfg(not(production))]
 pub const COMRAK_OPTIONS: ComrakOptions = ComrakOptions {
     hardbreaks: true,            // \n => <br>\n
+    smart: false,
+    safe: false,
+    // default_info_string: Some("rust".into()),
+    default_info_string: None,
     width: 120usize,             
     github_pre_lang: false,      
     ext_strikethrough: true,     // hello ~world~ person.
@@ -233,6 +237,10 @@ const ONE_RESULT_ONE_PAGE: bool = false;
 #[cfg(production)]
 pub const COMRAK_OPTIONS: ComrakOptions = ComrakOptions {
     hardbreaks: true,            // \n => <br>\n
+    smart: false,
+    safe: false,
+    // default_info_string: Some("rust".into()),
+    default_info_string: None,
     width: 120usize,             
     github_pre_lang: false,      
     ext_strikethrough: true,     // hello ~world~ person.
