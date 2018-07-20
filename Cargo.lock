@@ -149,7 +149,7 @@ dependencies = [
  "regex 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "rmp-serde 0.13.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "rocket 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
- "rocket-auth-login 0.2.2",
+ "rocket-auth-login 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "rocket_codegen 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
  "rocket_contrib 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
  "rss 1.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1117,7 +1117,8 @@ dependencies = [
 
 [[package]]
 name = "rocket-auth-login"
-version = "0.2.2"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "htmlescape 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rocket 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1815,6 +1816,7 @@ dependencies = [
 "checksum rmp 0.8.7 (registry+https://github.com/rust-lang/crates.io-index)" = "a3d45d7afc9b132b34a2479648863aa95c5c88e98b32285326a6ebadc80ec5c9"
 "checksum rmp-serde 0.13.7 (registry+https://github.com/rust-lang/crates.io-index)" = "011e1d58446e9fa3af7cdc1fb91295b10621d3ac4cb3a85cc86385ee9ca50cd3"
 "checksum rocket 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "c9010c81b707444fe8de4f83380e6e18bbc2825aac2da797d5553ce3d5b3e702"
+"checksum rocket-auth-login 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = "e3a3191026e1853c2ac06a891f475b7e98a0a14f73f1e303d96c639a2bc4757f"
 "checksum rocket_codegen 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "0109d1692a1a05c267ed1eef94ff018bd360e0b6487c8678da4ebbbdbf02cef7"
 "checksum rocket_contrib 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "6d4f5eaf6d3324a58b1d961b92fd1ff19c37074c603b8a095daa372089f644f4"
 "checksum rss 1.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5d76fce76b29eeec1d003ec42d8819b0d07839c65d00219941ddf815fdb94812"
