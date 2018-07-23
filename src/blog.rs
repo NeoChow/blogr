@@ -486,6 +486,25 @@ pub fn slash_quotes(text: &str) -> String {
 }
 
 impl Article {
+    pub fn short_clone(&self) -> Article {
+        Article {
+            aid: self.aid,
+            title: self.title.to_owned(),
+            posted: self.posted.clone(),
+            modified: self.modified.clone(),
+            userid: self.userid,
+            username: self.username.to_owned(),
+            body: if self.description != "" {
+                self.description.to_owned()
+            } else {
+                self.body[..DESC_LIMIT].to_owned()
+            },
+            tags: self.tags.clone(),
+            description: self.description.to_owned(),
+            markdown: self.markdown.to_owned(),
+            image: self.image.to_owned()
+        }
+    }
     pub fn to_display(&self) -> ArticleDisplay {
         ArticleDisplay {
             aid: self.aid.clone(),

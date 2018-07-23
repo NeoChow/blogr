@@ -463,7 +463,7 @@ pub mod rss {
     }
     
     // pub fn filter_rss(conn: &DbConn, tag: Option<&str>, author: Option<u32>) -> Option<String>
-    pub fn filter_rss(article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock, tag: Option<String>, author: Option<u32>) -> Option<String>
+    pub fn filter_rss(article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock, tag: Option<String>, author: Option<u32>, short_description: bool) -> Option<String>
     {
         // let qry = if tag.is_some() && author.is_none() {
         //     let tag = tag.expect("Fatal error unwrapping rss tag");
@@ -482,32 +482,74 @@ pub mod rss {
         if let Some(all_articles) = article_cache.all_articles() {
             let mut articles: Vec<Article> = Vec::with_capacity(article_cache.num_articles() as usize);
             
-            for article in all_articles {
-                if tag.is_some() && author.is_some() {
-                    if let &Some(ref tag) = &tag {
-                        if let &Some(ref author) = &author {
+            if tag.is_some() && author.is_some() {
+                if let &Some(ref tag) = &tag {
+                    if let &Some(ref author) = &author {
+                        for article in all_articles {
                             if article.userid == *author && article.tags.contains(&tag) {
-                                articles.push(article.clone())
+                                articles.push(
+                                    if short_description == false {
+                                        article.clone()
+                                    } else {
+                                        article.short_clone()
+                                    }
+                                )
                             }
                         }
                     }
-                } else if let Some(ref tag) = tag {
+                }
+            } else if let Some(ref tag) = tag {
+                for article in all_articles {
                     if article.tags.contains(&tag) {
-                        articles.push(article.clone())
+                        articles.push(
+                            if short_description == false {
+                                article.clone()
+                            } else {
+                                article.short_clone()
+                            }
+                        )
                     }
-                } else if let Some(ref author)  = author {
-                    if article.userid == *author {
-                        articles.push(article.clone())
-                    }
-                } else {
-                    articles.push(article.clone())
                 }
                 
+            } else if let Some(ref author)  = author {
+                for article in all_articles {
+                    if article.userid == *author {
+                        articles.push(
+                            if short_description == false {
+                                article.clone()
+                            } else {
+                                article.short_clone()
+                            }
+                        )
+                    }
+                }
+                
+            } else {
+                for article in all_articles {
+                    articles.push(
+                        if short_description == false {
+                            article.clone()
+                        } else {
+                            article.short_clone()
+                        }
+                    )
+                }
             }
             if articles.len() == 0 { return None; }
             
+            let output = rss_output(articles);
+            {
+                let out = &output;
+                
+                if out == "Could not create text input item in RSS channel."
+                    || out == "Could not create RSS channel."
+                    || out == "Could not create RSS feed." 
+                {
+                    return None;
+                }
+            }
+            Some(output)
             
-            Some(String::new())
         } else { None }
         // } else {
         //     None
@@ -570,6 +612,8 @@ pub mod rss {
         
         let result = conn.articles("");
         if let Some(articles) = result {
+            rss_output(articles)
+            /*
             let mut article_items: Vec<Item> = Vec::new();
             for article in &articles {
                 let mut link = String::with_capacity(BLOG_URL.len()+20);
@@ -639,6 +683,7 @@ pub mod rss {
             output.push_str(r#"<?xml version="1.0"?>"#);
             output.push_str(&rss_output);
             output
+            */
         } else {
             let output = String::from("Could not create RSS feed.");
             output
