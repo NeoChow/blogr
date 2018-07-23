@@ -440,12 +440,12 @@ pub mod rss {
                  msg: Option<String>,
                 ) -> Express
     {
-        let javascript: Option<String> = None;
+        // let javascript: Option<String> = None;
         let content = text_lock.retrieve_text("rss").unwrap_or("Could not load RSS feed.".to_owned());
         let express: Express = content.into();
         express.set_content_type(ContentType::XML)
     }
-    pub fn serve_filter(tag: Option<&str>,
+    pub fn serve_filter(tag: Option<String>,
                         author: Option<u32>,
                         multi_aids: &TagAidsLock,
                         article_lock: &ArticleCacheLock,
@@ -457,6 +457,8 @@ pub mod rss {
                         msg: Option<String>,
                        ) -> Express 
     {
+        let content = ::cache::pages::rss::filter_rss(article_lock, multi_aids, tag, author, true);
+        
         
         let express: Express = String::new().into();
         express.set_content_type(ContentType::XML)

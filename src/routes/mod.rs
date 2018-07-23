@@ -240,12 +240,26 @@ pub mod rss {
     #[get("/rss/<tag>")]
     pub fn rss_tag_filter(start: GenTimer,
                           tag: String,
+                          
                           text_lock: State<TextCacheLock>, 
                           encoding: AcceptCompression, 
                           uhits: UniqueHits
                          ) -> Express
     {
         // unimplemented!();
+        /*
+                        tag: Option<String>,
+                        author: Option<u32>,
+                        multi_aids: &TagAidsLock,
+                        article_lock: &ArticleCacheLock,
+                        admin: Option<AdministratorCookie>, 
+                        user: Option<UserCookie>, 
+                        uhits: Option<UniqueHits>, 
+                        gen: Option<GenTimer>, 
+                        encoding: Option<AcceptCompression>,
+                        msg: Option<String>,
+        */
+        // let output = cache::pages::rss::serve_filter();
         
         // if let Some(aids) = TagAidsLock.retrieve_tag_aids(u32) {
         //     if let Some(articles) = ArticleCacheLock.retrieve_articles(aids) {
