@@ -226,7 +226,7 @@ pub mod article {
 
 pub mod rss {
     use super::*;
-    /*
+    
     #[get("/author_feed/<author>")]
     pub fn rss_author_filter(start: GenTimer,
                       author: u32,
@@ -235,9 +235,9 @@ pub mod rss {
                       uhits: UniqueHits
                      ) -> Express
     {
-        
+        unimplemented!();
     }
-    #[get("/tag_feed/<tag>")]
+    #[get("/rss/<tag>")]
     pub fn rss_tag_filter(start: GenTimer,
                           tag: String,
                           text_lock: State<TextCacheLock>, 
@@ -245,9 +245,17 @@ pub mod rss {
                           uhits: UniqueHits
                          ) -> Express
     {
+        // unimplemented!();
         
+        // if let Some(aids) = TagAidsLock.retrieve_tag_aids(u32) {
+        //     if let Some(articles) = ArticleCacheLock.retrieve_articles(aids) {
+        //         // return Some(articles);
+        //     }
+        // }
+        // None
+        String::from("").into()
     }
-*/
+
     #[get("/rss.xml")]
     pub fn cache_rss(start: GenTimer,
                     text_lock: State<TextCacheLock>,

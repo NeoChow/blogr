@@ -109,7 +109,7 @@ pub mod articles {
         // }
         // let i = ctx_info!("Article", "/");
         
-        if let Some((articles, total_items)) = article_lock.all_articles(&pagination) {
+        if let Some((articles, total_items)) = article_lock.paginated_articles(&pagination) {
             let i = info::info(None, "/".to_owned(), admin, user, gen, uhits, encoding, javascript, msg);
             Ok(CtxBody( TemplateArticlesPages::new(articles, pagination.clone(), total_items, info_opt, i) ))
         } else if let Some((articles, total_items)) = cache::pages::articles::fallback(conn, &pagination) {
@@ -462,9 +462,59 @@ pub mod rss {
         express.set_content_type(ContentType::XML)
     }
     
-    /*
-    pub fn filter_rss(tag: Option<&str>, author: Option<u32>) -> Option<String>
+    // pub fn filter_rss(conn: &DbConn, tag: Option<&str>, author: Option<u32>) -> Option<String>
+    pub fn filter_rss(article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock, tag: Option<String>, author: Option<u32>) -> Option<String>
     {
+        // let qry = if tag.is_some() && author.is_none() {
+        //     let tag = tag.expect("Fatal error unwrapping rss tag");
+        //     format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) WHERE '{}' = ANY(a.tag) ORDER BY a.posted DESC", tag, DESC_LIMIT)
+        // } else if tag.is_some() && author.is_some() {
+        //     let tag = tag.expect("Fatal error unwrapping rss tag");
+        //     let author = author.expect("Fatal error unwrapping rss tag");
+        //     format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) WHERE a.author = '{}' AND '{}' = ANY(a.tag) ORDER BY a.posted DESC", author, tag, DESC_LIMIT)
+        // } else if author.is_some() {
+        //     let author = author.expect("Fatal error unwrapping rss tag");
+        //     format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) WHERE a.author = '{}' ORDER BY a.posted DESC", author, DESC_LIMIT)
+        // } else {
+        //     format!("SELECT a.aid, a.title, a.posted, description({}, a.body, a.description), a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid) ORDER BY a.posted DESC", DESC_LIMIT)
+        // };
+        // if let Some(tags) = multi_aids.retrieve_tags() {
+        if let Some(all_articles) = article_cache.all_articles() {
+            let mut articles: Vec<Article> = Vec::with_capacity(article_cache.num_articles() as usize);
+            
+            for article in all_articles {
+                if tag.is_some() && author.is_some() {
+                    if let &Some(ref tag) = &tag {
+                        if let &Some(ref author) = &author {
+                            if article.userid == *author && article.tags.contains(&tag) {
+                                articles.push(article.clone())
+                            }
+                        }
+                    }
+                } else if let Some(ref tag) = tag {
+                    if article.tags.contains(&tag) {
+                        articles.push(article.clone())
+                    }
+                } else if let Some(ref author)  = author {
+                    if article.userid == *author {
+                        articles.push(article.clone())
+                    }
+                } else {
+                    articles.push(article.clone())
+                }
+                
+            }
+            if articles.len() == 0 { return None; }
+            
+            
+            Some(String::new())
+        } else { None }
+        // } else {
+        //     None
+        // }
+        
+    }
+    /*
         // if both tag and author are set:
         // go through either all articles with the given tag OR author
         // then make sure each article also has the other filter value
@@ -514,7 +564,6 @@ pub mod rss {
         output.push_str(r#"<?xml version="1.0"?>"#);
         output.push_str(&rss_output);
         output
-    }
     */
     pub fn load_rss(conn: &DbConn) -> String {
         
@@ -597,7 +646,77 @@ pub mod rss {
     }
 }
 
-
+fn rss_output(articles: Vec<Article>) -> String {
+    let mut article_items: Vec<Item> = Vec::new();
+    for article in &articles {
+        let mut link = String::with_capacity(BLOG_URL.len()+20);
+        link.push_str(BLOG_URL);
+        link.push_str("article/");
+        link.push_str(&article.aid.to_string());
+        link.push_str("/");
+        link.push_str( &encode(&article.title) );
+        
+        let desc: &str = if &article.description != "" {
+            &article.description
+        } else {
+            if article.body.len() > DESC_LIMIT {
+                &article.body[..200]
+            } else {
+                &article.body[..]
+            }
+        };
+        
+        let guid = GuidBuilder::default()
+            .value(link.clone())
+            .build()
+            .expect("Could not create article guid.");
+        
+        let date_posted = DateTime::<Utc>::from_utc(article.posted, Utc).to_rfc2822();
+        
+        let item =ItemBuilder::default()
+            .title(article.title.clone())
+            .link(link)
+            .description(desc.to_string())
+            .author(article.username.clone())
+            .guid(guid)
+            .pub_date(date_posted)
+            .build();
+            
+        match item {
+            Ok(i) => article_items.push(i),
+            Err(e) => println!("Could not create rss article {}.  Error: {}", article.aid, e),
+        }
+    }
+    let mut search_link = String::with_capacity(BLOG_URL.len()+10);
+    search_link.push_str(BLOG_URL);
+    search_link.push_str("search");
+    
+    let searchbox = TextInputBuilder::default()
+        .title("Search")
+        .name("q")
+        .description("Search articles")
+        .link(search_link)
+        .build()
+        .expect("Could not create text input item in RSS channel.");
+    
+    let channel = ChannelBuilder::default()
+        .title("Vishus Blog")
+        .link(BLOG_URL)
+        .description("A programming and development blog about Rust, Javascript, and Web Development.")
+        .language("en-us".to_string())
+        .copyright("2017 Andrew Prindle".to_string())
+        .ttl(720.to_string()) // half a day, 1440 minutes in a day
+        .items(article_items)
+        .text_input(searchbox)
+        .build()
+        .expect("Could not create RSS channel.");
+    
+    let rss_output = channel.to_string();
+    let mut output = String::with_capacity(rss_output.len() + 30);
+    output.push_str(r#"<?xml version="1.0"?>"#);
+    output.push_str(&rss_output);
+    output
+}
 
 
 

@@ -192,7 +192,7 @@
 			"file": "src/settings.rs",
 			"settings":
 			{
-				"buffer_size": 11867,
+				"buffer_size": 12097,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -240,6 +240,51 @@
 				"buffer_size": 18365,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Package Control Messages\n========================\n\nGitGutter\n---------\n\n  1.7.15:\n  -------\n  \n    Fix:\n     - Compatibility issue of GitGutter with Snap on Ubuntu (#495)\n     - Write access regression when creating temp dir (#498)\n  \n    Enhancement:\n     - Reduce number of git --version calls (#493)\n  \n  \n  💛 Git Gutter? Want to support development?\n  \n  I've teamed up with Wes Bos to offer the following discounts:\n  \n  +------------------------------------------------+\n  |                                                |\n  |   Use the coupon code GITGUTTER for $10 off    |\n  |                                                |\n  +------------------------------------------------+\n  \n  🏅 ⭐ ES6 ⭐\n  \n  👉 ES6.io/friend/GITGUTTER\n  \n  🏅 ⭐ Sublime Text Book ⭐\n  \n  👉 SublimeTextBook.com/friend/GITGUTTER\n  \n  🏅 ⭐ React For Beginners ⭐\n  \n  👉 ReactForBeginners.com/friend/GITGUTTER\n  \n  \n  Join 15,000 other developers already learning with Wes Bos.\n  \n  These are fantastic resources - 100% money back guarantee! 🌟\n\n  1.7.14:\n  -------\n  \n    Fix:\n     - Diff Popup's content looks ugly due to Courier font\n     - Use Segoe UI Symbol for popup toolbars\n     - ST2 compatibility issue in TempFile class\n\n  1.7.13:\n  -------\n  \n    Fix:\n     - New `tempfile` module conflicts with stdlib in ST2\n     - A typo in the recent release message of 1.7.12\n\n  1.7.12:\n  -------\n  \n    README:\n     - Add a reason for GitGutter to keep quiet\n     - Fix documentation for `diff_algorithm`\n  \n    Enhancement:\n     - Place all temporary files into a dedicated sub directory\n     - Use XDG_RUNTIME_DIR for temporary files if available\n     - Delete old temporary files upon startup\n\n\nGitSavvy\n--------\n\n  Changes since 2.17.2:\n  \n    Enhancement:\n     - support prefix in prerelease when using smart tag\n     - support project-wise settings\n     - make `rebase_default_base_ref` more consistant with project-wise settings\n     - allow to use \"git: blame current file\" at blame view\n     - Opening commit from commadline respect setting\n  \n    Feature:\n     - git: checkout current file at commit\n  \n    Fix:\n     - Pedantic commit checks allows comment on 2. line\n     - On startup in-memory `instances` cache can be empty\n     - fix set status on cherry-pick done\n  \n    Other:\n     - Emphasize in docs when to use run_in_thread\n     - Fix subprocess command crashing with OSError\n     - Include A traceback when an exception happens and we don't handle it\n  \n  \n    Contributors:\n     - herr kaste\n     - Simon\n     - Randy Lai\n     - Pavel Savchenko\n     - joan\n     - Maarten Nieber\n\n  Changes since 2.17.0:\n  \n    Enhancement:\n     - use a more meanful branch name when reviewing PRs\n  \n    Fix:\n     - fix show file bug on Windows\n     - fix tag dashboard bug if hash length != 8\n     - Pass startupinfo to `subprocess.check_output` on Windows\n  \n    Contributors:\n     - herr kaste\n     - Randy Lai\n\n  Changes since 2.16.6:\n  \n    Requirement:\n     - bump git requirement, git v1.19.0 or above is required\n  \n    Feature:\n     - quick stage and amend\n     - git remote rename\n     - implement GitLab merge request review\n     - Pedantic commit messages\n     - add helpers to handle merge conflicts in status dashboard\n     - Live output: Show STDIN when present in live log\n  \n    Enhancement:\n    -  refreash UI when merge failed\n    -  add `abort rebase` command\n     - Add a refresh_gitsavvy_interfaces PoC for bug #835\n     - show diff stat when `show_commit_diff` is \"full\".\n     - manipulate commits with untracked files\n     - reset to original commit after failure\n     - use ssh url instead of url when adding fork\n     - support .sublime-color-scheme in inline diff view\n     - git pull from remote tracking branch directly\n     - use GsPullBase mixin\n     - add pull with rebase\n     - do commit synchronously when commit_on_close is true\n     - make following file renames optional\n     - rename `git: add (edit)` command\n  \n    Fix:\n     - only show diff patch when `show_commit_diff` is \"full\"\n     - use unicode to write .gitignore\n     - hash tag sign is a valid char for branch name\n     - load user specfic theme first\n  \n    Internal:\n     - Use window.status_message instead of sublime.status_message\n  \n    Docs:\n     - Add doc for setting PATH environment\n  \n    Contributors:\n     - Guillaume Wenzek\n     - Simon\n     - Pavel Savchenko\n     - Tom van Ommeren\n     - Randy Lai\n\n\nRust Enhanced\n-------------\n\n  # Rust Enhanced 2.11.0\n  \n  You must restart Sublime after installing this update.\n  \n  ## New Features\n  - Added `\"rust_message_theme\"` configuration setting for choosing different\n    styles of inline messages.  Currently two options are available: \"clear\" and\n    \"solid\".  See\n    https://github.com/rust-lang/rust-enhanced/blob/master/docs/build.md#general-settings\n    for examples.\n  \n  - If the Rust compiler provides a suggestion on how to fix an error, the\n    inline messages now include a link that you can click to automatically apply\n    the suggestion.\n  \n  ## Syntax Updates\n  - Support u128/i128 integer suffix.\n\n\nRustFmt\n-------\n\n  Changes:\n  \n    * support for newer `rustfmt`\n    * simpler and faster update of the view buffer\n  \n  1.\n  \n  Newer `rustfmt` requires `--emit=stdout` instead of `--write-mode=display`. The plugin uses the new arguments by default. If you have an older version and don't want to update, add this to the plugin settings:\n  \n  ```sublime-settings\n    \"legacy_write_mode_option\": true,\n  ```\n  \n  2.\n  \n  Finally found a working way to save/restore scroll position in Sublime. Now, the plugin simply replaces the entire view buffer with the output of `rustfmt`, preserving the scroll position, instead of the ridiculously convoluted diffing algorithm used before. Should be more reliable and faster. If there are any regressions, let me know.\n\n\nSublimeLinter-php\n-----------------\n\n  SublimeLinter-php 1.2.1\n  ---------------------------\n  \n  The 'cmd' setting has been deprecated. The new name for the same thing is 'executable' which is the common name for all linters in SublimeLinter land.\n  \n  {\n      \"SublimeLinter\": {\n          \"linters\": {\n              \"php\": {\n                  \"executable\": \"/path/to/php\"\n              }\n          }\n      }\n  }\n",
+			"settings":
+			{
+				"buffer_size": 6235,
+				"line_ending": "Windows",
+				"name": "Package Control Messages",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "#26292C\n#F8F8F0\n#F8F8F2\n#3B3A32\n#202325\n#49483E\n#FFE792\n#000000\n#222218\n#9D550F\n#F8F8F2\n#F8F8F2\n#ccc\n#ffffff\n#ffffff\n#FFDB00\n#ffffff\n#E900CC\n#FF3C37\n#FF0095\n#FF0095\n#ffffff\n#FFA100\n#FA6CFF\n#fd6783\n#fd6783\n#777777\n#666\n#FF8500\n#800\n#FF8500\n#fd6783\n#FF0700\n#FFA100\n#000000\n#ffffff\n#FF0095\n#fd65c6\n#a7f848\n#FF3C37\n#FFEA6B\n#FFA100\n#e50055\n#19f1c4\n#01F4FF\n#FF6F6B\n#FFF700\n#ffffff\n#FFA937\n#FF5300\n#000\n#FFA937\n#FF5300\n#000\n#FF8500\n#ffffff\n#000\n#FF8500\n#ffffff\n#FF3C37\n#FF3C37\n#FF8500\n#9b9b9b\n#D4B06A\n#FFCF38\n#D4B06A\n#3fd6ff\n#FFCF38\n#D4B06A\n#D4B06A\n#000\n#320004\n#FF0700\n#be0036\n#35FF00\n#35FF00\n#FF0095\n#000\n#FF8500\n#35FF00\n#35FF00\n#FFDB00\n#dafefd\n#6CF8FF\n#DDFF37\n#00354a\n#dafefd\n#6CF8FF\n#DDFF37\n#00354a\n#EEE\n#FF0000\n#00E6AC\n#3FCAFF\n#3FCAFF\n#660000\n#FF0700\n#ccc\n#000\n#3FCAFF\n#99F200\n#35FF00\n#BFFF37\n#CFFF6B\n#FF3C37\n#FF0095\n#F165FA\n#FF0095\n#18FF00\n#38F6FF\n#B7F200\n#18FF00\n#B7F200\n#38F6FF\n#FFDB00\n#FFDB00\n#fd6783\n#000\n#320004\n#FF0700\n#14b9dc\n#320004\n#c38913\n#320004\n#444\n#be0036\n#666\n#be0036\n#fff\n#be0036\n#320004\n#be0036\n#FF0700\n#78f2fe\n#666\n#FF0700\n#320004\n#be0036\n#FF0700\n#78f2fe\n#000\n#320004\n#be0036\n#FF0700\n#78f2fe\n#FF0095\n#FFB700\n#fd9daf\n#ffffff\n#fd9daf\n#ffffff\n#65C3FA\n#ffffff\n#FF3C37\n#ffffff\n#00E5B8\n#18FF00\n#38F6FF\n#BE8CFE\n#38F6FF\n#000\n#FF8500\n#3b3b90\n#FF8500\n#3b3b90\n#FF8500\n#FF9200\n#CD73FF\n#99F200\n#FF3C37\n#BE8CFE\n#000\n#14D100",
+			"settings":
+			{
+				"buffer_size": 1326,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#000000\n#000000\n#000000\n#00354a\n#00354a\n#00E5B8\n#00E6AC\n#01F4FF\n#14b9dc\n#14D100\n#18FF00\n#18FF00\n#18FF00\n#19f1c4\n#202325\n#222218\n#26292C\n#320004\n#320004\n#320004\n#320004\n#320004\n#320004\n#320004\n#35FF00\n#35FF00\n#35FF00\n#35FF00\n#35FF00\n#38F6FF\n#38F6FF\n#38F6FF\n#38F6FF\n#3B3A32\n#3b3b90\n#3b3b90\n#3FCAFF\n#3FCAFF\n#3FCAFF\n#3fd6ff\n#444444\n#49483E\n#65C3FA\n#660000\n#666666\n#666666\n#666666\n#6CF8FF\n#6CF8FF\n#777777\n#78f2fe\n#78f2fe\n#78f2fe\n#880000\n#99F200\n#99F200\n#9b9b9b\n#9D550F\n#a7f848\n#B7F200\n#B7F200\n#be0036\n#be0036\n#be0036\n#be0036\n#be0036\n#be0036\n#be0036\n#BE8CFE\n#BE8CFE\n#BFFF37\n#c38913\n#cccccc\n#CD73FF\n#CFFF6B\n#D4B06A\n#D4B06A\n#D4B06A\n#D4B06A\n#dafefd\n#dafefd\n#DDFF37\n#DDFF37\n#e50055\n#E900CC\n#EEEEEE\n#F165FA\n#F8F8F0\n#F8F8F2\n#F8F8F2\n#F8F8F2\n#FA6CFF\n#fd65c6\n#fd6783\n#fd6783\n#fd6783\n#fd6783\n#fd9daf\n#fd9daf\n#FF0000\n#FF0095\n#FF0095\n#FF0095\n#FF0095\n#FF0095\n#FF0095\n#FF0095\n#FF0700\n#FF0700\n#FF0700\n#FF0700\n#FF0700\n#FF0700\n#FF0700\n#FF0700\n#FF3C37\n#FF3C37\n#FF3C37\n#FF3C37\n#FF3C37\n#FF3C37\n#FF3C37\n#FF5300\n#FF5300\n#FF6F6B\n#FF8500\n#FF8500\n#FF8500\n#FF8500\n#FF8500\n#FF8500\n#FF8500\n#FF8500\n#FF8500\n#FF9200\n#FFA100\n#FFA100\n#FFA100\n#FFA937\n#FFA937\n#FFB700\n#FFCF38\n#FFCF38\n#FFDB00\n#FFDB00\n#FFDB00\n#FFDB00\n#FFE792\n#FFEA6B\n#FFF700\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff\n#ffffff",
+			"settings":
+			{
+				"buffer_size": 1303,
+				"line_ending": "Windows",
+				"name": "#000000"
+			}
+		},
+		{
+			"contents": "\n{\n    \"name\": \"Vishus Code\",\n    \"type\": \"dark\",\n    \"colors\": {\n        \"editor.background\": \"#26292C\",\n        \"editor.foreground\": \"#F8F8F2\",\n        \"editor.lineHighlightBackground\": \"#353535\",\n        \"editorWhitespace.foreground\": \"#707070\",\n        \"editorIndentGuide.background\": \"#222222\",\n        \"editor.findMatchHighlightForeground\": \"#FF8500\",\n        \"editor.findMatchHighlightBackground\": \"#000000\",\n        \"editorLineNumber.foreground\": \"#999999\"\n    },\n    \"tokenColors\": [\n        {\n            \"name\": \"Storage\",\n            \"scope\": [\n                \"storage.class.std\",\n                \"storage.type.core\",\n                \"support.constant.core\",\n                \"support.type.marker\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#35FF00\"\n            }\n        },\n        {\n            \"name\": \"Raw Strings\",\n            \"scope\": [\n                \"string.quoted.double.raw\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#dafefd\",\n                \"background\": \"#006597\"\n            }\n        },\n        {\n            \"name\": \"Variables\",\n            \"scope\": [\n                \"variable.language\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FFA937\"\n            }\n        },\n        {\n            \"name\": \"Attributes\",\n            \"scope\": [\n                \"meta.attribute.rust\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FF0700\",\n                \"background\": \"#FF0700\"\n            }\n        },\n        {\n            \"name\": \"Modifiers\",\n            \"scope\": [\n                \"storage.modifier.visibility\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FF0095\"\n            }\n        },\n        {\n            \"name\": \"Strings\",\n            \"scope\": [\n                \"string.quoted.double\",\n                \"string.quoted.single\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#3fd6ff\",\n                \"background\": \"#dafefd\"\n            }\n        },\n        {\n            \"name\": \"Constants\",\n            \"scope\": [\n                \"storage.modifier.const\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#fd6783\"\n            }\n        },\n        {\n            \"name\": \"Keywords\",\n            \"scope\": [\n                \"keyword.other\",\n                \"keyword.other.fn\",\n                \"keyword.other.where\",\n                \"storage.modifier.mut\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FF0095\"\n            }\n        },\n        {\n            \"name\": \"Parameters\",\n            \"scope\": [\n                \"meta.type_params\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FF6F6B\"\n            }\n        },\n\n        {\n            \"name\": \"Comments\",\n            \"scope\": [\n                \"comment.block\",\n                \"comment.line.double-slash\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#a39c8e\"\n            }\n        },\n        {\n            \"name\": \"Doc Comments\",\n            \"scope\": [\n                \"comment.line.documentation\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#00b4cf\"\n            }\n        },\n        {\n            \"name\": \"Boolean\",\n            \"scope\": [\n                \"constant.language.boolean\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#CD73FF\"\n            }\n        },\n        {\n            \"name\": \"Numbers\",\n            \"scope\": [\n                \"constant.numeric.float\",\n                \"constant.numeric.integer.decimal\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#35FF00\"\n            }\n        },\n\n        {\n            \"name\": \"Function\",\n            \"scope\": [\n                \"entity.name.function\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FFDB00\"\n            }\n        },\n\n        {\n            \"name\": \"Data Structures and Impl\",\n            \"scope\": [\n                \"entity.name.type\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#38F6FF\"\n            }\n        },\n        {\n            \"name\": \"Control Statements\",\n            \"scope\": [\n                \"keyword.control\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#99F200\"\n            }\n        },\n        {\n            \"name\": \"Operators\",\n            \"scope\": [\n                \"keyword.operator.arithmetic\",\n                \"keyword.operator.assignment\",\n                \"keyword.operator.comparison\",\n                \"keyword.operator.misc\",\n                \"keyword.operator.sigil\",\n                \"storage.modifier.const\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FD6783\"\n            }\n        },\n        \n        {\n            \"name\": \"Function Std\",\n            \"scope\": [\n                \"support.function.std\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FF8500\"\n            }\n        },\n        \n        {\n            \"name\": \"Lifetimes\",\n            \"scope\": [\n                \"storage.modifier.lifetime\",\n                \"entity.name.lifetime\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FF3C37\"\n            }\n        },\n        {\n            \"name\": \"Struct Enum Keywords\",\n            \"scope\": [\n                \"storage.type\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#35FF00\"\n            }\n        },\n        {\n            \"name\": \"Macro Definition??? Not Sure\",\n            \"scope\": [\n                \"support.function.builtin\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#d08aff\"\n            }\n        },\n        {\n            \"name\": \"Functions\",\n            \"scope\": [\n                \"support.function.core\"\n            ],\n            \"settings\": {\n                \"foreground\": \"#FF6F6B\"\n            }\n        }\n    ]\n}\n\n\n",
+			"settings":
+			{
+				"buffer_size": 5970,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#26292C\n#F8F8F2\n#353535\n#707070\n#222222\n#FF8500\n#000000\n#999999\n#35FF00\n#dafefd\n#006597\n#FFA937\n#FF0700\n#FF0700\n#FF0095\n#3fd6ff\n#dafefd\n#fd6783\n#FF0095\n#FF6F6B\n#a39c8e\n#00b4cf\n#CD73FF\n#35FF00\n#FFDB00\n#38F6FF\n#99F200\n#FD6783\n#FF8500\n#FF3C37\n#35FF00\n#d08aff\n#FF6F6B",
+			"settings":
+			{
+				"buffer_size": 263,
+				"line_ending": "Windows",
+				"name": "#26292C"
 			}
 		},
 		{
@@ -718,6 +763,8 @@
 	},
 	"file_history":
 	[
+		"/C/laragon/bin/laragon/utils/hosts.js",
+		"/C/Users/Andrew/AppData/Roaming/Sublime Text 3/Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
 		"/C/code/lang/Rust/proj/blogr/src/pages.rs",
 		"/C/Users/Andrew/.vscode/extensions/vishus-vivid-0-21/themes/Vishus Vivid 0.21.tmTheme",
 		"/C/Users/Andrew/.vscode/extensions/vishus-vivid-0-21/themes/Vishus vivid 9.21-color-theme.json",
@@ -843,13 +890,11 @@
 		"/C/code/lang/Rust/proj/blogr/static/blog-2018-01-07.js",
 		"/C/code/lang/Rust/proj/blogr/static/blog_after-2018-01-11.js",
 		"/C/code/lang/Rust/proj/blogr/static/blog_after-2018-01-07.js",
-		"/C/code/lang/Rust/proj/blogr/static/blogr_after-2018-01-12.js",
-		"/C/code/lang/Rust/proj/rocket-auth-login/examples/tls_example/Cargo.toml",
-		"/C/Users/Andrew/rust-backup-2018-01-10/.multirust/toolchains/nightly-x86_64-pc-windows-msvc/lib/rustlib/multirust-channel-manifest.toml"
+		"/C/code/lang/Rust/proj/blogr/static/blogr_after-2018-01-12.js"
 	],
 	"find":
 	{
-		"height": 42.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -864,6 +909,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"#[a-fA-F0-9]{3,6}",
 			"cmp",
 			"markdown",
 			"articlespages",
@@ -990,8 +1036,7 @@
 			"v-article-content",
 			"arev.ttf",
 			"asset",
-			"assets/fonts",
-			"localhost:8000/assets/fonts"
+			"assets/fonts"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1068,7 +1113,7 @@
 						"translation.y": 879.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -1077,7 +1122,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11867,
+						"buffer_size": 12097,
 						"regions":
 						{
 						},
@@ -1111,7 +1156,7 @@
 						"translation.y": 3719.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1178,7 +1223,7 @@
 						"translation.y": 2881.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
@@ -1221,7 +1266,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -1264,7 +1309,7 @@
 						"translation.y": 38.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -1308,7 +1353,7 @@
 						"translation.y": 485.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1330,20 +1375,17 @@
 						],
 						"settings":
 						{
-							"color_helper.box_height": 21,
+							"color_helper.box_height": 22,
 							"color_helper.color_scheme": "Packages/User/Custom-Themes/RustCustom-3.tmTheme",
 							"color_helper.file_palette":
 							[
 							],
-							"color_helper.preview_meta":
-							{
-							},
 							"color_helper.scan":
 							{
 								"current_ext": ".rs",
 								"current_syntax": "Rust/Rust",
 								"enabled": false,
-								"last_updated": 1528885627.76
+								"last_updated": 1529189577.02
 							},
 							"git_gutter_is_enabled": true,
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
@@ -1351,14 +1393,350 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 5199.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 7,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6235,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								635,
+								635
+							]
+						],
+						"settings":
+						{
+							"auto_indent": false,
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"current_ext": null,
+								"current_syntax": "Text/Plain text",
+								"enabled": false,
+								"last_updated": 1529189577.02
+							},
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_width": 2,
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1326,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								1326
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"current_ext": null,
+								"current_syntax": "XML/XML",
+								"enabled": false,
+								"last_updated": 1529189577.02
+							},
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1303,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								1303
+							]
+						],
+						"settings":
+						{
+							"auto_name": "#000000",
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"current_ext": null,
+								"current_syntax": "Text/Plain text",
+								"enabled": false,
+								"last_updated": 1529189577.02
+							},
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1022.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5970,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								96,
+								103
+							],
+							[
+								136,
+								143
+							],
+							[
+								189,
+								196
+							],
+							[
+								239,
+								246
+							],
+							[
+								290,
+								297
+							],
+							[
+								348,
+								355
+							],
+							[
+								406,
+								413
+							],
+							[
+								456,
+								463
+							],
+							[
+								782,
+								789
+							],
+							[
+								999,
+								1006
+							],
+							[
+								1040,
+								1047
+							],
+							[
+								1248,
+								1255
+							],
+							[
+								1459,
+								1466
+							],
+							[
+								1500,
+								1507
+							],
+							[
+								1718,
+								1725
+							],
+							[
+								1967,
+								1974
+							],
+							[
+								2008,
+								2015
+							],
+							[
+								2221,
+								2228
+							],
+							[
+								2539,
+								2546
+							],
+							[
+								2747,
+								2754
+							],
+							[
+								2996,
+								3003
+							],
+							[
+								3216,
+								3223
+							],
+							[
+								3430,
+								3437
+							],
+							[
+								3693,
+								3700
+							],
+							[
+								3904,
+								3911
+							],
+							[
+								4127,
+								4134
+							],
+							[
+								4342,
+								4349
+							],
+							[
+								4779,
+								4786
+							],
+							[
+								5002,
+								5009
+							],
+							[
+								5267,
+								5274
+							],
+							[
+								5481,
+								5488
+							],
+							[
+								5715,
+								5722
+							],
+							[
+								5927,
+								5934
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"current_ext": null,
+								"current_syntax": "Text/Plain text",
+								"enabled": false,
+								"last_updated": 1529189577.02
+							},
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 263,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								191,
+								191
+							]
+						],
+						"settings":
+						{
+							"auto_name": "#26292C",
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"current_ext": null,
+								"current_syntax": "Text/Plain text",
+								"enabled": false,
+								"last_updated": 1529189577.02
+							},
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
 					"file": "src/blog.rs",
 					"semi_transient": false,
 					"settings":
@@ -1397,11 +1775,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 13,
 					"file": "src/data.rs",
 					"semi_transient": false,
 					"settings":
@@ -1440,11 +1818,11 @@
 						"translation.y": 442.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 14,
 					"file": "src/accept.rs",
 					"semi_transient": false,
 					"settings":
@@ -1483,11 +1861,11 @@
 						"translation.y": 1832.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 15,
 					"file": "src/collate.rs",
 					"semi_transient": false,
 					"settings":
@@ -1526,11 +1904,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 16,
 					"file": "src/ral_administrator.rs",
 					"semi_transient": false,
 					"settings":
@@ -1569,11 +1947,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 17,
 					"file": "src/ral_user.rs",
 					"semi_transient": false,
 					"settings":
@@ -1612,11 +1990,11 @@
 						"translation.y": 7384.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 36,
+					"stack_index": 42,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 18,
 					"file": "src/referrer.rs",
 					"semi_transient": false,
 					"settings":
@@ -1655,11 +2033,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 19,
 					"file": "src/xpress.rs",
 					"semi_transient": false,
 					"settings":
@@ -1698,11 +2076,11 @@
 						"translation.y": 3377.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 20,
 					"file": "src/layout.rs",
 					"semi_transient": false,
 					"settings":
@@ -1741,11 +2119,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 21,
 					"file": "Cargo.toml",
 					"semi_transient": false,
 					"settings":
@@ -1782,11 +2160,11 @@
 						"translation.y": 1188.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 22,
 					"file": "src/private.rs",
 					"semi_transient": false,
 					"settings":
@@ -1823,11 +2201,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 37,
+					"stack_index": 43,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 23,
 					"file": "src/location.rs",
 					"semi_transient": false,
 					"settings":
@@ -1866,11 +2244,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 24,
 					"file": "src/sanitize.rs",
 					"semi_transient": false,
 					"settings":
@@ -1909,11 +2287,11 @@
 						"translation.y": 725.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 25,
 					"file": "Rocket.toml",
 					"semi_transient": false,
 					"settings":
@@ -1950,17 +2328,17 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 27,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 1,
+			"selected": 16,
 			"sheets":
 			[
 				{
-					"buffer": 21,
+					"buffer": 26,
 					"file": "/C/Users/Andrew/AppData/Roaming/Sublime Text 3/Packages/User/Custom-Themes/RustCustom-3.tmTheme",
 					"semi_transient": false,
 					"settings":
@@ -1972,13 +2350,701 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								468,
+								475
+							],
+							[
+								542,
+								549
+							],
+							[
+								621,
+								628
+							],
+							[
+								700,
+								707
+							],
+							[
+								782,
+								789
+							],
+							[
+								860,
+								867
+							],
+							[
+								942,
+								949
+							],
+							[
+								1034,
+								1041
+							],
+							[
+								1118,
+								1125
+							],
+							[
+								1198,
+								1205
+							],
+							[
+								1287,
+								1294
+							],
+							[
+								1469,
+								1476
+							],
+							[
+								1985,
+								1989
+							],
+							[
+								2352,
+								2359
+							],
+							[
+								2737,
+								2744
+							],
+							[
+								3070,
+								3077
+							],
+							[
+								3424,
+								3431
+							],
+							[
+								3769,
+								3776
+							],
+							[
+								4098,
+								4105
+							],
+							[
+								4446,
+								4453
+							],
+							[
+								5128,
+								5135
+							],
+							[
+								5174,
+								5181
+							],
+							[
+								5526,
+								5533
+							],
+							[
+								5582,
+								5589
+							],
+							[
+								5929,
+								5936
+							],
+							[
+								6284,
+								6291
+							],
+							[
+								6742,
+								6749
+							],
+							[
+								7139,
+								7143
+							],
+							[
+								7215,
+								7222
+							],
+							[
+								7608,
+								7612
+							],
+							[
+								7684,
+								7691
+							],
+							[
+								8171,
+								8178
+							],
+							[
+								8514,
+								8521
+							],
+							[
+								8850,
+								8857
+							],
+							[
+								9179,
+								9186
+							],
+							[
+								9258,
+								9265
+							],
+							[
+								9585,
+								9592
+							],
+							[
+								9642,
+								9649
+							],
+							[
+								9695,
+								9702
+							],
+							[
+								10060,
+								10067
+							],
+							[
+								10404,
+								10411
+							],
+							[
+								10766,
+								10773
+							],
+							[
+								10811,
+								10818
+							],
+							[
+								11131,
+								11138
+							],
+							[
+								11463,
+								11470
+							],
+							[
+								11803,
+								11810
+							],
+							[
+								11860,
+								11867
+							],
+							[
+								12213,
+								12220
+							],
+							[
+								12558,
+								12565
+							],
+							[
+								12679,
+								12686
+							],
+							[
+								13130,
+								13134
+							],
+							[
+								13207,
+								13214
+							],
+							[
+								13256,
+								13263
+							],
+							[
+								13601,
+								13605
+							],
+							[
+								13677,
+								13684
+							],
+							[
+								13723,
+								13730
+							],
+							[
+								14080,
+								14084
+							],
+							[
+								14156,
+								14163
+							],
+							[
+								14202,
+								14209
+							],
+							[
+								14535,
+								14542
+							],
+							[
+								14580,
+								14587
+							],
+							[
+								14939,
+								14946
+							],
+							[
+								15261,
+								15268
+							],
+							[
+								15307,
+								15314
+							],
+							[
+								15368,
+								15375
+							],
+							[
+								15421,
+								15428
+							],
+							[
+								15770,
+								15777
+							],
+							[
+								15827,
+								15834
+							],
+							[
+								15880,
+								15887
+							],
+							[
+								16202,
+								16209
+							],
+							[
+								16619,
+								16623
+							],
+							[
+								16674,
+								16681
+							],
+							[
+								16757,
+								16764
+							],
+							[
+								16815,
+								16822
+							],
+							[
+								17183,
+								17190
+							],
+							[
+								17534,
+								17541
+							],
+							[
+								17904,
+								17911
+							],
+							[
+								18273,
+								18277
+							],
+							[
+								18349,
+								18356
+							],
+							[
+								18672,
+								18679
+							],
+							[
+								19021,
+								19028
+							],
+							[
+								19338,
+								19345
+							],
+							[
+								19665,
+								19672
+							],
+							[
+								19719,
+								19726
+							],
+							[
+								19785,
+								19792
+							],
+							[
+								19868,
+								19875
+							],
+							[
+								20210,
+								20217
+							],
+							[
+								20264,
+								20271
+							],
+							[
+								20330,
+								20337
+							],
+							[
+								20413,
+								20420
+							],
+							[
+								20781,
+								20785
+							],
+							[
+								20857,
+								20864
+							],
+							[
+								21200,
+								21207
+							],
+							[
+								21708,
+								21715
+							],
+							[
+								22093,
+								22100
+							],
+							[
+								22568,
+								22575
+							],
+							[
+								22647,
+								22654
+							],
+							[
+								22993,
+								22997
+							],
+							[
+								23331,
+								23335
+							],
+							[
+								23683,
+								23690
+							],
+							[
+								24029,
+								24036
+							],
+							[
+								24091,
+								24098
+							],
+							[
+								24156,
+								24163
+							],
+							[
+								24514,
+								24521
+							],
+							[
+								24837,
+								24844
+							],
+							[
+								25171,
+								25178
+							],
+							[
+								25514,
+								25521
+							],
+							[
+								25838,
+								25845
+							],
+							[
+								26182,
+								26189
+							],
+							[
+								26518,
+								26525
+							],
+							[
+								26871,
+								26878
+							],
+							[
+								27211,
+								27218
+							],
+							[
+								27531,
+								27538
+							],
+							[
+								27854,
+								27861
+							],
+							[
+								28528,
+								28535
+							],
+							[
+								28876,
+								28883
+							],
+							[
+								29205,
+								29212
+							],
+							[
+								29622,
+								29626
+							],
+							[
+								29677,
+								29684
+							],
+							[
+								29760,
+								29767
+							],
+							[
+								30133,
+								30140
+							],
+							[
+								30191,
+								30198
+							],
+							[
+								30632,
+								30639
+							],
+							[
+								30690,
+								30697
+							],
+							[
+								31117,
+								31121
+							],
+							[
+								31241,
+								31248
+							],
+							[
+								31628,
+								31632
+							],
+							[
+								31752,
+								31759
+							],
+							[
+								32138,
+								32142
+							],
+							[
+								32214,
+								32221
+							],
+							[
+								32289,
+								32296
+							],
+							[
+								32351,
+								32358
+							],
+							[
+								32408,
+								32415
+							],
+							[
+								32466,
+								32473
+							],
+							[
+								32848,
+								32852
+							],
+							[
+								32924,
+								32931
+							],
+							[
+								32999,
+								33006
+							],
+							[
+								33061,
+								33068
+							],
+							[
+								33118,
+								33125
+							],
+							[
+								33176,
+								33183
+							],
+							[
+								33683,
+								33687
+							],
+							[
+								33827,
+								33834
+							],
+							[
+								33889,
+								33896
+							],
+							[
+								33946,
+								33953
+							],
+							[
+								34004,
+								34011
+							],
+							[
+								34668,
+								34675
+							],
+							[
+								34724,
+								34731
+							],
+							[
+								34782,
+								34789
+							],
+							[
+								35163,
+								35170
+							],
+							[
+								35527,
+								35534
+							],
+							[
+								35908,
+								35915
+							],
+							[
+								36244,
+								36251
+							],
+							[
+								36578,
+								36585
+							],
+							[
+								36920,
+								36927
+							],
+							[
+								37256,
+								37263
+							],
+							[
+								37609,
+								37616
+							],
+							[
+								37933,
+								37940
+							],
+							[
+								38275,
+								38282
+							],
+							[
+								38331,
+								38338
+							],
+							[
+								38389,
+								38396
+							],
+							[
+								38840,
+								38844
+							],
+							[
+								38916,
+								38923
+							],
+							[
+								39364,
+								39371
+							],
+							[
+								39443,
+								39450
+							],
+							[
+								39884,
+								39891
+							],
+							[
+								39963,
+								39970
+							],
+							[
+								40295,
+								40302
+							],
+							[
+								40653,
+								40660
+							],
+							[
+								40984,
+								40991
+							],
+							[
+								41295,
+								41302
+							],
+							[
+								41630,
+								41637
+							],
+							[
+								41950,
+								41954
+							],
+							[
+								42026,
+								42033
 							]
 						],
 						"settings":
 						{
-							"color_helper.box_height": 19,
+							"color_helper.box_height": 22,
 							"color_helper.color_scheme": "Packages/User/Custom-Themes/gooey.tmTheme",
 							"color_helper.file_palette":
 							[
@@ -2049,14 +3115,14 @@
 								"allowed_colors":
 								[
 									"hexa",
-									"hex",
-									"hex_compressed"
+									"hex_compressed",
+									"hex"
 								],
 								"compress_hex_output": false,
 								"current_ext": ".tmtheme",
 								"current_syntax": "XML/XML",
 								"enabled": true,
-								"last_updated": 1521615011.68,
+								"last_updated": 1529189577.02,
 								"scan_completion_scopes":
 								[
 								],
@@ -2070,14 +3136,14 @@
 							"syntax": "Packages/XML/XML.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 863.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 13,
 					"file": "src/data.rs",
 					"semi_transient": false,
 					"settings":
@@ -2105,7 +3171,7 @@
 								"current_ext": ".rs",
 								"current_syntax": "Rust/Rust",
 								"enabled": false,
-								"last_updated": 1521615011.68
+								"last_updated": 1529189577.02
 							},
 							"git_gutter_is_enabled": true,
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
@@ -2113,14 +3179,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1918.0,
+						"translation.y": 2009.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 12,
 					"file": "src/blog.rs",
 					"semi_transient": false,
 					"settings":
@@ -2159,7 +3225,7 @@
 						"translation.y": 3040.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 31,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
@@ -2202,11 +3268,11 @@
 						"translation.y": 9088.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 27,
 					"semi_transient": false,
 					"settings":
 					{
@@ -2244,7 +3310,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -2287,11 +3353,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 19,
 					"file": "src/xpress.rs",
 					"semi_transient": false,
 					"settings":
@@ -2330,7 +3396,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 42,
+					"stack_index": 47,
 					"type": "text"
 				},
 				{
@@ -2373,11 +3439,11 @@
 						"translation.y": 7190.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 57,
+					"stack_index": 62,
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 28,
 					"file": "static/packages/js/before/blog.js",
 					"semi_transient": false,
 					"settings":
@@ -2417,11 +3483,11 @@
 						"translation.y": 8573.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 35,
+					"stack_index": 41,
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 29,
 					"file": "static/assets/after-1.0.3.js",
 					"semi_transient": false,
 					"settings":
@@ -2460,11 +3526,11 @@
 						"translation.y": 6725.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 34,
+					"stack_index": 40,
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 30,
 					"file": "static/assets/before-1.0.6.js",
 					"semi_transient": false,
 					"settings":
@@ -2502,11 +3568,11 @@
 						"translation.y": 1448.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 43,
+					"stack_index": 48,
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 31,
 					"file": "static/assets/before-1.0.6-might-be-old.js",
 					"semi_transient": false,
 					"settings":
@@ -2544,11 +3610,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 44,
+					"stack_index": 49,
 					"type": "text"
 				},
 				{
-					"buffer": 27,
+					"buffer": 32,
 					"file": "static/packages/css/blog-current.css",
 					"semi_transient": false,
 					"settings":
@@ -2667,11 +3733,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 33,
 					"file": "static/assets/blog-1.0.8.css",
 					"semi_transient": false,
 					"settings":
@@ -2751,11 +3817,11 @@
 						"translation.y": 74.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
-					"buffer": 29,
+					"buffer": 34,
 					"file": "templates/page-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -2820,11 +3886,11 @@
 						"translation.y": 1265.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 52,
+					"stack_index": 57,
 					"type": "text"
 				},
 				{
-					"buffer": 30,
+					"buffer": 35,
 					"file": "pages/archive/about.page",
 					"semi_transient": false,
 					"settings":
@@ -2861,11 +3927,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 53,
+					"stack_index": 58,
 					"type": "text"
 				},
 				{
-					"buffer": 31,
+					"buffer": 36,
 					"file": "templates/article-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -2884,7 +3950,7 @@
 						"settings":
 						{
 							"auto_complete": false,
-							"color_helper.box_height": 23,
+							"color_helper.box_height": 22,
 							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
 							"color_helper.file_palette":
 							[
@@ -2896,86 +3962,19 @@
 							{
 								"allowed_colors":
 								[
-									"hex_compressed",
-									"hex",
-									"webcolors",
-									"rgba",
-									"hsla",
 									"hsl",
-									"rgb"
+									"rgb",
+									"rgba",
+									"hex",
+									"hsla",
+									"webcolors",
+									"hex_compressed"
 								],
 								"compress_hex_output": true,
 								"current_ext": ".hbs",
 								"current_syntax": "HTML/HTML",
 								"enabled": true,
-								"last_updated": 1519614412.17,
-								"scan_completion_scopes":
-								[
-								],
-								"scan_scopes":
-								[
-									"meta.declaration-list.css -support.type.property-name.css -comment -string",
-									"meta.property-value.css -comment -string",
-									"meta.value.css -comment -string",
-									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
-									"meta.tag.any.html meta.attribute-with-value.style.html"
-								],
-								"use_hex_argb": false
-							},
-							"git_gutter_is_enabled": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 12.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 30,
-					"type": "text"
-				},
-				{
-					"buffer": 32,
-					"file": "templates/search-template.html.hbs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1119,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								785,
-								785
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"color_helper.box_height": 21,
-							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
-							"color_helper.file_palette":
-							[
-							],
-							"color_helper.scan":
-							{
-								"allowed_colors":
-								[
-									"hex_compressed",
-									"hex",
-									"webcolors",
-									"rgba",
-									"hsla",
-									"hsl",
-									"rgb"
-								],
-								"compress_hex_output": true,
-								"current_ext": ".hbs",
-								"current_syntax": "HTML/HTML",
-								"enabled": true,
-								"last_updated": 1519614412.17,
+								"last_updated": 1532115967.67,
 								"scan_completion_scopes":
 								[
 								],
@@ -2998,11 +3997,78 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 40,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 33,
+					"buffer": 37,
+					"file": "templates/search-template.html.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1119,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								785,
+								785
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"rgb",
+									"webcolors",
+									"hex",
+									"hsl",
+									"hex_compressed",
+									"hsla",
+									"rgba"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".hbs",
+								"current_syntax": "HTML/HTML",
+								"enabled": true,
+								"last_updated": 1529189577.02,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 38,
 					"file": "templates/page-code-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3070,11 +4136,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 50,
+					"stack_index": 55,
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 39,
 					"file": "templates/common/assets-css.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3135,11 +4201,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 29,
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 40,
 					"file": "templates/common/assets-js-before.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3200,11 +4266,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 49,
+					"stack_index": 54,
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 41,
 					"file": "templates/common/assets-js-after.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3265,11 +4331,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 46,
+					"stack_index": 51,
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 42,
 					"file": "templates/page-blank-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3307,11 +4373,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 45,
+					"stack_index": 50,
 					"type": "text"
 				},
 				{
-					"buffer": 38,
+					"buffer": 43,
 					"file": "templates/tags-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3350,11 +4416,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 41,
+					"stack_index": 46,
 					"type": "text"
 				},
 				{
-					"buffer": 39,
+					"buffer": 44,
 					"file": "templates/common/header.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3419,11 +4485,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 55,
+					"stack_index": 60,
 					"type": "text"
 				},
 				{
-					"buffer": 40,
+					"buffer": 45,
 					"file": "templates/common/footer.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3486,11 +4552,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 54,
+					"stack_index": 59,
 					"type": "text"
 				},
 				{
-					"buffer": 41,
+					"buffer": 46,
 					"file": ".license",
 					"semi_transient": false,
 					"settings":
@@ -3528,11 +4594,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 56,
+					"stack_index": 61,
 					"type": "text"
 				},
 				{
-					"buffer": 42,
+					"buffer": 47,
 					"file": "templates/articles-pagination-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3596,11 +4662,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 39,
+					"stack_index": 45,
 					"type": "text"
 				},
 				{
-					"buffer": 43,
+					"buffer": 48,
 					"semi_transient": false,
 					"settings":
 					{
@@ -3638,11 +4704,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
-					"buffer": 44,
+					"buffer": 49,
 					"file": "/D/docs/vs code theme in progress - colors.txt",
 					"semi_transient": false,
 					"settings":
@@ -3679,11 +4745,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
-					"buffer": 45,
+					"buffer": 50,
 					"file": "src/pages-before-comment-out-prints.rs",
 					"semi_transient": false,
 					"settings":
@@ -3722,11 +4788,11 @@
 						"translation.y": 41695.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 38,
+					"stack_index": 44,
 					"type": "text"
 				},
 				{
-					"buffer": 46,
+					"buffer": 51,
 					"file": "templates/create-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3789,11 +4855,11 @@
 						"translation.y": 1577.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 47,
+					"stack_index": 52,
 					"type": "text"
 				},
 				{
-					"buffer": 47,
+					"buffer": 52,
 					"file": "templates/edit-article-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3857,11 +4923,11 @@
 						"translation.y": 4884.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 48,
+					"stack_index": 53,
 					"type": "text"
 				},
 				{
-					"buffer": 48,
+					"buffer": 53,
 					"file": "templates/general-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3898,11 +4964,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 32,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
-					"buffer": 49,
+					"buffer": 54,
 					"file": "templates/manage-pagination-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -3967,11 +5033,11 @@
 						"translation.y": 1449.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 39,
 					"type": "text"
 				},
 				{
-					"buffer": 50,
+					"buffer": 55,
 					"file": "/C/code/lang/Rust/proj/rocket-auth-login/examples/database_example/src/layout.rs",
 					"semi_transient": false,
 					"settings":
@@ -4010,11 +5076,11 @@
 						"translation.y": 4016.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 51,
+					"stack_index": 56,
 					"type": "text"
 				},
 				{
-					"buffer": 51,
+					"buffer": 56,
 					"file": "/C/code/lang/Rust/code/Snippets/Snippet Collection.rs",
 					"semi_transient": false,
 					"settings":
@@ -4053,7 +5119,7 @@
 						"translation.y": 10842.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 10,
 					"type": "text"
 				}
 			]
@@ -4066,7 +5132,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 29.0
+		"height": 32.0
 	},
 	"input":
 	{
@@ -4129,7 +5195,7 @@
 	"project": "blogr-proj-post-fractal-frontpage.sublime-project",
 	"replace":
 	{
-		"height": 54.0
+		"height": 60.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -4159,7 +5225,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 		"last_automatic_layout":

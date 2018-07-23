@@ -160,7 +160,7 @@ fn main() {
     let content_cache: ContentCacheLock = ContentCacheLock::new();
     let article_map_cache = ArticleCacheLock::new( ArticleCache::load_cache(&conn) );
     let multi_aids = TagAidsLock::load_cache(&conn);
-    let text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids) );
+    let text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids, &article_map_cache) );
     let num_articles = NumArticles(AtomicUsize::new( article_map_cache.num_articles() as usize ));
     
     if CACHE_ENABLED {

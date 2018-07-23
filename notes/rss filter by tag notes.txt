@@ -1,0 +1,27 @@
+
+TagAidsLock.tags_lock
+    RwLock<TagsCache>
+TagsCache.tags
+    Vec<TagCount>
+    
+TagCount
+    tag: String,
+    url: String,
+    count: u32,
+    size: u16
+    
+    
+    
+// if TagAidsLock.retrieve_aids(&str)
+
+
+if let Some(aids) = TagAidsLock.retrieve_tag_aids(u32) {
+    if let Some(articles) = ArticleCacheLock.retrieve_articles(aids) {
+        return Some(articles);
+    }
+}
+None
+
+
+
+

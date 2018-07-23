@@ -145,7 +145,20 @@ impl ArticleCacheLock {
             None
         }
     }
-    pub fn all_articles<T: Collate>(&self, pagination: &Page<T>) -> Option<(Vec<Article>, u32)> {
+    pub fn all_articles(&self) -> Option<Vec<Article>> {
+        if let Ok(article_cache) = self.lock.read() {
+            // let articles: Vec<Article> = article_cache.articles.values().map(|a| a).collect();
+            let mut articles: Vec<Article> = Vec::with_capacity(article_cache.articles.len());
+            for article in article_cache.articles.values() {
+                articles.push(article.clone());
+            }
+            if articles.len() > 0 {
+                Some(articles)
+            } else { None }
+        } else { None }
+    }
+    
+    pub fn paginated_articles<T: Collate>(&self, pagination: &Page<T>) -> Option<(Vec<Article>, u32)> {
         let mut starting = pagination.cur_page as u32;
         let mut ending = pagination.cur_page as u32 + pagination.settings.ipp() as u32;
         
@@ -204,8 +217,15 @@ pub struct TextCache {
     pub pages: HashMap<String, String>,
 }
 impl TextCache {
-    pub fn load_cache(conn: &DbConn, multi_aids: &TagAidsLock) -> Self {
+    pub fn load_cache(conn: &DbConn, multi_aids: &TagAidsLock, article_cache: &ArticleCacheLock) -> Self {
         let mut pages: HashMap<String, String> = HashMap::new();
+        
+        // if let Some(aids) = multi_aids.retrieve_tag_aids(u32) {
+        //     if let Some(articles) = ArticleCacheLock.retrieve_articles(aids) {
+        //         // return Some(articles);
+        //     }
+        // }
+        // None
         
         let rss = cache::pages::rss::load_rss(conn);
         pages.insert("rss".to_owned(), rss);
@@ -311,6 +331,13 @@ impl TagAidsLock {
             None
         }
     }
+    // Retrieve all aids for the given tag
+    pub fn retireve_tag_aids(&self, tag: u32) -> Option<Vec<u32>> {
+        let tagid = format!("tag/{}", tag);
+        self.retrieve_aids(&tagid)
+        // unimplemented!()
+    }
+    
     // Retrieve (from the cache) all tags and the number of times they have been used
     pub fn retrieve_tags(&self) -> Option<Vec<TagCount>> {
         if let Ok(all_tags) = self.tags_lock.read() {
@@ -507,10 +534,10 @@ pub fn update_article_caches(conn: &DbConn,
 }
 
 
-pub fn update_text_cache(conn: &DbConn, text_cache: &TextCacheLock, multi_aids: &TagAidsLock) -> bool {
+pub fn update_text_cache(conn: &DbConn, text_cache: &TextCacheLock, multi_aids: &TagAidsLock, article_cache: &ArticleCacheLock) -> bool {
     
     if let Ok(mut text_cache) = text_cache.lock.write() {
-        *text_cache = TextCache::load_cache(&conn, &multi_aids);
+        *text_cache = TextCache::load_cache(&conn, &multi_aids, &article_cache);
         true
     } else {
         println!("Failed refresh content - could not unlock text cache");
@@ -535,7 +562,7 @@ pub fn update_all_caches(conn: &DbConn,
         output = false;
     }
     
-    if ! update_text_cache(conn, text_cache, multi_aids) {
+    if ! update_text_cache(conn, text_cache, multi_aids, article_cache) {
         output = false;
     }
     
