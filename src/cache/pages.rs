@@ -445,23 +445,41 @@ pub mod rss {
         let express: Express = content.into();
         express.set_content_type(ContentType::XML)
     }
-    pub fn serve_filter(tag: Option<String>,
-                        author: Option<u32>,
-                        multi_aids: &TagAidsLock,
-                        article_lock: &ArticleCacheLock,
-                        admin: Option<AdministratorCookie>, 
-                        user: Option<UserCookie>, 
+    pub fn serve_filter(key: String,
+                        // tag: Option<String>,
+                        // author: Option<u32>,
+                        text_lock: &TextCacheLock,
+                        // multi_aids: &TagAidsLock,
+                        // article_lock: &ArticleCacheLock,
+                        // admin: Option<AdministratorCookie>, 
+                        // user: Option<UserCookie>, 
                         uhits: Option<UniqueHits>, 
                         gen: Option<GenTimer>, 
                         encoding: Option<AcceptCompression>,
-                        msg: Option<String>,
+                        // msg: Option<String>,
                        ) -> Express 
     {
-        let content = ::cache::pages::rss::filter_rss(article_lock, multi_aids, tag.as_ref(), author, true);
+        // let content = ::cache::pages::rss::filter_rss(article_lock, multi_aids, tag.as_ref(), author, true);
+        // let key = if let Some(k) = tag {
+        //     format!("rss-tag/{}", )
+        // } else if let Some(k) = author {
+            
+        // } else {
+        //     let content = text_lock.retrieve_text("rss").unwrap_or("Could not load RSS feed.".to_owned())
+        //     let express: Express = content.into();
+        //     return express.set_content_type(ContentType::XML);
+        // };
+        if let Some(feed) = text_lock.retrieve_text(&key) {
+            // let mut output: Express = "No rss feed found for specified filter(s).".to_owned().into()
+            let mut output: Express = feed.into();
+            output.set_content_type(ContentType::XML)
+        } else {
+            let mut output: Express = "No rss feed found for specified filter(s).".to_owned().into();
+            output
+        }
         
-        
-        let express: Express = String::new().into();
-        express.set_content_type(ContentType::XML)
+        // let express: Express = String::new().into();
+        // express.set_content_type(ContentType::XML)
     }
     
     pub fn load_filtered_rss(conn: &DbConn, article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock) -> Option<Vec<(String, String)>> {
