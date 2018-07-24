@@ -237,7 +237,36 @@ pub mod rss {
     {
         unimplemented!();
     }
-    #[get("/rss/<tag>")]
+    
+    
+    #[get("/rss-userid/<userid>")]
+    pub fn rss_userid_filter(start: GenTimer,
+                             userid: u32,
+                             text_lock: State<TextCacheLock>,
+                             encoding: AcceptCompression,
+                             uhits: UniqueHits
+                            ) -> Express
+    {
+        // basically just do: text_lock.retrieve_text(&format!("rss-author/{}", userid))
+        unimplemented!()
+    }
+    
+    #[get("/rss-username/<username>")]
+    pub fn rss_username_filter(start: GenTimer,
+                               conn: DbConn,
+                               username: String,
+                               text_lock: State<TextCacheLock>,
+                               encoding: AcceptCompression,
+                               uhits: UniqueHits
+                              ) -> Express
+    {
+        // do a database query for a user with that name, return the userid
+        // if there is a valid userid call rss_userid_filter()
+        unimplemented!()
+    }
+    
+    
+    #[get("/rss-tag/<tag>")]
     pub fn rss_tag_filter(start: GenTimer,
                           tag: String,
                           
@@ -246,7 +275,9 @@ pub mod rss {
                           uhits: UniqueHits
                          ) -> Express
     {
-        // unimplemented!();
+        // Basically just do: text_lock.retrieve_text(&format!("rss-tag/{}", tag))
+        
+        unimplemented!();
         /*
                         tag: Option<String>,
                         author: Option<u32>,
@@ -267,7 +298,8 @@ pub mod rss {
         //     }
         // }
         // None
-        String::from("").into()
+        // String::from("").into()
+        
     }
 
     #[get("/rss.xml")]
