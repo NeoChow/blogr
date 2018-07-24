@@ -457,15 +457,58 @@ pub mod rss {
                         msg: Option<String>,
                        ) -> Express 
     {
-        let content = ::cache::pages::rss::filter_rss(article_lock, multi_aids, tag, author, true);
+        let content = ::cache::pages::rss::filter_rss(article_lock, multi_aids, tag.as_ref(), author, true);
         
         
         let express: Express = String::new().into();
         express.set_content_type(ContentType::XML)
     }
     
+    pub fn load_filtered_rss(conn: &DbConn, article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock) -> Option<Vec<(String, String)>> {
+        let authors = cache::pages::author::load_authors(conn);
+        let tags: Vec<TagCount> = if let Some(t) = multi_aids.retrieve_tags() {
+            t
+        } else {
+            Vec::new()
+        };
+        
+        // iterate authors and tags adding all combos
+        // requesting rss filtered on tag AND author should
+        //   either be denied or generated on demand
+        
+        // let mut output: Vec<String>;
+        
+        // Create a vector of tuples containing a lookup key and rss feed text
+        let output: Vec<(String, String)> = 
+            tags.iter()
+            .map(|t| format!("rss-tag/{}", t.tag))
+            .zip(
+                tags.iter()
+                .filter_map(|t| 
+                    filter_rss(article_cache, multi_aids, Some(&t.tag), None, true)
+                )
+            )
+            .chain(
+                authors.iter()
+                .map(|a| format!("rss-author/{}", a))
+                .zip(
+                    authors.iter().filter_map(|a| {
+                        filter_rss(article_cache, multi_aids, None, Some(*a), true)
+                    })
+                )
+            )
+            .collect();
+        
+        if output.len() != 0 {
+            Some(output)
+        } else {
+            None
+        }
+        // None
+    }
+    
     // pub fn filter_rss(conn: &DbConn, tag: Option<&str>, author: Option<u32>) -> Option<String>
-    pub fn filter_rss(article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock, tag: Option<String>, author: Option<u32>, short_description: bool) -> Option<String>
+    pub fn filter_rss(article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock, tag: Option<&String>, author: Option<u32>, short_description: bool) -> Option<String>
     {
         // let qry = if tag.is_some() && author.is_none() {
         //     let tag = tag.expect("Fatal error unwrapping rss tag");
