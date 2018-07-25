@@ -492,7 +492,7 @@ pub mod rss {
             Vec::new()
         };
         
-        println!("Loading rss feed filters.\n    Authors: {:#?}\nTags: {:#?}", &authors, &tags);
+        // println!("Loading rss feed filters.\n    Authors: {:#?}\nTags: {:#?}", &authors, &tags);
         
         // iterate authors and tags adding all combos
         // requesting rss filtered on tag AND author should
@@ -545,9 +545,9 @@ pub mod rss {
         
         let output = feeds;
         
-        for (k, _) in &output {
+        /* for (k, _) in &output {
             println!("Loading key: {}", k);
-        }
+        } */
             
         if output.len() != 0 {
             Some(output)
@@ -577,6 +577,68 @@ pub mod rss {
         if let Some(all_articles) = article_cache.all_articles() {
             let mut articles: Vec<Article> = Vec::with_capacity(article_cache.num_articles() as usize);
             
+            // println!("Iterating through {} articles and matching against rss feed filter", all_articles.len());
+            
+            if let Some(ref tag) = tag {
+                if let &Some(ref author) = &author {
+                    // both tag and author
+                    for article in all_articles {
+                        if article.userid == *author && article.tags.contains(&tag.to_lowercase()) {
+                            // println!("Adding article to filtered feed");
+                            articles.push(
+                                if short_description == false {
+                                    article.clone()
+                                } else {
+                                    article.short_clone()
+                                }
+                            )
+                        }
+                    }
+                } else {
+                    // just tag
+                    // println!("Looking for tag {} in articles", &tag);
+                    for article in all_articles {
+                        if article.tags.contains(&tag.to_lowercase()) {
+                            // println!("Adding article to filtered feed");
+                            articles.push(
+                                if short_description == false {
+                                    article.clone()
+                                } else {
+                                    article.short_clone()
+                                }
+                            )
+                        }
+                    }
+                }
+            } else if let &Some(ref author) = &author {
+                // just author
+                for article in all_articles {
+                    if article.userid == *author {
+                        // println!("Adding article to filtered feed");
+                        articles.push(
+                            if short_description == false {
+                                article.clone()
+                            } else {
+                                article.short_clone()
+                            }
+                        )
+                    }
+                }
+            } else {
+                // all
+                for article in all_articles {
+                    // println!("Adding article to filtered feed");
+                    articles.push(
+                        if short_description == false {
+                            article.clone()
+                        } else {
+                            article.short_clone()
+                        }
+                    )
+                }
+            }
+            
+            /*
             if tag.is_some() && author.is_some() {
                 if let &Some(ref tag) = &tag {
                     if let &Some(ref author) = &author {
@@ -630,6 +692,8 @@ pub mod rss {
                     )
                 }
             }
+            */
+            
             if articles.len() == 0 {
                 println!("Could not create filtered rss feed: no filtered articles collected");
                 return None;

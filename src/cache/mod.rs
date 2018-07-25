@@ -233,7 +233,7 @@ impl TextCache {
         // let filtered = cache::pages::rss::load_filtered_rss(conn, article_cache, multi_aids);
         if let Some(feeds) = cache::pages::rss::load_filtered_rss(conn, article_cache, multi_aids) {
             for (key, feed) in feeds {
-                println!("Adding filtered rss feed: {} ({} chars)", key, feed.len());
+                // println!("Adding filtered rss feed: {} ({} chars)", key, feed.len());
                 pages.insert(key, feed);
             }
         }
