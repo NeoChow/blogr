@@ -1,130 +1,133 @@
 {
   "stats": {
-    "tag/rust": {
-      "127.0.0.1": 3
-    },
-    "article/22/My%20Development%20Environment": {
-      "127.0.0.1": 4
-    },
-    "article/21/Accept%20Encoding": {
-      "127.0.0.1": 6
-    },
-    "article/18/Rocket%20Templates%20And%20Compression": {
-      "127.0.0.1": 4
-    },
     "content/accept.rs": {
       "127.0.0.1": 3
     },
     "content": {
       "127.0.0.1": 2
     },
-    "test_rss": {
-      "127.0.0.1": 5
-    },
-    "all_tags": {
-      "127.0.0.1": 20
-    },
-    "content/legal-privacy": {
-      "127.0.0.1": 5
-    },
-    "content/content/legal_privacy": {
-      "127.0.0.1": 2
-    },
-    "download": {
-      "127.0.0.1": 14
-    },
-    "tag/mario": {
-      "127.0.0.1": 2
+    "tag/rust": {
+      "127.0.0.1": 3
     },
     "content/content/legal-privacy": {
+      "127.0.0.1": 2
+    },
+    "tag/programming": {
+      "127.0.0.1": 2
+    },
+    "//tag/code": {
+      "127.0.0.1": 2
+    },
+    "article/21/Accept%20Encoding": {
+      "127.0.0.1": 6
+    },
+    "/": {
+      "127.0.0.1": 42
+    },
+    "test_home": {
       "127.0.0.1": 2
     },
     "content/xpress.rs": {
       "127.0.0.1": 2
     },
+    "tag/code": {
+      "127.0.0.1": 7
+    },
+    "content/content/legalprivacy": {
+      "127.0.0.1": 2
+    },
+    "//tag/programming": {
+      "127.0.0.1": 14
+    },
+    "tag/admin": {
+      "127.0.0.1": 2
+    },
+    "content/content/legal%20privacy": {
+      "127.0.0.1": 2
+    },
+    "test_tagcloud": {
+      "127.0.0.1": 3
+    },
+    "rss-tag": {
+      "127.0.0.1": 4
+    },
+    "article/22/My%20Development%20Environment": {
+      "127.0.0.1": 4
+    },
+    "rss.xml": {
+      "127.0.0.1": 5
+    },
+    "//tag/rust%20code": {
+      "127.0.0.1": 8
+    },
+    "tag/rust%20code": {
+      "127.0.0.1": 3
+    },
+    "all_tags": {
+      "127.0.0.1": 20
+    },
+    "content/content/legal_privacy": {
+      "127.0.0.1": 2
+    },
+    "test_rss": {
+      "127.0.0.1": 5
+    },
+    "author": {
+      "127.0.0.1": 3
+    },
+    "article/18/Rocket%20Templates%20And%20Compression": {
+      "127.0.0.1": 4
+    },
+    "content/legal-privacy": {
+      "127.0.0.1": 5
+    },
+    "download": {
+      "127.0.0.1": 14
+    },
     "refresh_content": {
+      "127.0.0.1": 6
+    },
+    "test_cache": {
+      "127.0.0.1": 28
+    },
+    "article/18": {
+      "127.0.0.1": 3
+    },
+    "test_tag": {
+      "127.0.0.1": 7
+    },
+    "content/tutorials": {
+      "127.0.0.1": 8
+    },
+    "article/22/My%20Dev%20Env": {
+      "127.0.0.1": 12
+    },
+    "test_author": {
+      "127.0.0.1": 5
+    },
+    "content/sublime-theme": {
+      "127.0.0.1": 2
+    },
+    "test_article": {
       "127.0.0.1": 6
     },
     "create": {
       "127.0.0.1": 2
     },
-    "tag/rust%20code": {
-      "127.0.0.1": 3
-    },
-    "//tag/programming": {
-      "127.0.0.1": 14
-    },
-    "//tag/code": {
-      "127.0.0.1": 2
-    },
-    "author": {
-      "127.0.0.1": 3
-    },
-    "rss.xml": {
-      "127.0.0.1": 4
-    },
-    "tag/code": {
-      "127.0.0.1": 7
-    },
-    "tag/programming": {
-      "127.0.0.1": 2
-    },
-    "content/content/legalprivacy": {
-      "127.0.0.1": 2
-    },
     "content/rust-snippets": {
       "127.0.0.1": 22
-    },
-    "content/tutorials": {
-      "127.0.0.1": 8
-    },
-    "test_tagcloud": {
-      "127.0.0.1": 3
-    },
-    "test_author": {
-      "127.0.0.1": 5
-    },
-    "test_cache": {
-      "127.0.0.1": 28
     },
     "content/about-me": {
       "127.0.0.1": 5
     },
+    "tag/mario": {
+      "127.0.0.1": 2
+    },
     "edit": {
       "127.0.0.1": 24
     },
-    "test_tag": {
-      "127.0.0.1": 7
-    },
-    "test_article": {
-      "127.0.0.1": 6
-    },
     "pagestats": {
       "127.0.0.1": 23
-    },
-    "article/18": {
-      "127.0.0.1": 3
-    },
-    "content/content/legal%20privacy": {
-      "127.0.0.1": 2
-    },
-    "article/22/My%20Dev%20Env": {
-      "127.0.0.1": 12
-    },
-    "test_home": {
-      "127.0.0.1": 2
-    },
-    "tag/admin": {
-      "127.0.0.1": 2
-    },
-    "content/sublime-theme": {
-      "127.0.0.1": 2
-    },
-    "//tag/rust%20code": {
-      "127.0.0.1": 8
-    },
-    "/": {
-      "127.0.0.1": 40
     },
     "content/content/linux-tips": {
       "127.0.0.1": 2

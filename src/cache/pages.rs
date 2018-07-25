@@ -469,11 +469,13 @@ pub mod rss {
         //     let express: Express = content.into();
         //     return express.set_content_type(ContentType::XML);
         // };
+        let key = key.to_lowercase();
         if let Some(feed) = text_lock.retrieve_text(&key) {
             // let mut output: Express = "No rss feed found for specified filter(s).".to_owned().into()
             let mut output: Express = feed.into();
             output.set_content_type(ContentType::XML)
         } else {
+            println!("Error: requested filtered rss feed, no matching feed found.\nkey: {}", &key);
             let mut output: Express = "No rss feed found for specified filter(s).".to_owned().into();
             output
         }
@@ -490,6 +492,8 @@ pub mod rss {
             Vec::new()
         };
         
+        println!("Loading rss feed filters.\n    Authors: {:#?}\nTags: {:#?}", &authors, &tags);
+        
         // iterate authors and tags adding all combos
         // requesting rss filtered on tag AND author should
         //   either be denied or generated on demand
@@ -497,6 +501,7 @@ pub mod rss {
         // let mut output: Vec<String>;
         
         // Create a vector of tuples containing a lookup key and rss feed text
+        /*
         let output: Vec<(String, String)> = 
             tags.iter()
             .map(|t| format!("rss-tag/{}", t.tag))
@@ -516,7 +521,34 @@ pub mod rss {
                 )
             )
             .collect();
+        */
         
+        let mut feeds: Vec<(String, String)> = Vec::new();
+        
+        for author in &authors {
+            let key = format!("rss-author/{}", author).to_lowercase();
+            if let Some(feed) = filter_rss(article_cache, multi_aids, None, Some(*author), true) {
+                feeds.push((key, feed));
+            } else {
+                println!("Error loading rss author filter feed: {}", &key);
+            }
+        }
+        
+        for tag in &tags {
+            let key = format!("rss-tag/{}", tag.tag).to_lowercase();
+            if let Some(feed) = filter_rss(article_cache, multi_aids, Some(&tag.tag), None, true) {
+                feeds.push((key, feed));
+            } else {
+                println!("Error loading rss tag filter feed {}", &key);
+            }
+        }
+        
+        let output = feeds;
+        
+        for (k, _) in &output {
+            println!("Loading key: {}", k);
+        }
+            
         if output.len() != 0 {
             Some(output)
         } else {
@@ -598,7 +630,10 @@ pub mod rss {
                     )
                 }
             }
-            if articles.len() == 0 { return None; }
+            if articles.len() == 0 {
+                println!("Could not create filtered rss feed: no filtered articles collected");
+                return None;
+            }
             
             let output = rss_output(articles);
             {
@@ -608,12 +643,16 @@ pub mod rss {
                     || out == "Could not create RSS channel."
                     || out == "Could not create RSS feed." 
                 {
+                    println!("Could not create filtered rss feed: rss output error: '{}'", &out);
                     return None;
                 }
             }
             Some(output)
             
-        } else { None }
+        } else {
+            println!("Could not create filtered rss feed: error returning all articles");
+            None
+        }
         // } else {
         //     None
         // }

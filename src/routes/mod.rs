@@ -249,7 +249,7 @@ pub mod rss {
     {
         // basically just do: text_lock.retrieve_text(&format!("rss-author/{}", userid))
         // unimplemented!()
-        cache::pages::rss::serve_filter(format!("author/{}", userid), &text_lock, Some(uhits), Some(start), Some(encoding))
+        cache::pages::rss::serve_filter(format!("rss-author/{}", userid), &text_lock, Some(uhits), Some(start), Some(encoding))
     }
     
     #[get("/rss-username/<username>")]
@@ -288,7 +288,6 @@ pub mod rss {
     #[get("/rss-tag/<tag>")]
     pub fn rss_tag_filter(start: GenTimer,
                           tag: String,
-                          
                           text_lock: State<TextCacheLock>, 
                           encoding: AcceptCompression, 
                           uhits: UniqueHits
@@ -296,7 +295,7 @@ pub mod rss {
     {
         // Basically just do: text_lock.retrieve_text(&format!("rss-tag/{}", tag))
         let tag = sanitize::sanitize_tags(tag);
-        cache::pages::rss::serve_filter(format!("tag/{}", tag), &text_lock, Some(uhits), Some(start), Some(encoding))
+        cache::pages::rss::serve_filter(format!("rss-tag/{}", tag), &text_lock, Some(uhits), Some(start), Some(encoding))
         // unimplemented!();
         /*
                         tag: Option<String>,
@@ -351,6 +350,7 @@ pub mod rss {
         express.compress( encoding )
     }
 }
+
 
 pub mod author {
     use super::*;
