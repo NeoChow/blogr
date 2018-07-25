@@ -248,7 +248,8 @@ pub mod rss {
                             ) -> Express
     {
         // basically just do: text_lock.retrieve_text(&format!("rss-author/{}", userid))
-        unimplemented!()
+        // unimplemented!()
+        cache::pages::rss::serve_filter(format!("author/{}", userid), &text_lock, Some(uhits), Some(start), Some(encoding))
     }
     
     #[get("/rss-username/<username>")]
@@ -262,7 +263,25 @@ pub mod rss {
     {
         // do a database query for a user with that name, return the userid
         // if there is a valid userid call rss_userid_filter()
-        unimplemented!()
+        let username = ::sanitize::sanitize(&username);
+        let qry = conn.query(&format!("SELECT userid FROM users WHERE userid = '{}'", username), &[]);
+        if let Ok(result) = qry {
+            if !result.is_empty() && result.len() == 1 {
+               let row = result.get(0);
+               let userid = row.get(0);
+               rss_userid_filter(start, userid, text_lock, encoding, uhits)
+                
+            } else {
+               let express: Express = "Username not found".to_owned().into();
+               express
+            }
+        } else {
+               let express: Express = "Could not reach database.".to_owned().into();
+               express
+        }
+        
+        
+        // unimplemented!()
     }
     
     
@@ -276,8 +295,9 @@ pub mod rss {
                          ) -> Express
     {
         // Basically just do: text_lock.retrieve_text(&format!("rss-tag/{}", tag))
-        
-        unimplemented!();
+        let tag = sanitize::sanitize_tags(tag);
+        cache::pages::rss::serve_filter(format!("tag/{}", tag), &text_lock, Some(uhits), Some(start), Some(encoding))
+        // unimplemented!();
         /*
                         tag: Option<String>,
                         author: Option<u32>,
