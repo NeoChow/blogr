@@ -263,8 +263,10 @@ pub mod rss {
     {
         // do a database query for a user with that name, return the userid
         // if there is a valid userid call rss_userid_filter()
-        let username = ::sanitize::sanitize(&username);
-        let qry = conn.query(&format!("SELECT userid FROM users WHERE userid = '{}'", username), &[]);
+        let username = ::sanitize::escape_sql_pg(::sanitize::medium_sanitize(username).to_lowercase());
+        // let username = ::sanitize::escape_sql_pg(::sanitize::sanitize_tag(&username).to_lowercase());
+        let qrytext = format!("SELECT userid FROM users WHERE lower(username) = '{user}' OR lower(display) = '{user}'", user=username);
+        let qry = conn.query(&qrytext, &[]);
         if let Ok(result) = qry {
             if !result.is_empty() && result.len() == 1 {
                let row = result.get(0);
@@ -272,9 +274,13 @@ pub mod rss {
                rss_userid_filter(start, userid, text_lock, encoding, uhits)
                 
             } else {
-               let express: Express = "Username not found".to_owned().into();
+            //    let express: Express = "Username not found".to_owned().into();
+               let express: Express = format!("Username '{}' not found", username).into();
                express
             }
+        } else if let Err(err) = qry {
+               let express: Express = format!("Could not execute database query: '{}'\n{}", err, qrytext).into();
+               express
         } else {
                let express: Express = "Could not reach database.".to_owned().into();
                express

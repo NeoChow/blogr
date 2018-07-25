@@ -1,94 +1,10 @@
 {
   "stats": {
-    "rss.xml": {
-      "127.0.0.1": 5
-    },
-    "test_tag": {
-      "127.0.0.1": 7
-    },
-    "//tag/programming": {
-      "127.0.0.1": 14
-    },
-    "test_rss": {
-      "127.0.0.1": 5
-    },
-    "content/legal-privacy": {
-      "127.0.0.1": 5
-    },
-    "pagestats": {
-      "127.0.0.1": 23
-    },
-    "content/about-me": {
-      "127.0.0.1": 5
-    },
-    "test_tagcloud": {
+    "content/accept.rs": {
       "127.0.0.1": 3
-    },
-    "all_tags": {
-      "127.0.0.1": 20
-    },
-    "content/content/linux-tips": {
-      "127.0.0.1": 2
-    },
-    "//tag/rust%20code": {
-      "127.0.0.1": 8
-    },
-    "test_article": {
-      "127.0.0.1": 6
-    },
-    "create": {
-      "127.0.0.1": 2
-    },
-    "tag/code": {
-      "127.0.0.1": 7
-    },
-    "/": {
-      "127.0.0.1": 42
-    },
-    "rss-userid": {
-      "127.0.0.1": 6
-    },
-    "test_home": {
-      "127.0.0.1": 2
-    },
-    "article/18/Rocket%20Templates%20And%20Compression": {
-      "127.0.0.1": 4
-    },
-    "rss-username": {
-      "127.0.0.1": 3
-    },
-    "article/18": {
-      "127.0.0.1": 3
-    },
-    "article/22/My%20Development%20Environment": {
-      "127.0.0.1": 4
-    },
-    "content/content/legal%20privacy": {
-      "127.0.0.1": 2
-    },
-    "tag/admin": {
-      "127.0.0.1": 2
-    },
-    "content/content/legal-privacy": {
-      "127.0.0.1": 2
-    },
-    "tag/programming": {
-      "127.0.0.1": 2
-    },
-    "content/tutorials": {
-      "127.0.0.1": 8
     },
     "rss-tag": {
       "127.0.0.1": 10
-    },
-    "article/21/Accept%20Encoding": {
-      "127.0.0.1": 6
-    },
-    "content/xpress.rs": {
-      "127.0.0.1": 2
-    },
-    "content/accept.rs": {
-      "127.0.0.1": 3
     },
     "download": {
       "127.0.0.1": 14
@@ -96,47 +12,131 @@
     "test_cache": {
       "127.0.0.1": 28
     },
-    "article/22/My%20Dev%20Env": {
-      "127.0.0.1": 12
+    "content/content/legal%20privacy": {
+      "127.0.0.1": 2
     },
-    "//tag/code": {
+    "/": {
+      "127.0.0.1": 42
+    },
+    "all_tags": {
+      "127.0.0.1": 20
+    },
+    "rss.xml": {
+      "127.0.0.1": 5
+    },
+    "test_tag": {
+      "127.0.0.1": 7
+    },
+    "content/content/legalprivacy": {
+      "127.0.0.1": 2
+    },
+    "tag/rust%20code": {
+      "127.0.0.1": 3
+    },
+    "tag/mario": {
+      "127.0.0.1": 2
+    },
+    "content/content/linux-tips": {
+      "127.0.0.1": 2
+    },
+    "content/content/legal_privacy": {
+      "127.0.0.1": 2
+    },
+    "test_tagcloud": {
+      "127.0.0.1": 3
+    },
+    "content/about-me": {
+      "127.0.0.1": 5
+    },
+    "content/xpress.rs": {
+      "127.0.0.1": 2
+    },
+    "content/tutorials": {
+      "127.0.0.1": 8
+    },
+    "test_author": {
+      "127.0.0.1": 5
+    },
+    "test_home": {
       "127.0.0.1": 2
     },
     "refresh_content": {
       "127.0.0.1": 6
     },
-    "tag/mario": {
-      "127.0.0.1": 2
-    },
-    "author": {
-      "127.0.0.1": 3
-    },
-    "content/sublime-theme": {
-      "127.0.0.1": 2
-    },
-    "edit": {
-      "127.0.0.1": 24
-    },
-    "content/content/legal_privacy": {
-      "127.0.0.1": 2
-    },
-    "content/content/legalprivacy": {
-      "127.0.0.1": 2
-    },
     "content/rust-snippets": {
       "127.0.0.1": 22
+    },
+    "//tag/programming": {
+      "127.0.0.1": 14
+    },
+    "rss-userid": {
+      "127.0.0.1": 6
+    },
+    "content/content/legal-privacy": {
+      "127.0.0.1": 2
+    },
+    "//tag/code": {
+      "127.0.0.1": 2
     },
     "tag/rust": {
       "127.0.0.1": 3
     },
-    "tag/rust%20code": {
-      "127.0.0.1": 3
+    "//tag/rust%20code": {
+      "127.0.0.1": 8
+    },
+    "pagestats": {
+      "127.0.0.1": 23
+    },
+    "create": {
+      "127.0.0.1": 2
     },
     "content": {
       "127.0.0.1": 2
     },
-    "test_author": {
+    "test_article": {
+      "127.0.0.1": 6
+    },
+    "rss-username": {
+      "127.0.0.1": 15
+    },
+    "test_rss": {
       "127.0.0.1": 5
+    },
+    "author": {
+      "127.0.0.1": 3
+    },
+    "content/legal-privacy": {
+      "127.0.0.1": 5
+    },
+    "article/21/Accept%20Encoding": {
+      "127.0.0.1": 6
+    },
+    "tag/admin": {
+      "127.0.0.1": 2
+    },
+    "article/22/My%20Dev%20Env": {
+      "127.0.0.1": 12
+    },
+    "article/18/Rocket%20Templates%20And%20Compression": {
+      "127.0.0.1": 4
+    },
+    "tag/programming": {
+      "127.0.0.1": 2
+    },
+    "tag/code": {
+      "127.0.0.1": 7
+    },
+    "edit": {
+      "127.0.0.1": 24
+    },
+    "article/22/My%20Development%20Environment": {
+      "127.0.0.1": 4
+    },
+    "content/sublime-theme": {
+      "127.0.0.1": 2
+    },
+    "article/18": {
+      "127.0.0.1": 3
     }
   }
 }
