@@ -557,6 +557,8 @@ impl PageFormat {
             
             // println!("DEBUG: starting search for html at index: {}", start_at);
             
+            
+            // the b" at the end is intentional and specifies a newline
             let html_start = twoway::find_bytes(&buffer[start_at..], b"
 ");
             if let Some(mut html_pos) = html_start {

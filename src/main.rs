@@ -163,6 +163,7 @@ fn main() {
     let text_cache = TextCacheLock::new( TextCache::load_cache(&conn, &multi_aids, &article_map_cache) );
     let num_articles = NumArticles(AtomicUsize::new( article_map_cache.num_articles() as usize ));
     
+    // Currently doesn't do anything
     if CACHE_ENABLED {
         println!("Starting blog.  Cache enabled.");
     } else {
