@@ -240,6 +240,9 @@ impl Express {
             extras: HashMap::new(),
         }
     }
+    pub fn apply_deafults(mut self, encoding: AcceptCompression) -> Express {
+        self.add_compression(encoding)
+    }
 }
 
 impl From<String> for Express {

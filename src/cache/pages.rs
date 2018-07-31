@@ -459,17 +459,6 @@ pub mod rss {
                         // msg: Option<String>,
                        ) -> Express 
     {
-        // let content = ::cache::pages::rss::filter_rss(article_lock, multi_aids, tag.as_ref(), author, true);
-        // let key = if let Some(k) = tag {
-        //     format!("rss-tag/{}", )
-        // } else if let Some(k) = author {
-            
-        // } else {
-        //     let content = text_lock.retrieve_text("rss").unwrap_or("Could not load RSS feed.".to_owned())
-        //     let express: Express = content.into();
-        //     return express.set_content_type(ContentType::XML);
-        // };
-        let key = key.to_lowercase();
         if let Some(feed) = text_lock.retrieve_text(&key) {
             // let mut output: Express = "No rss feed found for specified filter(s).".to_owned().into()
             let mut output: Express = feed.into();
@@ -479,9 +468,6 @@ pub mod rss {
             let mut output: Express = "No rss feed found for specified filter(s).".to_owned().into();
             output
         }
-        
-        // let express: Express = String::new().into();
-        // express.set_content_type(ContentType::XML)
     }
     
     pub fn load_filtered_rss(conn: &DbConn, article_cache: &ArticleCacheLock, multi_aids: &TagAidsLock) -> Option<Vec<(String, String)>> {
@@ -493,35 +479,6 @@ pub mod rss {
         };
         
         // println!("Loading rss feed filters.\n    Authors: {:#?}\nTags: {:#?}", &authors, &tags);
-        
-        // iterate authors and tags adding all combos
-        // requesting rss filtered on tag AND author should
-        //   either be denied or generated on demand
-        
-        // let mut output: Vec<String>;
-        
-        // Create a vector of tuples containing a lookup key and rss feed text
-        /*
-        let output: Vec<(String, String)> = 
-            tags.iter()
-            .map(|t| format!("rss-tag/{}", t.tag))
-            .zip(
-                tags.iter()
-                .filter_map(|t| 
-                    filter_rss(article_cache, multi_aids, Some(&t.tag), None, true)
-                )
-            )
-            .chain(
-                authors.iter()
-                .map(|a| format!("rss-author/{}", a))
-                .zip(
-                    authors.iter().filter_map(|a| {
-                        filter_rss(article_cache, multi_aids, None, Some(*a), true)
-                    })
-                )
-            )
-            .collect();
-        */
         
         let mut feeds: Vec<(String, String)> = Vec::new();
         
@@ -544,10 +501,6 @@ pub mod rss {
         }
         
         let output = feeds;
-        
-        /* for (k, _) in &output {
-            println!("Loading key: {}", k);
-        } */
             
         if output.len() != 0 {
             Some(output)
@@ -665,8 +618,6 @@ pub mod rss {
     }
     
     pub fn load_rss(conn: &DbConn) -> String {
-        
-        
         let result = conn.articles("");
         if let Some(articles) = result {
             rss_output(articles)
@@ -676,6 +627,10 @@ pub mod rss {
         }
     }
 }
+
+// Maybe at some point make the custom RSS feeds use the rss::CategoryBuilder
+//     This would make each tag an explicit category instead of a separate RSS feed
+//     but would also require making the rss into one large feed
 fn create_rss_feed(articles: Vec<Article>, custom_title: Option<&String>, custom_link: Option<&String>) -> String {
     let mut article_items: Vec<Item> = Vec::new();
     for article in &articles {
@@ -765,6 +720,8 @@ fn create_rss_feed(articles: Vec<Article>, custom_title: Option<&String>, custom
     output.push_str(&rss_output);
     output
 }
+
+
 fn rss_output(articles: Vec<Article>) -> String {
     let mut article_items: Vec<Item> = Vec::new();
     for article in &articles {

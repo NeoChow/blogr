@@ -114,8 +114,10 @@ fn static_files(file: PathBuf, encoding: AcceptCompression) -> Option<Express> {
 }
 
 
-
-#[error(404)]
+// For Rocket <= 0.3.14
+// #[error(404)]
+// For Rocket >= 0.3.15
+#[catch(404)]
 pub fn error_not_found(req: &Request) -> Express {
     ErrorHits::error404(req);
     let content = format!( "The request page `{}` could not be found.", sanitize_text(req.uri().as_str()) );
@@ -123,7 +125,11 @@ pub fn error_not_found(req: &Request) -> Express {
     let express: Express = output.into();
     express
 }
-#[error(500)]
+
+// For Rocket <= 0.3.14
+// #[error(500)]
+// For Rocket >= 0.3.15
+#[catch(500)]
 pub fn error_internal_error(req: &Request) -> Express {
     ErrorHits::error500(req);
     let content = format!( "An internal server error occurred procesing the page `{}`.", sanitize_text(req.uri().as_str()) );
@@ -170,7 +176,8 @@ fn main() {
         println!("Starting blog.  Cache is DISABLED.");
     }
         
-    let rock = rocket::ignite()
+    // let rock = rocket::ignite()
+    rocket::ignite()
         .manage(pg_pool)
         .manage(hitcount)
         .manage(views)
@@ -240,7 +247,11 @@ fn main() {
             
             static_files
         ])
-        .catch(errors![ error_internal_error, error_not_found ])
+        
+        // FOr ROcket <= 0.3.14
+        // .catch(errors![ error_internal_error, error_not_found ])
+        // For Rocket >= 0.3.15
+        .catch(catchers![ error_internal_error, error_not_found ])
         .launch();
 }
 
