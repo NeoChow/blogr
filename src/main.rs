@@ -191,6 +191,44 @@ fn main() {
         
         .attach(Template::fairing())
         
+        /*
+        Routes
+        /
+            /
+            /all_tags
+            /tag?<tag>
+            /article?<aid>
+            /article        hbs_article_not_found
+            /rss.xml
+            
+        /tag
+            /<tag>
+            
+        /article
+            /<aid>/<title>
+            /<aid>
+            
+        /rss
+            /author/<author>
+            /userid/<userid>
+            /username/<username>
+            /tag/<tag>
+        
+        /author
+            /<author>/<authorname>
+            /<author>
+            
+        
+        
+        /author_feed/<author> => /rss/author/<author>
+        /rss-userid/<userid> => /rss/userid/<userid>
+        /rss-username/<username> => /rss/username/<username>
+        /rss-tag/<tag>  => /rss/tag/<tag>
+        
+        
+        
+        */
+        
         .mount("/", routes![
             routes::articles::cache_index,
             routes::author::cache_author_seo,

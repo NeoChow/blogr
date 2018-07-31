@@ -227,7 +227,7 @@ pub mod article {
 pub mod rss {
     use super::*;
     
-    #[get("/author_feed/<author>")]
+    #[get("/rss/author/<author>")]
     pub fn rss_author_filter(start: GenTimer,
                       author: u32,
                       text_lock: State<TextCacheLock>, 
