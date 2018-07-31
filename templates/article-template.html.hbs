@@ -17,11 +17,11 @@
                         <div class="v-byline"> 
                              by 
                             <a href="{{info.base_url}}author/{{body.userid}}/{{body.username}}" class="v-author-link">{{body.username}}</a>
+                            <a href="{{info.base_url}}rss-userid/{{body.userid}}" title="RSS feed for the author '{{body.username}}'"><i class="v-icon-rss v-rss-author fa fa-rss-square" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <div class="col v-editlink">
                     {{~#if info.is_admin~}}
-                        <!-- <a href="{{info.base_url}}edit/{{body.aid}}">Edit <i class="fa fa-pencil" aria-hidden="true"></i></a> -->
                         <form action="{{info.base_url}}edit/{{body.aid}}" method="GET">
                             <button class="btn btn-warning" type="submit">Edit <i class="fa fa-pencil" aria-hidden="true"></i></button>
                         </form>
@@ -37,7 +37,7 @@
     <!-- <div id="toc-body"> -->
         {{{body.body~}}}
         <div class="v-article-tags">
-            {{~#if body.tags}}{{#each body.tags}} <a href="{{../info.base_url}}tag/{{this}}">#{{this}}</a> {{/each}}{{/if~}}
+            {{~#if body.tags}}{{#each body.tags}} <a href="{{../info.base_url}}tag/{{this}}">#{{this}}</a><a href="{{../info.base_url}}rss-tag/{{this}}" title="RSS feed for the {{this}} tag"><i class="v-icon-rss v-rss-filter fa fa-rss-square" aria-hidden="true"></i></a> {{/each}}{{/if~}}
         </div>
     <!-- </div> -->
     </div>

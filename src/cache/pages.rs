@@ -856,7 +856,95 @@ pub mod rss {
         }
     }
 }
-
+fn create_rss_feed(articles: Vec<Article>, custom_link: Option<&str>, custom_title: Option<&str>) -> String {
+    let mut article_items: Vec<Item> = Vec::new();
+    for article in &articles {
+        let mut link = String::with_capacity(BLOG_URL.len()+20);
+        link.push_str(BLOG_URL);
+        link.push_str("article/");
+        link.push_str(&article.aid.to_string());
+        link.push_str("/");
+        link.push_str( &encode(&article.title) );
+        
+        let desc: &str = if &article.description != "" {
+            &article.description
+        } else {
+            if article.body.len() > DESC_LIMIT {
+                &article.body[..200]
+            } else {
+                &article.body[..]
+            }
+        };
+        
+        let guid = GuidBuilder::default()
+            .value(link.clone())
+            .build()
+            .expect("Could not create article guid.");
+        
+        let date_posted = DateTime::<Utc>::from_utc(article.posted, Utc).to_rfc2822();
+        
+        let item =ItemBuilder::default()
+            .title(article.title.clone())
+            .link(link)
+            .description(desc.to_string())
+            .author(article.username.clone())
+            .guid(guid)
+            .pub_date(date_posted)
+            .build();
+            
+        match item {
+            Ok(i) => article_items.push(i),
+            Err(e) => println!("Could not create rss article {}.  Error: {}", article.aid, e),
+        }
+    }
+    let mut search_link = String::with_capacity(BLOG_URL.len()+10);
+    search_link.push_str(BLOG_URL);
+    search_link.push_str("search");
+    
+    let searchbox = TextInputBuilder::default()
+        .title("Search")
+        .name("q")
+        .description("Search articles")
+        .link(search_link)
+        .build()
+        .expect("Could not create text input item in RSS channel.");
+    
+    let channel_link_string: String;
+    let channel_link = match custom_link {
+        Some(s) => {
+            channel_link_string = format!("{}/{}", BLOG_URL, s);
+            // BLOG_URL
+            &channel_link_string
+        },
+        None => {BLOG_URL},
+    };
+    let channel_title_string: String;
+    let channel_title = match custom_title {
+        Some(s) => {
+            channel_title_string = format!("Vishus Blog - {}", s);
+            &channel_title_string
+        },
+        None => { "Vishus blog" },
+    };
+    
+    let channel = ChannelBuilder::default()
+        .title(channel_title)
+        .link(channel_link)
+        .description("A programming and development blog about Rust, Javascript, and Web Development.")
+        .language("en-us".to_string())
+        .copyright("2018 Andrew Prindle".to_string())
+        .ttl(720.to_string()) // half a day, 1440 minutes in a day
+        .items(article_items)
+        .text_input(searchbox)
+        .build()
+        .expect("Could not create RSS channel.");
+    
+    let rss_output = channel.to_string();
+    let mut output = String::with_capacity(rss_output.len() + 60);
+    output.push_str(r#"<?xml version="1.0"?>"#);
+    output.push_str(&rss_output);
+    output
+}
 fn rss_output(articles: Vec<Article>) -> String {
     let mut article_items: Vec<Item> = Vec::new();
     for article in &articles {
@@ -915,7 +1003,7 @@ fn rss_output(articles: Vec<Article>) -> String {
         .link(BLOG_URL)
         .description("A programming and development blog about Rust, Javascript, and Web Development.")
         .language("en-us".to_string())
-        .copyright("2017 Andrew Prindle".to_string())
+        .copyright("2018 Andrew Prindle".to_string())
         .ttl(720.to_string()) // half a day, 1440 minutes in a day
         .items(article_items)
         .text_input(searchbox)

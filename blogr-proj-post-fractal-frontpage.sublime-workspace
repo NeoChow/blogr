@@ -183,7 +183,7 @@
 			"file": "src/main.rs",
 			"settings":
 			{
-				"buffer_size": 8056,
+				"buffer_size": 8244,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -219,7 +219,7 @@
 			"file": "src/content.rs",
 			"settings":
 			{
-				"buffer_size": 43952,
+				"buffer_size": 44037,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -243,22 +243,12 @@
 			}
 		},
 		{
-			"contents": "Package Control Messages\n========================\n\nGitGutter\n---------\n\n  1.7.15:\n  -------\n  \n    Fix:\n     - Compatibility issue of GitGutter with Snap on Ubuntu (#495)\n     - Write access regression when creating temp dir (#498)\n  \n    Enhancement:\n     - Reduce number of git --version calls (#493)\n  \n  \n  💛 Git Gutter? Want to support development?\n  \n  I've teamed up with Wes Bos to offer the following discounts:\n  \n  +------------------------------------------------+\n  |                                                |\n  |   Use the coupon code GITGUTTER for $10 off    |\n  |                                                |\n  +------------------------------------------------+\n  \n  🏅 ⭐ ES6 ⭐\n  \n  👉 ES6.io/friend/GITGUTTER\n  \n  🏅 ⭐ Sublime Text Book ⭐\n  \n  👉 SublimeTextBook.com/friend/GITGUTTER\n  \n  🏅 ⭐ React For Beginners ⭐\n  \n  👉 ReactForBeginners.com/friend/GITGUTTER\n  \n  \n  Join 15,000 other developers already learning with Wes Bos.\n  \n  These are fantastic resources - 100% money back guarantee! 🌟\n\n  1.7.14:\n  -------\n  \n    Fix:\n     - Diff Popup's content looks ugly due to Courier font\n     - Use Segoe UI Symbol for popup toolbars\n     - ST2 compatibility issue in TempFile class\n\n  1.7.13:\n  -------\n  \n    Fix:\n     - New `tempfile` module conflicts with stdlib in ST2\n     - A typo in the recent release message of 1.7.12\n\n  1.7.12:\n  -------\n  \n    README:\n     - Add a reason for GitGutter to keep quiet\n     - Fix documentation for `diff_algorithm`\n  \n    Enhancement:\n     - Place all temporary files into a dedicated sub directory\n     - Use XDG_RUNTIME_DIR for temporary files if available\n     - Delete old temporary files upon startup\n\n\nGitSavvy\n--------\n\n  Changes since 2.17.2:\n  \n    Enhancement:\n     - support prefix in prerelease when using smart tag\n     - support project-wise settings\n     - make `rebase_default_base_ref` more consistant with project-wise settings\n     - allow to use \"git: blame current file\" at blame view\n     - Opening commit from commadline respect setting\n  \n    Feature:\n     - git: checkout current file at commit\n  \n    Fix:\n     - Pedantic commit checks allows comment on 2. line\n     - On startup in-memory `instances` cache can be empty\n     - fix set status on cherry-pick done\n  \n    Other:\n     - Emphasize in docs when to use run_in_thread\n     - Fix subprocess command crashing with OSError\n     - Include A traceback when an exception happens and we don't handle it\n  \n  \n    Contributors:\n     - herr kaste\n     - Simon\n     - Randy Lai\n     - Pavel Savchenko\n     - joan\n     - Maarten Nieber\n\n  Changes since 2.17.0:\n  \n    Enhancement:\n     - use a more meanful branch name when reviewing PRs\n  \n    Fix:\n     - fix show file bug on Windows\n     - fix tag dashboard bug if hash length != 8\n     - Pass startupinfo to `subprocess.check_output` on Windows\n  \n    Contributors:\n     - herr kaste\n     - Randy Lai\n\n  Changes since 2.16.6:\n  \n    Requirement:\n     - bump git requirement, git v1.19.0 or above is required\n  \n    Feature:\n     - quick stage and amend\n     - git remote rename\n     - implement GitLab merge request review\n     - Pedantic commit messages\n     - add helpers to handle merge conflicts in status dashboard\n     - Live output: Show STDIN when present in live log\n  \n    Enhancement:\n    -  refreash UI when merge failed\n    -  add `abort rebase` command\n     - Add a refresh_gitsavvy_interfaces PoC for bug #835\n     - show diff stat when `show_commit_diff` is \"full\".\n     - manipulate commits with untracked files\n     - reset to original commit after failure\n     - use ssh url instead of url when adding fork\n     - support .sublime-color-scheme in inline diff view\n     - git pull from remote tracking branch directly\n     - use GsPullBase mixin\n     - add pull with rebase\n     - do commit synchronously when commit_on_close is true\n     - make following file renames optional\n     - rename `git: add (edit)` command\n  \n    Fix:\n     - only show diff patch when `show_commit_diff` is \"full\"\n     - use unicode to write .gitignore\n     - hash tag sign is a valid char for branch name\n     - load user specfic theme first\n  \n    Internal:\n     - Use window.status_message instead of sublime.status_message\n  \n    Docs:\n     - Add doc for setting PATH environment\n  \n    Contributors:\n     - Guillaume Wenzek\n     - Simon\n     - Pavel Savchenko\n     - Tom van Ommeren\n     - Randy Lai\n\n\nRust Enhanced\n-------------\n\n  # Rust Enhanced 2.11.0\n  \n  You must restart Sublime after installing this update.\n  \n  ## New Features\n  - Added `\"rust_message_theme\"` configuration setting for choosing different\n    styles of inline messages.  Currently two options are available: \"clear\" and\n    \"solid\".  See\n    https://github.com/rust-lang/rust-enhanced/blob/master/docs/build.md#general-settings\n    for examples.\n  \n  - If the Rust compiler provides a suggestion on how to fix an error, the\n    inline messages now include a link that you can click to automatically apply\n    the suggestion.\n  \n  ## Syntax Updates\n  - Support u128/i128 integer suffix.\n\n\nRustFmt\n-------\n\n  Changes:\n  \n    * support for newer `rustfmt`\n    * simpler and faster update of the view buffer\n  \n  1.\n  \n  Newer `rustfmt` requires `--emit=stdout` instead of `--write-mode=display`. The plugin uses the new arguments by default. If you have an older version and don't want to update, add this to the plugin settings:\n  \n  ```sublime-settings\n    \"legacy_write_mode_option\": true,\n  ```\n  \n  2.\n  \n  Finally found a working way to save/restore scroll position in Sublime. Now, the plugin simply replaces the entire view buffer with the output of `rustfmt`, preserving the scroll position, instead of the ridiculously convoluted diffing algorithm used before. Should be more reliable and faster. If there are any regressions, let me know.\n\n\nSublimeLinter-php\n-----------------\n\n  SublimeLinter-php 1.2.1\n  ---------------------------\n  \n  The 'cmd' setting has been deprecated. The new name for the same thing is 'executable' which is the common name for all linters in SublimeLinter land.\n  \n  {\n      \"SublimeLinter\": {\n          \"linters\": {\n              \"php\": {\n                  \"executable\": \"/path/to/php\"\n              }\n          }\n      }\n  }\n",
+			"contents": ".v-icon-pagegen {\n    color: #f27700;\n    font-size: 22px;\n}\n\n.v-icon-rss {\n    color: #ff0000;\n}\na .v-rss-filter {\n    color: #ff0000;\n    padding-left: 6px;\n    font-size: 22px;\n    padding-right: 4px;\n}\na .v-rss-filter:hover {\n    color: #ff8000;\n}\n.v-all-tags li a .v-rss-filter {\n    padding-left: 6px;\n    font-size: 25px;\n}\n\n.v-all-tags li a {\n    padding-right: 0px !important;\n}\n.v-all-tags li a:last-of-type {\n    padding-left: 0px;\n}\n.v-legal {\n    color: #f09;\n    font-size: 21px;\n    padding-right: .2em;\n}\n\n.v-footer-legal-link {\n    color: #f09 !important;\n}\n.v-copyright a.v-footer-legal-link:hover {\n    /* color: #e20389 !important; */\n    color: #cf017d !important;\n}\n.v-footer-rss-link {\n     color: #ff0000;\n}\n\n.v-copyright {\n    color: #ff0000\n}\n.v-copyright a {\n    color: #ff0000;\n    text-decoration: unset;\n    border-bottom: 1px solid #ff0000;\n}\n.v-copyright a:hover {\n    color: #dd0000 !important;\n    border-bottom: 1px solid #ffffff;\n}\n.v-copyright a:first-of-type {\n    color: #ff4800;\n}\n.v-icon-copyright {\n    font-size: 1.1em;\n}\n.v-icon-at {\n    color: #ff4800;\n    font-size: 1em;\n    margin-right: -2px;\n}\n.v-generation-time {\n    color: #969696;\n}",
 			"settings":
 			{
-				"buffer_size": 6235,
+				"buffer_size": 1186,
 				"line_ending": "Windows",
-				"name": "Package Control Messages",
-				"read_only": true,
-				"scratch": true
-			}
-		},
-		{
-			"contents": "#26292C\n#F8F8F0\n#F8F8F2\n#3B3A32\n#202325\n#49483E\n#FFE792\n#000000\n#222218\n#9D550F\n#F8F8F2\n#F8F8F2\n#ccc\n#ffffff\n#ffffff\n#FFDB00\n#ffffff\n#E900CC\n#FF3C37\n#FF0095\n#FF0095\n#ffffff\n#FFA100\n#FA6CFF\n#fd6783\n#fd6783\n#777777\n#666\n#FF8500\n#800\n#FF8500\n#fd6783\n#FF0700\n#FFA100\n#000000\n#ffffff\n#FF0095\n#fd65c6\n#a7f848\n#FF3C37\n#FFEA6B\n#FFA100\n#e50055\n#19f1c4\n#01F4FF\n#FF6F6B\n#FFF700\n#ffffff\n#FFA937\n#FF5300\n#000\n#FFA937\n#FF5300\n#000\n#FF8500\n#ffffff\n#000\n#FF8500\n#ffffff\n#FF3C37\n#FF3C37\n#FF8500\n#9b9b9b\n#D4B06A\n#FFCF38\n#D4B06A\n#3fd6ff\n#FFCF38\n#D4B06A\n#D4B06A\n#000\n#320004\n#FF0700\n#be0036\n#35FF00\n#35FF00\n#FF0095\n#000\n#FF8500\n#35FF00\n#35FF00\n#FFDB00\n#dafefd\n#6CF8FF\n#DDFF37\n#00354a\n#dafefd\n#6CF8FF\n#DDFF37\n#00354a\n#EEE\n#FF0000\n#00E6AC\n#3FCAFF\n#3FCAFF\n#660000\n#FF0700\n#ccc\n#000\n#3FCAFF\n#99F200\n#35FF00\n#BFFF37\n#CFFF6B\n#FF3C37\n#FF0095\n#F165FA\n#FF0095\n#18FF00\n#38F6FF\n#B7F200\n#18FF00\n#B7F200\n#38F6FF\n#FFDB00\n#FFDB00\n#fd6783\n#000\n#320004\n#FF0700\n#14b9dc\n#320004\n#c38913\n#320004\n#444\n#be0036\n#666\n#be0036\n#fff\n#be0036\n#320004\n#be0036\n#FF0700\n#78f2fe\n#666\n#FF0700\n#320004\n#be0036\n#FF0700\n#78f2fe\n#000\n#320004\n#be0036\n#FF0700\n#78f2fe\n#FF0095\n#FFB700\n#fd9daf\n#ffffff\n#fd9daf\n#ffffff\n#65C3FA\n#ffffff\n#FF3C37\n#ffffff\n#00E5B8\n#18FF00\n#38F6FF\n#BE8CFE\n#38F6FF\n#000\n#FF8500\n#3b3b90\n#FF8500\n#3b3b90\n#FF8500\n#FF9200\n#CD73FF\n#99F200\n#FF3C37\n#BE8CFE\n#000\n#14D100",
-			"settings":
-			{
-				"buffer_size": 1326,
-				"line_ending": "Windows"
+				"name": ".v-icon-pagegen {"
 			}
 		},
 		{
@@ -291,7 +281,7 @@
 			"file": "src/blog.rs",
 			"settings":
 			{
-				"buffer_size": 40862,
+				"buffer_size": 41532,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -300,7 +290,7 @@
 			"file": "src/data.rs",
 			"settings":
 			{
-				"buffer_size": 6256,
+				"buffer_size": 6472,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -463,7 +453,7 @@
 			"file": "static/packages/css/blog-current.css",
 			"settings":
 			{
-				"buffer_size": 37210,
+				"buffer_size": 38527,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -481,7 +471,7 @@
 			"file": "templates/page-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 9078,
+				"buffer_size": 9187,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -499,16 +489,32 @@
 			"file": "templates/article-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 2428,
+				"buffer_size": 2457,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": ".v-icon-pagegen {\n    color: #f27700;\n    font-size: 22px;\n}\n\n.v-icon-rss {\n    color: #ff0000;\n}\na .v-rss-filter {\n    color: #ff0000;\n    padding-left: 6px;\n    font-size: 22px;\n    padding-right: 4px;\n}\na .v-rss-filter:hover {\n    color: #ff8000;\n}\n.v-all-tags li a .v-rss-filter {\n    padding-left: 6px;\n    font-size: 25px;\n}\n\n.v-all-tags li a {\n    padding-right: 0px !important;\n    /* color: white !important; */\n}\n.v-all-tags li a:last-of-type {\n    padding-left: 0px;\n}\n.v-legal {\n    color: #f09;\n    font-size: 21px;\n    padding-right: .2em;\n}\n\n.v-footer-legal-link {\n    color: #f09 !important;\n}\n.v-copyright a.v-footer-legal-link:hover {\n    /* color: #e20389 !important; */\n    color: #cf017d !important;\n}\n.v-footer-rss-link {\n     color: #ff0000;\n}\n\n.v-copyright {\n    color: #ff0000\n}\n.v-copyright a {\n    color: #ff0000;\n    text-decoration: unset;\n    border-bottom: 1px solid #ff0000;\n}\n.v-copyright a:hover {\n    color: #dd0000 !important;\n    border-bottom: 1px solid #ffffff;\n}\n.v-copyright a:first-of-type {\n    color: #ff4800;\n}\n.v-icon-copyright {\n    font-size: 1.1em;\n}\n.v-icon-at {\n    color: #ff4800;\n    font-size: 1em;\n    margin-right: -2px;\n}\n.v-generation-time {\n    color: #969696;\n}",
+			"settings":
+			{
+				"buffer_size": 1221,
+				"line_ending": "Windows",
+				"name": ".v-icon-pagegen {"
 			}
 		},
 		{
 			"file": "templates/search-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 1119,
+				"buffer_size": 1317,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -517,7 +523,7 @@
 			"file": "templates/page-code-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 9694,
+				"buffer_size": 9803,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -526,7 +532,7 @@
 			"file": "templates/common/assets-css.html.hbs",
 			"settings":
 			{
-				"buffer_size": 21,
+				"buffer_size": 22,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -563,7 +569,7 @@
 			"file": "templates/tags-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 445,
+				"buffer_size": 617,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -581,7 +587,7 @@
 			"file": "templates/common/footer.html.hbs",
 			"settings":
 			{
-				"buffer_size": 872,
+				"buffer_size": 981,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -600,7 +606,7 @@
 			"file": "templates/articles-pagination-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 1626,
+				"buffer_size": 1793,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -642,7 +648,7 @@
 			"file": "templates/edit-article-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 13790,
+				"buffer_size": 13954,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -1070,7 +1076,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -1079,7 +1085,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8056,
+						"buffer_size": 8244,
 						"regions":
 						{
 						},
@@ -1113,7 +1119,7 @@
 						"translation.y": 879.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1156,7 +1162,7 @@
 						"translation.y": 3719.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -1223,7 +1229,7 @@
 						"translation.y": 2881.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
@@ -1266,7 +1272,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1275,7 +1281,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 43952,
+						"buffer_size": 44037,
 						"regions":
 						{
 						},
@@ -1309,7 +1315,7 @@
 						"translation.y": 38.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1353,7 +1359,7 @@
 						"translation.y": 485.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -1369,8 +1375,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								8078,
+								8078
 							]
 						],
 						"settings":
@@ -1380,12 +1386,15 @@
 							"color_helper.file_palette":
 							[
 							],
+							"color_helper.preview_meta":
+							{
+							},
 							"color_helper.scan":
 							{
 								"current_ext": ".rs",
 								"current_syntax": "Rust/Rust",
 								"enabled": false,
-								"last_updated": 1529189577.02
+								"last_updated": 1532833585.62
 							},
 							"git_gutter_is_enabled": true,
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
@@ -1396,7 +1405,7 @@
 						"translation.y": 5199.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1404,86 +1413,49 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6235,
+						"buffer_size": 1186,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								635,
-								635
+								1186,
+								1186
 							]
 						],
 						"settings":
 						{
-							"auto_indent": false,
+							"auto_name": ".v-icon-pagegen {",
 							"color_helper.box_height": 22,
 							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
 							"color_helper.file_palette":
 							[
 							],
+							"color_helper.preview_meta":
+							{
+							},
 							"color_helper.scan":
 							{
 								"current_ext": null,
 								"current_syntax": "Text/Plain text",
 								"enabled": false,
-								"last_updated": 1529189577.02
+								"last_updated": 1532833585.62
 							},
 							"git_gutter_is_enabled": false,
 							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_width": 2,
-							"word_wrap": true
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 628.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1326,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								1326
-							]
-						],
-						"settings":
-						{
-							"color_helper.box_height": 22,
-							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
-							"color_helper.file_palette":
-							[
-							],
-							"color_helper.scan":
-							{
-								"current_ext": null,
-								"current_syntax": "XML/XML",
-								"enabled": false,
-								"last_updated": 1529189577.02
-							},
-							"git_gutter_is_enabled": false,
-							"syntax": "Packages/XML/XML.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
 					"semi_transient": false,
 					"settings":
 					{
@@ -1520,11 +1492,11 @@
 						"translation.y": 1022.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 9,
 					"semi_transient": false,
 					"settings":
 					{
@@ -1691,11 +1663,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 10,
 					"semi_transient": false,
 					"settings":
 					{
@@ -1732,16 +1704,16 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 11,
 					"file": "src/blog.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 40862,
+						"buffer_size": 41532,
 						"regions":
 						{
 						},
@@ -1775,16 +1747,16 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 12,
 					"file": "src/data.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6256,
+						"buffer_size": 6472,
 						"regions":
 						{
 						},
@@ -1818,11 +1790,11 @@
 						"translation.y": 442.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 13,
 					"file": "src/accept.rs",
 					"semi_transient": false,
 					"settings":
@@ -1861,11 +1833,11 @@
 						"translation.y": 1832.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 32,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 14,
 					"file": "src/collate.rs",
 					"semi_transient": false,
 					"settings":
@@ -1904,11 +1876,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 15,
 					"file": "src/ral_administrator.rs",
 					"semi_transient": false,
 					"settings":
@@ -1947,11 +1919,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 16,
 					"file": "src/ral_user.rs",
 					"semi_transient": false,
 					"settings":
@@ -1990,11 +1962,11 @@
 						"translation.y": 7384.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 42,
+					"stack_index": 43,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 17,
 					"file": "src/referrer.rs",
 					"semi_transient": false,
 					"settings":
@@ -2033,11 +2005,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 31,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 18,
 					"file": "src/xpress.rs",
 					"semi_transient": false,
 					"settings":
@@ -2076,11 +2048,11 @@
 						"translation.y": 3377.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 30,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 19,
 					"file": "src/layout.rs",
 					"semi_transient": false,
 					"settings":
@@ -2119,11 +2091,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 29,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 20,
 					"file": "Cargo.toml",
 					"semi_transient": false,
 					"settings":
@@ -2160,11 +2132,11 @@
 						"translation.y": 1188.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 21,
 					"file": "src/private.rs",
 					"semi_transient": false,
 					"settings":
@@ -2201,11 +2173,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 43,
+					"stack_index": 44,
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 22,
 					"file": "src/location.rs",
 					"semi_transient": false,
 					"settings":
@@ -2244,11 +2216,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 23,
 					"file": "src/sanitize.rs",
 					"semi_transient": false,
 					"settings":
@@ -2287,11 +2259,11 @@
 						"translation.y": 725.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 24,
 					"file": "Rocket.toml",
 					"semi_transient": false,
 					"settings":
@@ -2328,17 +2300,17 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 28,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 16,
+			"selected": 18,
 			"sheets":
 			[
 				{
-					"buffer": 26,
+					"buffer": 25,
 					"file": "/C/Users/Andrew/AppData/Roaming/Sublime Text 3/Packages/User/Custom-Themes/RustCustom-3.tmTheme",
 					"semi_transient": false,
 					"settings":
@@ -3139,16 +3111,16 @@
 						"translation.y": 863.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 12,
 					"file": "src/data.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6256,
+						"buffer_size": 6472,
 						"regions":
 						{
 						},
@@ -3182,16 +3154,16 @@
 						"translation.y": 2009.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 11,
 					"file": "src/blog.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 40862,
+						"buffer_size": 41532,
 						"regions":
 						{
 						},
@@ -3225,7 +3197,7 @@
 						"translation.y": 3040.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 37,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
@@ -3268,11 +3240,11 @@
 						"translation.y": 9088.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
-					"buffer": 27,
+					"buffer": 26,
 					"semi_transient": false,
 					"settings":
 					{
@@ -3310,7 +3282,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
@@ -3319,7 +3291,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 43952,
+						"buffer_size": 44037,
 						"regions":
 						{
 						},
@@ -3353,11 +3325,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 18,
 					"file": "src/xpress.rs",
 					"semi_transient": false,
 					"settings":
@@ -3396,7 +3368,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 47,
+					"stack_index": 48,
 					"type": "text"
 				},
 				{
@@ -3439,11 +3411,11 @@
 						"translation.y": 7190.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 62,
+					"stack_index": 63,
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 27,
 					"file": "static/packages/js/before/blog.js",
 					"semi_transient": false,
 					"settings":
@@ -3483,11 +3455,11 @@
 						"translation.y": 8573.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 41,
+					"stack_index": 42,
 					"type": "text"
 				},
 				{
-					"buffer": 29,
+					"buffer": 28,
 					"file": "static/assets/after-1.0.3.js",
 					"semi_transient": false,
 					"settings":
@@ -3526,11 +3498,11 @@
 						"translation.y": 6725.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 40,
+					"stack_index": 41,
 					"type": "text"
 				},
 				{
-					"buffer": 30,
+					"buffer": 29,
 					"file": "static/assets/before-1.0.6.js",
 					"semi_transient": false,
 					"settings":
@@ -3568,11 +3540,11 @@
 						"translation.y": 1448.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 48,
+					"stack_index": 49,
 					"type": "text"
 				},
 				{
-					"buffer": 31,
+					"buffer": 30,
 					"file": "static/assets/before-1.0.6-might-be-old.js",
 					"semi_transient": false,
 					"settings":
@@ -3610,16 +3582,16 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 49,
+					"stack_index": 50,
 					"type": "text"
 				},
 				{
-					"buffer": 32,
+					"buffer": 31,
 					"file": "static/packages/css/blog-current.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 37210,
+						"buffer_size": 38527,
 						"regions":
 						{
 						},
@@ -3733,11 +3705,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 34,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
-					"buffer": 33,
+					"buffer": 32,
 					"file": "static/assets/blog-1.0.8.css",
 					"semi_transient": false,
 					"settings":
@@ -3817,16 +3789,16 @@
 						"translation.y": 74.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 35,
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 33,
 					"file": "templates/page-template.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9078,
+						"buffer_size": 9187,
 						"regions":
 						{
 						},
@@ -3886,11 +3858,11 @@
 						"translation.y": 1265.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 57,
+					"stack_index": 58,
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 34,
 					"file": "pages/archive/about.page",
 					"semi_transient": false,
 					"settings":
@@ -3927,24 +3899,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 58,
+					"stack_index": 59,
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 35,
 					"file": "templates/article-template.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2428,
+						"buffer_size": 2457,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								874,
-								874
+								992,
+								992
 							]
 						],
 						"settings":
@@ -3958,23 +3930,35 @@
 							],
 							"color_helper.popup_active": false,
 							"color_helper.popup_auto": true,
+							"color_helper.preview_meta":
+							{
+								"132":
+								[
+									-5200788499611663206,
+									7,
+									"hex",
+									-7008373805733631594,
+									1,
+									"1532833589.965276"
+								]
+							},
 							"color_helper.scan":
 							{
 								"allowed_colors":
 								[
-									"hsl",
-									"rgb",
-									"rgba",
 									"hex",
-									"hsla",
 									"webcolors",
-									"hex_compressed"
+									"hex_compressed",
+									"rgba",
+									"hsl",
+									"hsla",
+									"rgb"
 								],
 								"compress_hex_output": true,
 								"current_ext": ".hbs",
 								"current_syntax": "HTML/HTML",
 								"enabled": true,
-								"last_updated": 1532115967.67,
+								"last_updated": 1532833585.62,
 								"scan_completion_scopes":
 								[
 								],
@@ -3997,24 +3981,110 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 37,
-					"file": "templates/search-template.html.hbs",
+					"buffer": 36,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1119,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								785,
-								785
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.preview_meta":
+							{
+							},
+							"color_helper.scan":
+							{
+								"current_ext": null,
+								"current_syntax": "Text/Plain text",
+								"enabled": false,
+								"last_updated": 1532833585.62
+							},
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 37,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1221,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1221,
+								1221
+							]
+						],
+						"settings":
+						{
+							"auto_name": ".v-icon-pagegen {",
+							"color_helper.box_height": 22,
+							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.preview_meta":
+							{
+							},
+							"color_helper.scan":
+							{
+								"current_ext": null,
+								"current_syntax": "Text/Plain text",
+								"enabled": false,
+								"last_updated": 1532833585.62
+							},
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 650.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 38,
+					"file": "templates/search-template.html.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1317,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -4064,16 +4134,16 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 38,
+					"buffer": 39,
 					"file": "templates/page-code-template.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9694,
+						"buffer_size": 9803,
 						"regions":
 						{
 						},
@@ -4136,24 +4206,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 55,
+					"stack_index": 56,
 					"type": "text"
 				},
 				{
-					"buffer": 39,
+					"buffer": 40,
 					"file": "templates/common/assets-css.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 21,
+						"buffer_size": 22,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								17,
-								17
+								0,
+								0
 							]
 						],
 						"settings":
@@ -4201,11 +4271,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 36,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
-					"buffer": 40,
+					"buffer": 41,
 					"file": "templates/common/assets-js-before.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -4266,11 +4336,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 54,
+					"stack_index": 55,
 					"type": "text"
 				},
 				{
-					"buffer": 41,
+					"buffer": 42,
 					"file": "templates/common/assets-js-after.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -4331,11 +4401,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 51,
+					"stack_index": 52,
 					"type": "text"
 				},
 				{
-					"buffer": 42,
+					"buffer": 43,
 					"file": "templates/page-blank-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -4373,24 +4443,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 50,
+					"stack_index": 51,
 					"type": "text"
 				},
 				{
-					"buffer": 43,
+					"buffer": 44,
 					"file": "templates/tags-template.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 445,
+						"buffer_size": 617,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								215,
-								215
+								0,
+								0
 							]
 						],
 						"settings":
@@ -4416,11 +4486,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 46,
+					"stack_index": 47,
 					"type": "text"
 				},
 				{
-					"buffer": 44,
+					"buffer": 45,
 					"file": "templates/common/header.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -4485,16 +4555,16 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 60,
+					"stack_index": 61,
 					"type": "text"
 				},
 				{
-					"buffer": 45,
+					"buffer": 46,
 					"file": "templates/common/footer.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 872,
+						"buffer_size": 981,
 						"regions":
 						{
 						},
@@ -4552,11 +4622,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 59,
+					"stack_index": 60,
 					"type": "text"
 				},
 				{
-					"buffer": 46,
+					"buffer": 47,
 					"file": ".license",
 					"semi_transient": false,
 					"settings":
@@ -4594,24 +4664,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 61,
+					"stack_index": 62,
 					"type": "text"
 				},
 				{
-					"buffer": 47,
+					"buffer": 48,
 					"file": "templates/articles-pagination-template.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1626,
+						"buffer_size": 1793,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1170,
-								1170
+								0,
+								0
 							]
 						],
 						"settings":
@@ -4662,11 +4732,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 45,
+					"stack_index": 46,
 					"type": "text"
 				},
 				{
-					"buffer": 48,
+					"buffer": 49,
 					"semi_transient": false,
 					"settings":
 					{
@@ -4704,11 +4774,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 49,
+					"buffer": 50,
 					"file": "/D/docs/vs code theme in progress - colors.txt",
 					"semi_transient": false,
 					"settings":
@@ -4745,11 +4815,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
-					"buffer": 50,
+					"buffer": 51,
 					"file": "src/pages-before-comment-out-prints.rs",
 					"semi_transient": false,
 					"settings":
@@ -4788,11 +4858,11 @@
 						"translation.y": 41695.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 44,
+					"stack_index": 45,
 					"type": "text"
 				},
 				{
-					"buffer": 51,
+					"buffer": 52,
 					"file": "templates/create-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -4855,16 +4925,16 @@
 						"translation.y": 1577.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 52,
+					"stack_index": 53,
 					"type": "text"
 				},
 				{
-					"buffer": 52,
+					"buffer": 53,
 					"file": "templates/edit-article-template.html.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13790,
+						"buffer_size": 13954,
 						"regions":
 						{
 						},
@@ -4923,11 +4993,11 @@
 						"translation.y": 4884.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 53,
+					"stack_index": 54,
 					"type": "text"
 				},
 				{
-					"buffer": 53,
+					"buffer": 54,
 					"file": "templates/general-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -4964,11 +5034,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 38,
+					"stack_index": 39,
 					"type": "text"
 				},
 				{
-					"buffer": 54,
+					"buffer": 55,
 					"file": "templates/manage-pagination-template.html.hbs",
 					"semi_transient": false,
 					"settings":
@@ -5033,11 +5103,11 @@
 						"translation.y": 1449.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 39,
+					"stack_index": 40,
 					"type": "text"
 				},
 				{
-					"buffer": 55,
+					"buffer": 56,
 					"file": "/C/code/lang/Rust/proj/rocket-auth-login/examples/database_example/src/layout.rs",
 					"semi_transient": false,
 					"settings":
@@ -5076,11 +5146,11 @@
 						"translation.y": 4016.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 56,
+					"stack_index": 57,
 					"type": "text"
 				},
 				{
-					"buffer": 56,
+					"buffer": 57,
 					"file": "/C/code/lang/Rust/code/Snippets/Snippet Collection.rs",
 					"semi_transient": false,
 					"settings":
@@ -5119,14 +5189,9 @@
 						"translation.y": 10842.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 11,
 					"type": "text"
 				}
-			]
-		},
-		{
-			"sheets":
-			[
 			]
 		}
 	],
@@ -5146,19 +5211,13 @@
 				0,
 				0,
 				1,
-				2
+				1
 			],
 			[
 				1,
 				0,
 				2,
 				1
-			],
-			[
-				1,
-				1,
-				2,
-				2
 			]
 		],
 		"cols":
@@ -5170,7 +5229,6 @@
 		"rows":
 		[
 			0.0,
-			0.848813209494,
 			1.0
 		]
 	},
@@ -5225,30 +5283,9 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
-		"last_automatic_layout":
-		[
-			[
-				0,
-				0,
-				1,
-				2
-			],
-			[
-				1,
-				0,
-				2,
-				1
-			],
-			[
-				1,
-				1,
-				2,
-				2
-			]
-		]
 	},
 	"show_minimap": true,
 	"show_open_files": true,

@@ -41,7 +41,7 @@ pub fn hbs_manage_full(start: GenTimer, sortstr: String, orderstr: String, pagin
     
     let mut total_query = "SELECT COUNT(*) AS count FROM articles";
     
-    let mut page_query = "SELECT a.aid, a.title, a.posted, '' as body, a.tag, a.description, u.userid, u.display, u.username FROM articles a JOIN users u ON (a.author = u.userid)";
+    let mut page_query = "SELECT a.aid, a.title, a.posted, '' as body, a.tag, a.description, u.userid, u.display, u.username, a.image, a.markdown, a.modified FROM articles a JOIN users u ON (a.author = u.userid)";
     
     let order = match sortstr.to_lowercase().as_ref() {
         "date" if &orderstr == "desc" => "posted DESC",
@@ -70,7 +70,9 @@ pub fn hbs_manage_full(start: GenTimer, sortstr: String, orderstr: String, pagin
             let total_items: u32 = count as u32;
             let (ipp, cur, num_pages) = pagination.page_data(total_items);
             let pagesql = pagination.sql(page_query, Some(order));
-            // println!("Manage paginated query: {}", pagesql);
+            
+            // println!("Generated pagination sql:\n{}\n", pagesql);
+            
             if let Some(results) = conn.articles(&pagesql) {
                 if results.len() != 0 {
                     output = hbs_template(TemplateBody::Manage(results, pagination, total_items, sort_options), fmsg, Some(format!("Manage Articles - Page {} of {}", cur, num_pages)), String::from("/manage"), Some(admin), user, None, Some(start.0));

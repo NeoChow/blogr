@@ -43,6 +43,7 @@ pub fn hbs_search_results(start: GenTimer, pagination: Page<Pagination>, searchs
 SELECT a.aid, a.title, a.posted, 
     ts_headline('pg_catalog.english', a.body, fqry, 'StartSel = "<mark>", StopSel = "</mark>"') AS body, 
     a.tag, a.description, u.userid, u.display, u.username, 
+    a.image, a.markdown, a.modified,
     ts_rank(a.fulltxt, fqry, 32) AS rank
 FROM articles a JOIN users u ON (a.author = u.userid),
     plainto_tsquery('pg_catalog.english', '"#);
@@ -110,7 +111,7 @@ FROM articles a JOIN users u ON (a.author = u.userid),
             let total_items: u32 = count as u32;
             let (ipp, cur, num_pages) = pagination.page_data(total_items);
             let sql = pagination.sql(&qrystr, Some("rank DESC"));
-            // println!("Prepared paginated query:\n{}", sql);
+            println!("Prepared paginated query:\n{}", sql);
             if let Some(results) = conn.articles(&sql) {
                 if results.len() != 0 {
                     let pinfo = pagination.page_info(total_items);

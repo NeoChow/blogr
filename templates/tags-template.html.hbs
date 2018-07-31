@@ -8,7 +8,7 @@
         <ul>
     {{~#if tags~}}
     {{~#each tags~}}
-        {{~#if this.tag}}<li class="v-tag-size-{{this.size}}"><a href="{{../info.base_url}}/tag/{{this.url}}">#{{this.tag}} ({{this.count}})</a></li>{{/if~}}
+        {{~#if this.tag}}<li class="v-tag-size-{{this.size}}"><a href="{{../info.base_url}}/tag/{{this.url}}">#{{this.tag}} ({{this.count}})</a><a href="{{../info.base_url}}rss-tag/{{this.url}}" title="RSS feed for the {{this.tag}} tag"><i class="v-icon-rss v-rss-filter fa fa-rss-square" aria-hidden="true"></i></a></li>{{/if~}}
     {{~/each~}}
     {{/if}}
         </ul>

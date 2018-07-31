@@ -567,17 +567,82 @@ hr.v-am-item-tag-divider:after {
 /* Icons */
 
 .v-icon-pagegen {
-    
+    color: #f27700;
+    font-size: 22px;
 }
+
 .v-icon-rss {
-    
+    color: #ff0000;
+}
+a .v-rss-filter {
+    color: #ff0000;
+    padding-left: 6px;
+    font-size: 22px;
+    padding-right: 4px;
+}
+a .v-rss-filter:hover {
+    color: #ff8000;
+}
+.v-rss-author {
+    color: #ff0000;
+    font-size: 24px;
+}
+.v-all-tags li a .v-rss-filter {
+    padding-left: 6px;
+    font-size: 25px;
+}
+
+.v-all-tags li a {
+    padding-right: 0px !important;
+}
+.v-all-tags li a:last-of-type {
+    padding-left: 0px;
+}
+.v-legal {
+    color: #f09;
+    font-size: 21px;
+    padding-right: .2em;
+}
+
+.v-footer-legal-link {
+    color: #f09 !important;
+}
+.v-copyright a.v-footer-legal-link:hover {
+    /* color: #e20389 !important; */
+    color: #cf017d !important;
+}
+.v-footer-rss-link {
+     color: #ff0000;
+}
+
+.v-copyright {
+    color: #ff0000
+}
+.v-copyright a {
+    color: #ff0000;
+    text-decoration: unset;
+    border-bottom: 1px solid #ff0000;
+}
+.v-copyright a:hover {
+    color: #dd0000 !important;
+    border-bottom: 1px solid #ffffff;
+}
+.v-copyright a:first-of-type {
+    color: #ff4800;
 }
 .v-icon-copyright {
-    
+    font-size: 1.1em;
 }
 .v-icon-at {
-    
+    color: #ff4800;
+    font-size: 1em;
+    margin-right: -2px;
 }
+.v-generation-time {
+    color: #969696;
+}
+
+
 
 .v-am-itemlink i.fa.fa-pencil {
     color: #e0e442;
@@ -1006,7 +1071,7 @@ article.v-article-single h1, .v-content h1 {
 .v-all-tags li {
     display: inline-block;
     list-style-type: none;
-    margin: 0px .5em;
+    margin: 0px .2em;
 }
 .v-all-tags li a {
     padding: .4em;
