@@ -183,7 +183,7 @@
 			"file": "src/main.rs",
 			"settings":
 			{
-				"buffer_size": 8244,
+				"buffer_size": 9365,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -342,7 +342,7 @@
 			"file": "src/xpress.rs",
 			"settings":
 			{
-				"buffer_size": 11695,
+				"buffer_size": 11818,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -359,7 +359,7 @@
 			"file": "Cargo.toml",
 			"settings":
 			{
-				"buffer_size": 2819,
+				"buffer_size": 2890,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -453,7 +453,7 @@
 			"file": "static/packages/css/blog-current.css",
 			"settings":
 			{
-				"buffer_size": 38527,
+				"buffer_size": 38421,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -489,7 +489,7 @@
 			"file": "templates/article-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 2457,
+				"buffer_size": 2671,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -514,7 +514,7 @@
 			"file": "templates/search-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 1317,
+				"buffer_size": 1522,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -606,7 +606,7 @@
 			"file": "templates/articles-pagination-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 1793,
+				"buffer_size": 1998,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -648,7 +648,7 @@
 			"file": "templates/edit-article-template.html.hbs",
 			"settings":
 			{
-				"buffer_size": 13954,
+				"buffer_size": 14014,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -1076,7 +1076,7 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 10,
 			"sheets":
 			[
 				{
@@ -1085,7 +1085,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8244,
+						"buffer_size": 9365,
 						"regions":
 						{
 						},
@@ -1119,7 +1119,7 @@
 						"translation.y": 879.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -1141,17 +1141,20 @@
 						],
 						"settings":
 						{
-							"color_helper.box_height": 21,
+							"color_helper.box_height": 22,
 							"color_helper.color_scheme": "Packages/User/Custom-Themes/RustCustom-3.tmTheme",
 							"color_helper.file_palette":
 							[
 							],
+							"color_helper.preview_meta":
+							{
+							},
 							"color_helper.scan":
 							{
 								"current_ext": ".rs",
 								"current_syntax": "Rust/Rust",
 								"enabled": false,
-								"last_updated": 1521615011.68
+								"last_updated": 1533051664.67
 							},
 							"git_gutter_is_enabled": true,
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
@@ -1159,10 +1162,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3719.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -1315,7 +1318,7 @@
 						"translation.y": 38.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1386,9 +1389,6 @@
 							"color_helper.file_palette":
 							[
 							],
-							"color_helper.preview_meta":
-							{
-							},
 							"color_helper.scan":
 							{
 								"current_ext": ".rs",
@@ -1405,7 +1405,7 @@
 						"translation.y": 5199.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1440,7 +1440,7 @@
 								"current_ext": null,
 								"current_syntax": "Text/Plain text",
 								"enabled": false,
-								"last_updated": 1532833585.62
+								"last_updated": 1533051664.67
 							},
 							"git_gutter_is_enabled": false,
 							"syntax": "Packages/Text/Plain text.tmLanguage",
@@ -1448,10 +1448,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 628.0,
+						"translation.y": 457.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -1473,26 +1473,29 @@
 						"settings":
 						{
 							"auto_name": "#000000",
-							"color_helper.box_height": 22,
+							"color_helper.box_height": 21,
 							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
 							"color_helper.file_palette":
 							[
 							],
+							"color_helper.preview_meta":
+							{
+							},
 							"color_helper.scan":
 							{
 								"current_ext": null,
 								"current_syntax": "Text/Plain text",
 								"enabled": false,
-								"last_updated": 1529189577.02
+								"last_updated": 1533051664.67
 							},
 							"git_gutter_is_enabled": false,
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1022.0,
+						"translation.y": 2389.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -1647,12 +1650,15 @@
 							"color_helper.file_palette":
 							[
 							],
+							"color_helper.preview_meta":
+							{
+							},
 							"color_helper.scan":
 							{
 								"current_ext": null,
 								"current_syntax": "Text/Plain text",
 								"enabled": false,
-								"last_updated": 1529189577.02
+								"last_updated": 1533051664.67
 							},
 							"git_gutter_is_enabled": false,
 							"syntax": "Packages/Text/Plain text.tmLanguage",
@@ -1663,7 +1669,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -1678,24 +1684,27 @@
 						"selection":
 						[
 							[
-								191,
-								191
+								223,
+								223
 							]
 						],
 						"settings":
 						{
 							"auto_name": "#26292C",
-							"color_helper.box_height": 22,
+							"color_helper.box_height": 21,
 							"color_helper.color_scheme": "Packages/Theme - Monokai Pro/Monokai Pro.tmTheme",
 							"color_helper.file_palette":
 							[
 							],
+							"color_helper.preview_meta":
+							{
+							},
 							"color_helper.scan":
 							{
 								"current_ext": null,
 								"current_syntax": "Text/Plain text",
 								"enabled": false,
-								"last_updated": 1529189577.02
+								"last_updated": 1533051664.67
 							},
 							"git_gutter_is_enabled": false,
 							"syntax": "Packages/Text/Plain text.tmLanguage"
@@ -1704,7 +1713,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -1747,7 +1756,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1876,7 +1885,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -2014,7 +2023,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11695,
+						"buffer_size": 11818,
 						"regions":
 						{
 						},
@@ -2100,7 +2109,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2819,
+						"buffer_size": 2890,
 						"regions":
 						{
 						},
@@ -2132,7 +2141,7 @@
 						"translation.y": 1188.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -3111,7 +3120,7 @@
 						"translation.y": 863.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -3154,7 +3163,7 @@
 						"translation.y": 2009.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -3334,7 +3343,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11695,
+						"buffer_size": 11818,
 						"regions":
 						{
 						},
@@ -3591,7 +3600,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 38527,
+						"buffer_size": 38421,
 						"regions":
 						{
 						},
@@ -3908,15 +3917,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2457,
+						"buffer_size": 2671,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								992,
-								992
+								0,
+								0
 							]
 						],
 						"settings":
@@ -3930,18 +3939,6 @@
 							],
 							"color_helper.popup_active": false,
 							"color_helper.popup_auto": true,
-							"color_helper.preview_meta":
-							{
-								"132":
-								[
-									-5200788499611663206,
-									7,
-									"hex",
-									-7008373805733631594,
-									1,
-									"1532833589.965276"
-								]
-							},
 							"color_helper.scan":
 							{
 								"allowed_colors":
@@ -3981,7 +3978,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -4007,9 +4004,6 @@
 							"color_helper.file_palette":
 							[
 							],
-							"color_helper.preview_meta":
-							{
-							},
 							"color_helper.scan":
 							{
 								"current_ext": null,
@@ -4024,7 +4018,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -4051,9 +4045,6 @@
 							"color_helper.file_palette":
 							[
 							],
-							"color_helper.preview_meta":
-							{
-							},
 							"color_helper.scan":
 							{
 								"current_ext": null,
@@ -4064,10 +4055,10 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 650.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -4076,7 +4067,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1317,
+						"buffer_size": 1522,
 						"regions":
 						{
 						},
@@ -4134,7 +4125,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -4673,7 +4664,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1793,
+						"buffer_size": 1998,
 						"regions":
 						{
 						},
@@ -4934,7 +4925,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13954,
+						"buffer_size": 14014,
 						"regions":
 						{
 						},
@@ -5189,7 +5180,7 @@
 						"translation.y": 10842.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 12,
 					"type": "text"
 				}
 			]

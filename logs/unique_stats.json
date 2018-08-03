@@ -1,151 +1,154 @@
 {
   "stats": {
-    "tag/rust%20code": {
+    "article/18": {
       "127.0.0.1": 3
     },
     "pagestats": {
-      "127.0.0.1": 26
+      "127.0.0.1": 57
     },
-    "tag/programming": {
-      "127.0.0.1": 2
-    },
-    "content/sublime-theme": {
-      "127.0.0.1": 2
+    "rss-username": {
+      "127.0.0.1": 15
     },
     "test_tag": {
       "127.0.0.1": 7
     },
+    "/": {
+      "127.0.0.1": 63
+    },
     "download": {
       "127.0.0.1": 14
     },
-    "article/18/Rocket%20Templates%20And%20Compression": {
-      "127.0.0.1": 4
+    "test_cache": {
+      "127.0.0.1": 28
     },
-    "rss.xml": {
-      "127.0.0.1": 5
-    },
-    "test_home": {
-      "127.0.0.1": 2
-    },
-    "rss-tag": {
-      "127.0.0.1": 18
-    },
-    "edit": {
-      "127.0.0.1": 27
-    },
-    "content/content/linux-tips": {
-      "127.0.0.1": 2
-    },
-    "refresh_content": {
-      "127.0.0.1": 6
-    },
-    "article/21/Accept%20Encoding": {
-      "127.0.0.1": 7
+    "//tag/admin": {
+      "127.0.0.1": 3
     },
     "content/xpress.rs": {
       "127.0.0.1": 2
     },
-    "content/about-me": {
-      "127.0.0.1": 8
-    },
-    "//tag/code": {
+    "content/content/linux-tips": {
       "127.0.0.1": 2
-    },
-    "//tag/programming": {
-      "127.0.0.1": 14
-    },
-    "create": {
-      "127.0.0.1": 5
-    },
-    "admin": {
-      "127.0.0.1": 4
-    },
-    "test_author": {
-      "127.0.0.1": 5
-    },
-    "content/rust-snippets": {
-      "127.0.0.1": 22
-    },
-    "/": {
-      "127.0.0.1": 59
     },
     "rss-userid": {
-      "127.0.0.1": 7
-    },
-    "content/content/legal_privacy": {
-      "127.0.0.1": 2
-    },
-    "tag/admin": {
-      "127.0.0.1": 2
-    },
-    "content/content/legal%20privacy": {
-      "127.0.0.1": 2
-    },
-    "content/tutorials": {
       "127.0.0.1": 8
     },
-    "all_tags": {
-      "127.0.0.1": 90
-    },
-    "test_tagcloud": {
-      "127.0.0.1": 3
-    },
-    "search/rust": {
-      "127.0.0.1": 3
-    },
-    "content/legal-privacy": {
-      "127.0.0.1": 7
-    },
-    "author": {
-      "127.0.0.1": 4
-    },
-    "article/22/My%20Dev%20Env": {
-      "127.0.0.1": 16
-    },
-    "tag/code": {
-      "127.0.0.1": 19
-    },
-    "content": {
-      "127.0.0.1": 2
-    },
-    "content/content/legal-privacy": {
+    "content/content/legal_privacy": {
       "127.0.0.1": 2
     },
     "content/content/legalprivacy": {
       "127.0.0.1": 2
     },
-    "//tag/rust%20code": {
-      "127.0.0.1": 8
+    "tag/admin": {
+      "127.0.0.1": 2
     },
-    "content/accept.rs": {
-      "127.0.0.1": 3
+    "rss.xml": {
+      "127.0.0.1": 7
     },
-    "article/22/My%20Development%20Environment": {
-      "127.0.0.1": 4
+    "content/rust-snippets": {
+      "127.0.0.1": 22
     },
     "backup": {
       "127.0.0.1": 2
     },
-    "test_article": {
+    "tag/code": {
+      "127.0.0.1": 19
+    },
+    "create": {
+      "127.0.0.1": 7
+    },
+    "//tag/programming": {
+      "127.0.0.1": 14
+    },
+    "//tag/code": {
+      "127.0.0.1": 2
+    },
+    "content/tutorials": {
+      "127.0.0.1": 8
+    },
+    "test_author": {
+      "127.0.0.1": 5
+    },
+    "admin": {
+      "127.0.0.1": 4
+    },
+    "refresh_content": {
       "127.0.0.1": 6
     },
-    "rss-username": {
-      "127.0.0.1": 15
+    "edit": {
+      "127.0.0.1": 27
+    },
+    "all_tags": {
+      "127.0.0.1": 94
+    },
+    "article/21/Accept%20Encoding": {
+      "127.0.0.1": 7
+    },
+    "test_tagcloud": {
+      "127.0.0.1": 3
     },
     "test_rss": {
       "127.0.0.1": 5
     },
-    "tag/rust": {
-      "127.0.0.1": 3
+    "tag/programming": {
+      "127.0.0.1": 2
+    },
+    "content/about-me": {
+      "127.0.0.1": 10
+    },
+    "author": {
+      "127.0.0.1": 5
     },
     "tag/mario": {
       "127.0.0.1": 2
     },
-    "article/18": {
+    "test_home": {
+      "127.0.0.1": 2
+    },
+    "search/rust": {
+      "127.0.0.1": 4
+    },
+    "rss-tag": {
+      "127.0.0.1": 21
+    },
+    "content/legal-privacy": {
+      "127.0.0.1": 8
+    },
+    "test_article": {
+      "127.0.0.1": 6
+    },
+    "tag/rust%20code": {
       "127.0.0.1": 3
     },
-    "test_cache": {
-      "127.0.0.1": 28
+    "content/content/legal%20privacy": {
+      "127.0.0.1": 2
+    },
+    "article/22/My%20Development%20Environment": {
+      "127.0.0.1": 4
+    },
+    "content/content/legal-privacy": {
+      "127.0.0.1": 2
+    },
+    "//tag/rust%20code": {
+      "127.0.0.1": 8
+    },
+    "tag/rust": {
+      "127.0.0.1": 3
+    },
+    "content/accept.rs": {
+      "127.0.0.1": 3
+    },
+    "content/sublime-theme": {
+      "127.0.0.1": 2
+    },
+    "article/22/My%20Dev%20Env": {
+      "127.0.0.1": 16
+    },
+    "content": {
+      "127.0.0.1": 2
+    },
+    "article/18/Rocket%20Templates%20And%20Compression": {
+      "127.0.0.1": 4
     }
   }
 }

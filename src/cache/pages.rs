@@ -543,7 +543,7 @@ pub mod rss {
                 } else {
                     // just tag
                     // println!("Looking for tag {} in articles", &tag);
-                    custom_title = Some(format!("#{} tag", tag));
+                    custom_title = Some(format!("#{} articles", tag));
                     custom_link = Some(format!("rss-tag/{}", tag));
                     for article in all_articles {
                         if article.tags.contains(&tag.to_lowercase()) {

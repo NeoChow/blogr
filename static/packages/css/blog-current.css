@@ -1196,6 +1196,7 @@ input#inputTitle.v-form-control:focus {
 
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #363636 inset !important;
+    box-shadow: 0 0 0 1000px #363636 inset !important;
     -webkit-text-fill-color: #ccc !important;
     background: #363636 !important;
 }
@@ -1342,7 +1343,7 @@ mark, .v-term {
     /*flex-basis: 30ch;*/
 }
 #v-body {
-    border: 1px solid #212529
+    border: 1px solid #212529;
     /*border: 1px dashed #dd0000;*/
     /*margin: 0px 5%;*/
     flex: 9 1 100%;
