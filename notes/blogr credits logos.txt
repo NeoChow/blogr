@@ -1,0 +1,23 @@
+
+uses credits:
+
+linode
+rust
+rocket
+ubuntu
+nginx
+
+font-awesome
+highlightjs
+toast
+toc jquery
+jquery fancybox
+bootstrap
+clipboard js
+hljs line numbers
+remarkable
+jqmath
+
+
+
+
