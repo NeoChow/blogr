@@ -1,2 +1,0 @@
-nightly-2017-11-22-x86_64-pc-windows-msvc (directory override for '\\?\C:\code\lang\Rust\proj\blogr')
-rustc 1.23.0-nightly (63739ab7b 2017-11-21)
