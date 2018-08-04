@@ -2,7 +2,11 @@
 ==== Current Todo List ====
   these changes should be made before introducing it to the community
 
+See if logging in as an admin can also log the user in as a regular user
+
 try using the parking_lot crate for mutex's instead of standard library ones
+
+try using config_struct crate which can import settings from a toml/json/yaml/ron?
 
 reorganize routes to hopefully optimize the routing
 
