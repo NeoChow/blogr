@@ -71,7 +71,8 @@ pub struct NumArticles(pub AtomicUsize);
 
 
 pub struct ArticleCacheLock {
-    pub lock: RwLock<ArticleCache>,
+    // pub lock: RwLock<ArticleCache>,
+    pub lock: parking_lot::RwLock<ArticleCache>,
 }
 
 pub struct ArticleCache {
@@ -94,40 +95,45 @@ impl ArticleCache {
 
 impl ArticleCacheLock {
     pub fn new(cache: ArticleCache) -> Self {
-        ArticleCacheLock{ lock: RwLock::new( cache ) }
+        // ArticleCacheLock{ lock: RwLock::new( cache ) }
+        ArticleCacheLock{ lock: parking_lot::RwLock::new( cache ) }
     }
     
     
     pub fn update_cache(&self, conn: &DbConn) -> Result<(), ()> {
-        if let Ok(mut article_cache) = self.lock.write() {
+        // if let Ok(mut article_cache) = self.lock.write() {
+            let mut article_cache = self.lock.write();
             *article_cache = ArticleCache::load_cache(&conn);
             Ok( () )
-        } else {
-            println!("Failed to run update_articles() - could not acquire write lock");
-            Err( () )
-        }
+        // } else {
+        //     println!("Failed to run update_articles() - could not acquire write lock");
+        //     Err( () )
+        // }
     }
     
     pub fn num_articles(&self) -> u32 {
-        if let Ok(article_cache) = self.lock.read() {
+        // if let Ok(article_cache) = self.lock.read() {
+            let article_cache = self.lock.read();
             article_cache.articles.len() as u32
-        } else {
-            0
-        }
+        // } else {
+        //     0
+        // }
     }
     pub fn retrieve_article(&self, aid: u32) -> Option<Article> {
-        if let Ok(article_cache) = self.lock.read() {
+        // if let Ok(article_cache) = self.lock.read() {
+            let article_cache = self.lock.read();
             if let Some(article) = article_cache.articles.get(&aid) {
                 Some(article.clone())
             } else {
                 None
             }
-        } else {
-            None
-        }
+        // } else {
+        //     None
+        // }
     }
     pub fn retrieve_articles(&self, aids: Vec<u32>) -> Option<Vec<Article>> {
-        if let Ok(article_cache) = self.lock.read() {
+        // if let Ok(article_cache) = self.lock.read() {
+            let article_cache = self.lock.read();
             let mut articles: Vec<Article> = Vec::new();
             for aid in aids {
                 if let Some(article) = article_cache.articles.get(&aid) {
@@ -141,12 +147,13 @@ impl ArticleCacheLock {
             } else {
                 None
             }
-        } else {
-            None
-        }
+        // } else {
+        //     None
+        // }
     }
     pub fn all_articles(&self) -> Option<Vec<Article>> {
-        if let Ok(article_cache) = self.lock.read() {
+        // if let Ok(article_cache) = self.lock.read() {
+        let article_cache = self.lock.read();
             // let articles: Vec<Article> = article_cache.articles.values().map(|a| a).collect();
             let mut articles: Vec<Article> = Vec::with_capacity(article_cache.articles.len());
             for article in article_cache.articles.values() {
@@ -155,15 +162,21 @@ impl ArticleCacheLock {
             if articles.len() > 0 {
                 Some(articles)
             } else { None }
-        } else { None }
+        // } else { None }
     }
     
     pub fn paginated_articles<T: Collate>(&self, pagination: &Page<T>) -> Option<(Vec<Article>, u32)> {
         let mut starting = pagination.cur_page as u32;
         let mut ending = pagination.cur_page as u32 + pagination.settings.ipp() as u32;
         
-        if let Ok(article_lock) = self.lock.read() {
-            let aids: Vec<u32> = article_lock.articles.keys().map(|i| *i).collect();
+        // original
+        // if let Ok(article_lock) = self.lock.read() {
+            let aids: Vec<u32>;
+            {
+            let article_lock = self.lock.read();
+            // let aids: Vec<u32> = article_lock.articles.keys().map(|i| *i).collect();
+            aids = article_lock.articles.keys().map(|i| *i).collect();
+            }
             let total_items = aids.len() as u32;
             
             let mut starting = pagination.start();
@@ -201,16 +214,18 @@ impl ArticleCacheLock {
                 }
             }
             
-        } else {
-            None
-        }
+        // original
+        // } else {
+        //     None
+        // }
     }
 }
 
 
 
 pub struct TextCacheLock {
-    pub lock: RwLock<TextCache>,
+    // pub lock: RwLock<TextCache>,
+    pub lock: parking_lot::RwLock<TextCache>,
 }
 
 pub struct TextCache {
@@ -245,16 +260,19 @@ impl TextCache {
 }
 impl TextCacheLock {
     pub fn new(cache: TextCache) -> Self {
-        TextCacheLock{ lock: RwLock::new(cache) }
+        // TextCacheLock{ lock: RwLock::new(cache) }
+        TextCacheLock{ lock: parking_lot::RwLock::new(cache) }
     }
     // For text retrieval maybe add a closure or function pointer parameter
     // that will be called in case the specified index(cached text) is not in the cache
     pub fn retrieve_text(&self, idx: &str) -> Option<String> {
-        if let Ok(text_cache) = self.lock.read() {
-            text_cache.pages.get(idx).map(|s| s.clone())
-        } else {
-            None
-        }
+        self.lock.read().pages.get(idx).map(|s| s.clone())
+        // original:
+        // if let Ok(text_cache) = self.lock.read() {
+            // text_cache.pages.get(idx).map(|s| s.clone())
+        // } else {
+            // None
+        // }
     }
 }
 
@@ -270,8 +288,10 @@ pub struct TagsCache {
 }
 
 pub struct TagAidsLock {
-    pub aids_lock: RwLock<AidsCache>,
-    pub tags_lock: RwLock<TagsCache>,
+    // pub aids_lock: RwLock<AidsCache>,
+    pub aids_lock: parking_lot::RwLock<AidsCache>,
+    // pub tags_lock: RwLock<TagsCache>,
+    pub tags_lock: parking_lot::RwLock<TagsCache>,
 }
 
 impl TagsCache {
@@ -329,15 +349,16 @@ impl TagAidsLock {
         // unlock TagAidsLock
         // find the page
         // return the aids
-        if let Ok(multi_aids) = self.aids_lock.read() {
+        // if let Ok(multi_aids) = self.aids_lock.read() {
+            let multi_aids = self.aids_lock.read();
             if let Some(aids) = multi_aids.pages.get(page) {
                 Some(aids.clone())
             } else {
                 None
             }
-        } else {
-            None
-        }
+        // } else {
+        //     None
+        // }
     }
     // Retrieve all aids for the given tag
     pub fn retireve_tag_aids(&self, tag: u32) -> Option<Vec<u32>> {
@@ -348,11 +369,12 @@ impl TagAidsLock {
     
     // Retrieve (from the cache) all tags and the number of times they have been used
     pub fn retrieve_tags(&self) -> Option<Vec<TagCount>> {
-        if let Ok(all_tags) = self.tags_lock.read() {
+        // if let Ok(all_tags) = self.tags_lock.read() {
+            let all_tags = self.tags_lock.read();
             Some(all_tags.tags.clone())
-        } else {
-            None
-        }
+        // } else {
+        //     None
+        // }
     }
     
     pub fn load_cache(conn: &DbConn) -> Self {
@@ -390,14 +412,14 @@ impl TagAidsLock {
         }
         
         TagAidsLock {
-            aids_lock: RwLock::new( AidsCache{ pages: article_cache } ),
-            tags_lock: RwLock::new( tag_cache ),
+            aids_lock: parking_lot::RwLock::new( AidsCache{ pages: article_cache } ),
+            tags_lock: parking_lot::RwLock::new( tag_cache ),
         }
         
     }
     #[inline]
     pub fn new(aids: AidsCache, tags: TagsCache) -> Self {
-        TagAidsLock{ aids_lock: RwLock::new( aids), tags_lock: RwLock::new( tags ) }
+        TagAidsLock{ aids_lock: parking_lot::RwLock::new( aids), tags_lock: parking_lot::RwLock::new( tags ) }
     }
     
     pub fn multi_articles<T: Collate>(&self, article_cache: &ArticleCacheLock, multi_page: &str, pagination: &Page<T>) -> Option<(Vec<Article>, u32)> {
@@ -507,36 +529,39 @@ pub fn load_articles_map(conn: &DbConn) -> Option<HashMap<u32, Article>> {
 
 
 pub fn update_article_caches(conn: &DbConn,
-                             article_cache: &ArticleCacheLock, 
+                             article_cache_lock: &ArticleCacheLock, 
                              multi_aids: &TagAidsLock, 
                              num_articles: &NumArticles
                             ) -> bool {
     let mut output = true;
-    if let Ok(mut article_cache) = article_cache.lock.write() {
+    // if let Ok(mut article_cache) = article_cache.lock.write() {
+        let mut article_cache = article_cache_lock.lock.write();
         *article_cache = ArticleCache::load_cache(&conn);
-    } else {
-        println!("Failed to update_article_caches() - could not unlock article cache");
-        output = false;
-    }
+    // } else {
+    //     println!("Failed to update_article_caches() - could not unlock article cache");
+    //     output = false;
+    // }
     
     let multi = TagAidsLock::load_cache(&conn);
     let (tags_multi, aids_multi) = destruct_multi(multi);
     
-    if let Ok(mut tags) = multi_aids.tags_lock.write() {
+    // if let Ok(mut tags) = multi_aids.tags_lock.write() {
+        let mut tags = multi_aids.tags_lock.write();
         *tags = tags_multi;
-    } else {
-        println!("Failed to update_article_caches() - could not unlock multi cache - tags");
-        output = false;
-    }
+    // } else {
+    //     println!("Failed to update_article_caches() - could not unlock multi cache - tags");
+    //     output = false;
+    // }
     
-    if let Ok(mut multi_aids) = multi_aids.aids_lock.write() {
+    // if let Ok(mut multi_aids) = multi_aids.aids_lock.write() {
+        let mut multi_aids = multi_aids.aids_lock.write();
         *multi_aids = aids_multi;
-    } else {
-        println!("Failed to update_article_caches() - could not unlock multi cache - ArticleIds");
-        output = false;
-    }
+    // } else {
+    //     println!("Failed to update_article_caches() - could not unlock multi cache - ArticleIds");
+    //     output = false;
+    // }
     
-    num_articles.0.store( article_cache.num_articles() as usize, Ordering::Relaxed );
+    num_articles.0.store( article_cache_lock.num_articles() as usize, Ordering::Relaxed );
     
     output
 }
@@ -544,13 +569,14 @@ pub fn update_article_caches(conn: &DbConn,
 
 pub fn update_text_cache(conn: &DbConn, text_cache: &TextCacheLock, multi_aids: &TagAidsLock, article_cache: &ArticleCacheLock) -> bool {
     
-    if let Ok(mut text_cache) = text_cache.lock.write() {
+    // if let Ok(mut text_cache) = text_cache.lock.write() {
+        let mut text_cache = text_cache.lock.write();
         *text_cache = TextCache::load_cache(&conn, &multi_aids, &article_cache);
         true
-    } else {
-        println!("Failed refresh content - could not unlock text cache");
-        false
-    }
+    // } else {
+    //     println!("Failed refresh content - could not unlock text cache");
+    //     false
+    // }
     
 }
 
