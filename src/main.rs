@@ -32,6 +32,7 @@ extern crate rss;
 #[allow(unused_imports)]
 extern crate htmlescape;
 extern crate rocket_auth_login;
+extern crate parking_lot;
 
 
 mod cache;
