@@ -63,6 +63,18 @@ Once you have a [Virtual Private Server Installed](https://vishus.net/content/se
 
 The first half are the development settings, which is the default mode.  When you pass `--cfg production` to rustc it enables the production mode, which uses the settings in the second half of the settings file.  Most settings should be self explanatory, although better documentation of the configuration settings is currently being worked on.
 
+To configure the app to authenticate to your database, create a file in the src directory called private.rs with the following contents:
+```rust
+// Development machine user/passwords for database
+#[cfg(not(production))]
+pub const DATABASE_URL: &'static str = "postgres://username:password@localhost/blog";
+
+// Production machine user/password for database
+#[cfg(production)]
+pub const DATABASE_URL: &'static str = "postgres://username:password@localhost/blog";
+
+```
+
 The following settings are the ones you must edit:
 
 - The most important settings is the `BLOG_URL` setting which tells the blog the address to use.
